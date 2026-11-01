@@ -19,13 +19,13 @@ Last updated: 2026-11-01
 2. Worker API: public status, auth/session/CSRF, monitor CRUD, manual checks, incidents, audit, cron — complete
 3. Public status page and admin UI, responsive editorial design — complete
 4. Tests (unit + integration + Playwright desktop/mobile), typecheck, build — complete
-5. Local scheduled-trigger verification, secret scan, GitHub private repo + CI — complete
+5. Local scheduled-trigger verification, secret scan, GitHub repository + CI — complete
 6. Cloudflare D1 + Worker deployment, live public/admin verification, cleanup, README live URL — complete
 
 ## Publication check
 
 - Live scheduled checks, owner workflows, responsive screenshots, and both GitHub CI runs verified.
-- Final mobile owner overview uses readable service cards. Commit and CI verification precede public visibility.
+- Final mobile owner overview uses readable service cards. The repository is public after the final CI and secret scan passed.
 
 ## Feature ledger
 
