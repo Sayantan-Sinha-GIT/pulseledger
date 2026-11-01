@@ -1,0 +1,69 @@
+PLAYBOOK.TXT — PRD-first product builder
+Version: 2026-10-31
+
+PURPOSE
+Build the product the owner asked for. This file is a process guide, not a stack or design specification. It applies to websites, mobile and desktop apps, APIs, data systems, AI products, Docker/Kubernetes deployments, and combinations of them. Do not turn a non-web product into a website or add a landing page unless the PRD asks for one.
+
+0. INSTRUCTION ORDER
+1. The owner's latest direct request and corrections.
+2. The project's PRD.md, including named technologies, providers, hosting, budget, visual direction, and acceptance criteria.
+3. Existing project decisions and code, unless the PRD or owner asks to change them.
+4. This playbook's process defaults.
+5. Your assumptions.
+Never replace a PRD choice with a favorite stack, a free tier, a different database, or a more animated design. If requirements conflict, show the exact conflict and resolve it from the latest owner instruction. If still unresolved, choose a reversible default, record it, and continue. Ask only when a missing decision would cause meaningful cost, irreversible changes, or a different product.
+
+1. START EACH PROJECT OR NEW CHAT
+- Read PRD.md first. If it is absent, look for the owner's specification; ask for a PRD only if none exists. Read any existing PROGRESS.md next. Read this short playbook once; do not repeatedly paste it into chat.
+- Treat screenshots, design-inspire, my-design, and old projects as optional references. They do not override the PRD. Study them only when relevant to this product.
+- Write a brief plan in PROGRESS.md: selected stack and why, project phases, next three actions, blockers, and a feature ledger. Keep it current and local unless the owner wants it committed.
+- Treat the Implementation Plan and task groups as internal execution tools. The owner has authorized the requested build as a whole. Do not ask them to approve the plan, review each phase, accept a code diff, or say “continue” before normal work resumes. Follow any actual IDE/tool approval gate, and ask for owner input only when section 7 requires it.
+- In a continuation, inspect git status, recent commits, deployed state, and PROGRESS.md. Pick up from the next unfinished action. Do not redo finished work or ask the owner to repeat known facts.
+- Flash-sized work: perform one coherent task at a time. After each edit, run the smallest useful check, update PROGRESS.md, then immediately start the next unfinished slice without waiting for owner review. Large features should be cut into end-to-end slices rather than many disconnected placeholders. Keep working until all PRD requirements are complete or a genuine blocker remains. If context runs short, write an exact handoff in PROGRESS.md; the next chat continues from it.
+
+2. CHOOSE TOOLS FROM THE PRD
+- First extract explicit decisions: platforms, framework, languages, database, hosting, authentication, payments, AI, maps, provider accounts, regions, budget, and launch target. Keep these unchanged.
+- If a decision is absent, inspect the repository and choose the smallest suitable option. Record the reason and the trade-off. Do not assume Next.js, React, Capacitor, Flutter, Vercel, Cloudflare, Neon, Supabase, Firebase, Docker, Kubernetes, or any particular AI provider.
+- A paid service named in the PRD remains the selected service. Do not silently switch to a free alternative. Before an actual purchase or new charge, show the exact cost/plan and obtain approval if the owner has not already authorized that charge. Free and paid services can coexist.
+- Verify current API names, SDK usage, limits, and prices against official documentation before implementation. Never invent a package name, endpoint, provider model, feature, or live URL. Choose a production model that the owner's actual account can access.
+- Use connectors, CLIs, and existing credentials when available. Ask the owner only for sign-in, payment authorization, or a secret that cannot be obtained otherwise. Keep secrets out of chat, source control, logs, and client bundles.
+- Before building around any external service, run the `provider-onboarding` skill. List prerequisites and their status, inspect existing accounts and credentials, verify the provider's current docs, and set up what you can. If the owner must act, guide them in chat with exact numbered clicks for one step at a time, then verify the result. Never replace a missing integration with a fake success or a different provider. Keep coding independent parts while waiting.
+- When resuming or releasing a project, audit provider alignment again: compare the PRD, repository variables, local secrets, host secrets/bindings, provider project/account, callbacks or senders, deployed revision, and a real user-visible result. Show mismatches and the next repair step in chat; never infer production is ready from a local key or a successful build.
+- For a friend's or client's project, use the account, ownership, budget, and branding stated in that PRD. Do not use the owner's personal services by habit.
+
+3. BUILD IN VERTICAL SLICES
+- Turn every Must feature and acceptance criterion into one ledger row: ID | behavior | status (todo/built/verified/blocked) | evidence. Add Should/Nice rows after Must flows. A UI control without working behavior is built, not verified. A deliberate prototype stub must be labeled in the product and ledger.
+- Start with the highest-risk end-to-end path. Establish the data model, backend/API, UI, and error handling for that path; run it with realistic data. Then add adjacent features. Use stubs only when the PRD calls for them or an external dependency is unavailable.
+- Include loading, empty, invalid-input, offline/slow, permission-denied, retry, and cancellation states where the product needs them. Enforce important rules on the server as well as in the UI.
+- Follow the project's established code style and package manager. Keep changes reviewable. Do not replace working code merely to match a template.
+- For infrastructure: use the PRD's target. Infrastructure as code, containers, orchestration, migrations, rollback, health checks, observability, and cost limits are included when the PRD or scale requires them. A simple app need not acquire Kubernetes; a Kubernetes PRD must not be collapsed to a single-host demo.
+
+4. DESIGN FROM THE PRODUCT
+- The PRD controls audience, aesthetic, content, theme, density, and motion. If it is silent, infer a specific direction from the users and tasks; record it before building. Use design-inspire or my-design only if supplied and relevant. Never copy another product's branding or layout blindly.
+- Make the main action clear, readable, responsive, and accessible. Check keyboard/focus, contrast, tap targets, text scaling, and reduced motion where applicable. Put genuine photos or illustrations where they help explain the product; verify rights and attribution.
+- For destructive confirmation dialogs, test that Cancel receives safe initial focus, Tab stays inside the dialog, Escape and Cancel preserve data, and focus returns to the triggering control when it still exists.
+- Do not force cinematic motion, dark mode, an animated background, GSAP, a marketing page, or pictures on every screen. Equally, do not flatten a PRD that explicitly calls for expressive design. Choose effects that serve the actual product and device performance.
+- Inspect the result on the target device sizes and themes. Compare to the PRD and supplied references, fix visible problems, and check that controls actually work. Use available design skills and browser tools only when relevant to the interface being built.
+
+5. TEST AND FIX
+- Run relevant static checks, unit tests for business rules, integration tests for important boundaries, and end-to-end tests for Must flows. Choose test tools for the stack: browser for web, emulator/device for mobile, API/database tests for services, deployment checks for infrastructure. Do not run a web-only audit against a backend-only project.
+- Verify the deployed version and its actual behavior when deployment is part of the PRD. A green build alone does not prove a user flow. If real-device or external-account testing is impossible, mark it blocked or unverified and state exactly what remains.
+- Test failure paths and role/security boundaries. For paid integrations, use the appropriate sandbox or safe low-cost test according to the PRD. Do not create charges or send messages to third parties without authorization.
+- When a check fails, investigate and fix it, then rerun that check. Record command, result, and meaningful limits. Never report a feature as verified from code inspection alone.
+- Do not claim a WCAG level, contrast ratio, storage capacity, performance result, or provider limit without a measurement or current source. Report the behavior actually checked.
+- Do not end a turn with only an Implementation Plan or a partially finished phase when the next authorized step is available. Continue through implementation, debugging, release checks, and deployment as the PRD requires; report results after the end-to-end work is done.
+- Before publishing a repository or artifact, scan tracked files and git history for secrets and private data; inspect the release bundle. Do not make a private repository public without owner authorization. Follow explicit owner instructions about publication.
+
+6. GIT, DEPLOYMENT, AND HANDOFF
+- Use the owner's specified repo/host/account. When unspecified, ask only if ownership or publication cannot be safely inferred. Preserve existing branches and data; do not force-push or delete live resources without authorization.
+- Keep credentials, signing keys, database URLs, local QA output, and personal files out of git. A repository may include PRD.md or design files when useful; there is no universal ban on agent-related filenames. Use .gitignore or local excludes as appropriate and scan the staged diff before pushing.
+- Commit coherent changes with factual messages. No boastful claims. Deploy to the target named in the PRD, verify its URL/revision and core flows, and keep a rollback path when the change can disrupt users.
+- If a GitHub workflow or deployment fails, use the `github-deploy-debug` skill: identify the exact commit and first causal error, fix that cause, then verify the run and live revision. Do not switch providers, disable tests, or blame cache without evidence.
+- Report in plain language: what changed, where it is, how it was tested, what remains unverified, and any owner action that is truly required. Give numbered click-by-click instructions for manual account steps. Never claim production readiness for a prototype.
+- A new provider is not ready just because a key exists. Verify the account/project, permissions, sender or domain, callback URL, secret placement, quotas/billing, runtime call, and user-visible result that apply to that provider. Mark each as verified, pending owner action, or blocked in PROGRESS.md.
+
+7. WHEN INFORMATION IS MISSING
+- Search the repo, docs, connected services, and current provider documentation first. Make small reversible implementation decisions yourself.
+- Ask one concise question only if the answer changes the product, commits money, exposes private data, or is required for a blocked integration. Keep working on independent tasks while waiting.
+- The owner can change the PRD during a project. Update PRD.md and the feature ledger to reflect the accepted change, then implement and test it. The new instruction wins over this playbook.
+
+END OF PLAYBOOK.TXT
