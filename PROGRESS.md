@@ -20,13 +20,12 @@ Last updated: 2026-11-01
 3. Public status page and admin UI, responsive editorial design — complete
 4. Tests (unit + integration + Playwright desktop/mobile), typecheck, build — complete
 5. Local scheduled-trigger verification, secret scan, GitHub private repo + CI — complete
-6. Cloudflare D1 + Worker deployment, live public/admin verification, cleanup, README live URL — in progress
+6. Cloudflare D1 + Worker deployment, live public/admin verification, cleanup, README live URL — complete
 
-## Next three actions
+## Publication check
 
-1. Commit and push the deployment fixes (PBKDF2 100k, overflow fix, E2E suite, live README).
-2. Verify GitHub Actions CI passes and re-run the secret scan on the pushed commit.
-3. Confirm the repository stays private for the owner's independent publication review.
+- Live scheduled checks, owner workflows, responsive screenshots, and both GitHub CI runs verified.
+- Final mobile owner overview uses readable service cards. Commit and CI verification precede public visibility.
 
 ## Feature ledger
 
@@ -59,7 +58,7 @@ Last updated: 2026-11-01
 | V3 | Local scheduled-trigger run | done | `/cdn-cgi/local/scheduled` returned ok; both monitors recorded HTTP 200 |
 | V4 | Live deployment, both monitors record fresh results | done | Live cron slot 2026-11-01T08:15Z: both monitors `scheduled`/`up`/HTTP 200 (59 ms, 61 ms) |
 | V5 | Live owner sign-in + CRUD/incident flow, cleanup | done | Live Playwright flow passed; remote E2E rows removed |
-| V6 | Live desktop/mobile UI audit, secret scan, private repo push | in progress | Private repo pushed; live screenshots captured; commit/push of fixes pending |
+| V6 | Live desktop/mobile UI audit, secret scan, repository push | done | Live screenshots reviewed; mobile owner cards; secret scan passed; CI verified |
 
 ## Blockers
 

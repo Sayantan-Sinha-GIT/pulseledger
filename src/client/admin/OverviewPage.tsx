@@ -157,7 +157,7 @@ export function OverviewPage() {
                 </p>
               </div>
             ) : (
-              <div className="table-scroll">
+              <div className="table-scroll overview-desktop-table">
                 <table className="data-table admin-table">
                   <caption className="sr-only">Monitor state and recent performance</caption>
                   <thead>
@@ -177,20 +177,20 @@ export function OverviewPage() {
                           <span className="table-primary">{monitor.name}</span>
                           <span className="table-secondary">{hostOf(monitor.url)}</span>
                         </td>
-                        <td>
+                        <td data-label="State">
                           <span className={`state state-${monitor.state}`}>
                             <span className="state-mark" aria-hidden="true" />
                             {monitor.state}
                           </span>
                         </td>
-                        <td>
+                        <td data-label="Last check">
                           {monitor.lastCheck
                             ? `${formatRelative(monitor.lastCheck.checked_at)} · ${monitor.lastCheck.outcome}`
                             : "No checks yet"}
                         </td>
-                        <td className="mono">{formatUptime(monitor.uptime.h24)}</td>
-                        <td className="mono">{formatCount(monitor.checks24h)}</td>
-                        <td className={`mono ${monitor.failures24h > 0 ? "value-down" : ""}`}>
+                        <td data-label="Uptime 24h" className="mono">{formatUptime(monitor.uptime.h24)}</td>
+                        <td data-label="Checks" className="mono">{formatCount(monitor.checks24h)}</td>
+                        <td data-label="Failed" className={`mono ${monitor.failures24h > 0 ? "value-down" : ""}`}>
                           {formatCount(monitor.failures24h)}
                         </td>
                       </tr>
@@ -199,6 +199,32 @@ export function OverviewPage() {
                 </table>
               </div>
             )}
+            {monitors.length > 0 ? (
+              <div className="overview-mobile-list">
+                {monitors.map((monitor) => (
+                  <article className="overview-mobile-card" key={monitor.id} aria-label={monitor.name}>
+                    <div className="overview-mobile-head">
+                      <div>
+                        <h3>{monitor.name}</h3>
+                        <p className="overview-mobile-host">{hostOf(monitor.url)}</p>
+                      </div>
+                      <span className={`state state-${monitor.state}`}>
+                        <span className="state-mark" aria-hidden="true" />
+                        {monitor.state}
+                      </span>
+                    </div>
+                    <dl className="overview-mobile-metrics">
+                      <div><dt>Last check</dt><dd>{monitor.lastCheck
+                        ? `${formatRelative(monitor.lastCheck.checked_at)} · ${monitor.lastCheck.outcome}`
+                        : "No checks yet"}</dd></div>
+                      <div><dt>Uptime 24h</dt><dd>{formatUptime(monitor.uptime.h24)}</dd></div>
+                      <div><dt>Checks, 24h</dt><dd>{formatCount(monitor.checks24h)}</dd></div>
+                      <div><dt>Failed, 24h</dt><dd className={monitor.failures24h > 0 ? "value-down" : ""}>{formatCount(monitor.failures24h)}</dd></div>
+                    </dl>
+                  </article>
+                ))}
+              </div>
+            ) : null}
           </section>
         </>
       ) : null}

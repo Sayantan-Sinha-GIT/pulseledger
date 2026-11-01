@@ -41,7 +41,10 @@ async function adminPage(name, contextOptions) {
   await page.getByLabel("Password").fill(password);
   await page.getByRole("button", { name: "Sign in" }).click();
   await page.getByRole("heading", { name: "Operations at a glance." }).waitFor();
+  await page.getByRole("region", { name: "Owner summary" }).waitFor();
   await page.screenshot({ path: resolve(output, `admin-overview-${name}.png`), fullPage: true });
+  await page.getByRole("button", { name: "Sign out" }).click();
+  await page.getByLabel("Password").waitFor();
   await context.close();
 }
 
