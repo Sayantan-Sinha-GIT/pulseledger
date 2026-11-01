@@ -8,8 +8,8 @@ const migrations = await readD1Migrations("./migrations");
 // relationship to the production owner password.
 const testPassword = randomBytes(18).toString("base64url");
 const salt = randomBytes(16);
-const hash = pbkdf2Sync(testPassword, salt, 210_000, 32, "sha256");
-const testHash = `pbkdf2-sha256$210000$${salt.toString("base64")}$${hash.toString("base64")}`;
+const hash = pbkdf2Sync(testPassword, salt, 100_000, 32, "sha256");
+const testHash = `pbkdf2-sha256$100000$${salt.toString("base64")}$${hash.toString("base64")}`;
 
 export default defineConfig({
   plugins: [

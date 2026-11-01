@@ -4,7 +4,8 @@ An uptime and incident dashboard for independently operated services. A public s
 page shows real checks, latency, uptime, and a plain-language incident record. A private
 owner desk manages HTTPS monitors, runs checks on demand, and writes incident updates.
 
-**Live:** _added after deployment_ · **Stack:** Cloudflare Workers · React 19 + Vite · D1
+**Live:** <https://pulseledger.srimantasutapa123.workers.dev> · **Stack:** Cloudflare
+Workers · React 19 + Vite · D1
 
 ![PulseLedger public status page](docs/screenshots/public-status-desktop.png)
 
@@ -65,7 +66,8 @@ external API key, and no third-party analytics.
 ### Security
 
 - Owner password is generated locally (`scripts/setup-local.mjs`) and stored only as a
-  PBKDF2-SHA256 hash (210,000 iterations) in the `ADMIN_PASSWORD_HASH` Worker secret.
+  PBKDF2-SHA256 hash (100,000 iterations, the Workers WebCrypto maximum) in the
+  `ADMIN_PASSWORD_HASH` Worker secret.
   The plaintext lives only in the gitignored `secrets/owner-credentials.txt`.
 - Server-side sessions in D1; only SHA-256 hashes of session tokens are stored. Cookies
   are `HttpOnly`, `SameSite=Strict`, `Secure`, and scoped to `/`.
@@ -147,7 +149,16 @@ that is then read back on the public page.
 
 Current results: typecheck clean, 66/66 Vitest tests passing, production build succeeds,
 8/8 desktop Playwright tests passing, 6/6 mobile Playwright tests passing (2 destructive
-mobile flows intentionally skipped), `npm audit` reports 0 vulnerabilities.
+mobile flows intentionally skipped), `npm audit` reports 0 vulnerabilities, and the
+secret scan passes on every tracked file.
+
+Live verification on 2026-11-01: the deployed cron fired in the 08:15 UTC slot and both
+seeded monitors recorded `scheduled` checks with HTTP 200 (59 ms and 61 ms). The live
+owner desk was exercised end to end with Playwright — monitor create/manual check/edit/
+pause/resume/remove with confirmation, plus an incident opened, updated, and resolved and
+read back on the public page — and every test-created row was deleted from the remote
+database afterward. The live public page has been audited at 1440×900 and 390×844 with no
+horizontal overflow.
 
 ## Deployment
 

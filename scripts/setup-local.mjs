@@ -10,7 +10,8 @@ import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const OWNER_EMAIL = "srimantasutapa123@gmail.com";
-const ITERATIONS = 210_000;
+// Workers WebCrypto rejects PBKDF2 counts above 100,000.
+const ITERATIONS = 100_000;
 const root = resolve(import.meta.dirname, "..");
 const devVarsPath = resolve(root, ".dev.vars");
 const credentialsDir = resolve(root, "secrets");

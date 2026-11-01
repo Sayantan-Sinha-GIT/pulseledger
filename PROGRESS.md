@@ -5,7 +5,7 @@ Last updated: 2026-11-01
 ## Decisions
 
 - Stack: Cloudflare Worker (TypeScript) serving a React 19 + Vite SPA from Workers Static Assets, with D1. One Worker, one origin, no external APIs or paid services.
-- Auth: single owner email + PBKDF2-SHA256 password hash stored as a Worker secret (`ADMIN_PASSWORD_HASH`). Server-side D1 sessions with HttpOnly/SameSite=Strict cookies, hashed tokens, CSRF token bound to each session, Origin/Sec-Fetch-Site checks, and D1-backed login rate limiting.
+- Auth: single owner email + PBKDF2-SHA256 password hash (100,000 iterations, the Workers WebCrypto maximum) stored as a Worker secret (`ADMIN_PASSWORD_HASH`). Server-side D1 sessions with HttpOnly/SameSite=Strict cookies, hashed tokens, CSRF token bound to each session, Origin/Sec-Fetch-Site checks, and D1-backed login rate limiting.
 - Checks: `fetch` with `redirect: "manual"`, 10 s AbortSignal timeout, HTTPS-only URL validation, 2xx/3xx success rules, one row per completed check, 15-minute cron slot dedupe, 30-day retention.
 - Dev workflow: `npm run build` + `wrangler dev` (single origin, mirrors production). E2E via Playwright against the built Worker.
 - Seeded monitors (verified live 2026-11-01: both returned HTTP 200):
@@ -19,14 +19,14 @@ Last updated: 2026-11-01
 2. Worker API: public status, auth/session/CSRF, monitor CRUD, manual checks, incidents, audit, cron — complete
 3. Public status page and admin UI, responsive editorial design — complete
 4. Tests (unit + integration + Playwright desktop/mobile), typecheck, build — complete
-5. Local scheduled-trigger verification, secret scan, GitHub private repo + CI — in progress
-6. Cloudflare D1 + Worker deployment, live public/admin verification, cleanup, README live URL — pending
+5. Local scheduled-trigger verification, secret scan, GitHub private repo + CI — complete
+6. Cloudflare D1 + Worker deployment, live public/admin verification, cleanup, README live URL — in progress
 
 ## Next three actions
 
-1. Commit the verified build, create the private GitHub repository, and push.
-2. Apply remote migrations, upload the password hash secret, and deploy the Worker.
-3. Verify live cron checks, owner sign-in, CRUD/incident flow, mobile/desktop UI, clean E2E records, and update README/PROGRESS.
+1. Commit and push the deployment fixes (PBKDF2 100k, overflow fix, E2E suite, live README).
+2. Verify GitHub Actions CI passes and re-run the secret scan on the pushed commit.
+3. Confirm the repository stays private for the owner's independent publication review.
 
 ## Feature ledger
 
@@ -53,13 +53,13 @@ Last updated: 2026-11-01
 | S3 | Worker /health endpoint | done | Returns ok + D1 status locally |
 | S4 | D1 migrations + indexes, reproducible local/remote apply | done | `0001_init.sql`, `0002_seed_monitors.sql`; reset script |
 | S5 | GitHub Actions CI: typecheck, tests, build, audit | done | `.github/workflows/ci.yml` |
-| S6 | README: architecture, screenshots, live URL, setup, deploy, limitations | in progress | README written; live URL pending |
+| S6 | README: architecture, screenshots, live URL, setup, deploy, limitations | done | README includes live URL and screenshots |
 | V1 | Unit/integration tests for status, URL safety, auth/CSRF, incidents, APIs | done | 66/66 Vitest tests pass |
 | V2 | Playwright E2E desktop + mobile | done | 8/8 desktop, 6/6 mobile (2 destructive mobile flows skipped) |
 | V3 | Local scheduled-trigger run | done | `/cdn-cgi/local/scheduled` returned ok; both monitors recorded HTTP 200 |
-| V4 | Live deployment, both monitors record fresh results | pending | |
-| V5 | Live owner sign-in + CRUD/incident flow, cleanup | pending | |
-| V6 | Live desktop/mobile UI audit, secret scan, private repo push | pending | |
+| V4 | Live deployment, both monitors record fresh results | done | Live cron slot 2026-11-01T08:15Z: both monitors `scheduled`/`up`/HTTP 200 (59 ms, 61 ms) |
+| V5 | Live owner sign-in + CRUD/incident flow, cleanup | done | Live Playwright flow passed; remote E2E rows removed |
+| V6 | Live desktop/mobile UI audit, secret scan, private repo push | in progress | Private repo pushed; live screenshots captured; commit/push of fixes pending |
 
 ## Blockers
 

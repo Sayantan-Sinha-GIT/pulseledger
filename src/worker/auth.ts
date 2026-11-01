@@ -90,7 +90,8 @@ export async function verifyPassword(
   const parts = stored.trim().split("$");
   if (parts.length !== 4 || parts[0] !== "pbkdf2-sha256") return false;
   const iterations = Number(parts[1]);
-  if (!Number.isInteger(iterations) || iterations < 100_000 || iterations > 1_000_000) {
+  // Workers WebCrypto supports PBKDF2 only up to 100,000 iterations.
+  if (!Number.isInteger(iterations) || iterations !== 100_000) {
     return false;
   }
   let salt: Uint8Array;

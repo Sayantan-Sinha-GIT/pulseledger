@@ -1,5 +1,5 @@
 # Local development secrets. This file is gitignored and never deployed.
 # Run `npm run setup:local` to generate a strong owner password and hash.
 OWNER_EMAIL="srimantasutapa123@gmail.com"
-ADMIN_PASSWORD_HASH="pbkdf2-sha256$210000$REPLACE_WITH_BASE64_SALT$REPLACE_WITH_BASE64_HASH"
+ADMIN_PASSWORD_HASH="pbkdf2-sha256$100000$REPLACE_WITH_BASE64_SALT$REPLACE_WITH_BASE64_HASH"
 ENVIRONMENT="development"
