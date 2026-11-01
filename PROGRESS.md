@@ -36,7 +36,7 @@ Last updated: 2026-11-01
 | P2 | Six distinct monitor states + incident-active | done | `deriveMonitorState`; state legend; Playwright label check |
 | P3 | Auto-refresh, manual refresh, last-updated, API failure/empty states | done | 60 s interval + Refresh now + alert/last-snapshot copy; Playwright refresh test |
 | P4 | Accessible responsive public page (keyboard, contrast, reduced motion, no overflow) | done | Skip link focus test; 390 px and 1440 px overflow checks; mobile detail-grid fix |
-| M1 | Haan and portfolio monitors seeded | in verification | `migrations/0002_seed_monitors.sql`, `0003_portfolio_monitors.sql`; live scheduled results pending |
+| M1 | Haan and portfolio monitors seeded | done | `migrations/0002_seed_monitors.sql`, `0003_portfolio_monitors.sql`; remote 13:45 UTC scheduled slot checked all 11, 11 HTTP 200 |
 | M2 | Check storage (time, status/error, duration, outcome), 2xx/3xx success | done | `checks` schema; real 200 checks recorded locally |
 | M3 | SSRF-safe HTTPS-only URL validation, bounded timeout, no redirect following | done | `src/shared/urlSafety.ts`; 10 s timeout; `redirect: "manual"` |
 | M4 | Idempotent scheduled checks, 30-day retention, manual check same path | done | Slot unique index + skip logic; `pruneOldData`; shared `runCheck` |
@@ -60,6 +60,7 @@ Last updated: 2026-11-01
 | V4 | Live deployment, both monitors record fresh results | done | Live cron slot 2026-11-01T08:15Z: both monitors `scheduled`/`up`/HTTP 200 (59 ms, 61 ms) |
 | V5 | Live owner sign-in + CRUD/incident flow, cleanup | done | Live Playwright flow passed; remote E2E rows removed |
 | V6 | Live desktop/mobile UI audit, secret scan, repository push | done | Live screenshots reviewed; mobile owner cards; secret scan passed; CI verified |
+| V7 | Portfolio expansion and live status verification | done | 11/11 scheduled checks up at 2026-11-01T13:45Z; manual Worker-to-Worker route fixed; 66 Vitest tests, 14 Playwright passes, 2 intentional mobile skips, zero audit findings; desktop/mobile screenshots reviewed |
 
 ## Blockers
 

@@ -168,7 +168,8 @@ StyleShopZ checks returned 404 only from Worker-to-Worker requests; Cloudflare's
 endpoints then returned HTTP 200 from PulseLedger. The failed checks remain in the
 real history, so StyleShopZ may temporarily appear degraded. Dispatch returned HTTP
 200 but its roughly six-second response crossed the configured slow threshold.
-The scheduled trigger still needs to be observed for all eleven endpoints.
+The 13:45 UTC scheduled slot recorded all eleven endpoints as up with HTTP 200.
+The dashboard preserves the later manual failures and slow responses in its history.
 
 ## Deployment
 
