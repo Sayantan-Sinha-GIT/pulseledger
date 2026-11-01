@@ -97,16 +97,18 @@ describe("owner monitor API", () => {
       method: "POST",
       body: {
         name: "Example status",
+        project: "Example",
         url: "https://example.com/health",
         expectedStatus: "200",
       },
     });
     expect(created.status).toBe(201);
     const createdBody = (await created.json()) as {
-      data: { monitor: { id: string; paused: number; expected_status: string } };
+      data: { monitor: { id: string; project: string; paused: number; expected_status: string } };
     };
     const id = createdBody.data.monitor.id;
     expect(createdBody.data.monitor.paused).toBe(0);
+    expect(createdBody.data.monitor.project).toBe("Example");
     expect(createdBody.data.monitor.expected_status).toBe("200");
 
     const paused = await adminRequest(`/api/admin/monitors/${id}`, session, {
@@ -121,7 +123,7 @@ describe("owner monitor API", () => {
 
     const edited = await adminRequest(`/api/admin/monitors/${id}`, session, {
       method: "PATCH",
-      body: { name: "Example status renamed" },
+      body: { name: "Example status renamed", project: "Example operations" },
     });
     expect(edited.status).toBe(200);
 
@@ -131,6 +133,7 @@ describe("owner monitor API", () => {
     };
     const row = listBody.data.monitors.find((monitor) => monitor.id === id);
     expect(row?.name).toBe("Example status renamed");
+    expect(row?.project).toBe("Example operations");
     expect(row?.state).toBe("paused");
 
     const removed = await adminRequest(`/api/admin/monitors/${id}`, session, {

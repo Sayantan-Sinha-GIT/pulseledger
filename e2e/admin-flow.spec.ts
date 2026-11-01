@@ -42,6 +42,7 @@ test.describe("owner monitor and incident lifecycle", () => {
     await editForm.getByRole("button", { name: "Save changes" }).click();
     await expect(page.getByRole("status")).toContainText("Monitor updated.");
     await expect(page.getByRole("heading", { name: renamed })).toBeVisible();
+    await expect(card.locator(".rule-note").first()).toHaveText("E2E checks");
 
     const editedCard = page
       .locator("article.monitor-card")
