@@ -306,12 +306,13 @@ async function createMonitor(
   const id = `mon_${crypto.randomUUID()}`;
   try {
     await env.DB.prepare(
-      `INSERT INTO monitors (id, name, url, expected_status, paused, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO monitors (id, name, project, url, expected_status, paused, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     )
       .bind(
         id,
         input.name,
+        input.project,
         input.url,
         input.expectedStatus,
         input.paused ? 1 : 0,
@@ -333,7 +334,7 @@ async function createMonitor(
     action: "monitor_created",
     targetType: "monitor",
     targetId: id,
-    detail: { name: input.name, url: input.url },
+    detail: { name: input.name, project: input.project, url: input.url },
   });
   const monitor = await env.DB.prepare("SELECT * FROM monitors WHERE id = ?")
     .bind(id)
@@ -356,6 +357,7 @@ async function updateMonitor(
   const input = validateMonitorInput(await readJson(request), { partial: true });
   const next = {
     name: input.name ?? existing.name,
+    project: input.project ?? existing.project,
     url: input.url ?? existing.url,
     expectedStatus: input.expectedStatus ?? existing.expected_status,
     paused: input.paused === undefined ? existing.paused : input.paused ? 1 : 0,
@@ -376,11 +378,12 @@ async function updateMonitor(
 
   try {
     await env.DB.prepare(
-      `UPDATE monitors SET name = ?, url = ?, expected_status = ?, paused = ?, updated_at = ?
+      `UPDATE monitors SET name = ?, project = ?, url = ?, expected_status = ?, paused = ?, updated_at = ?
        WHERE id = ?`,
     )
       .bind(
         next.name,
+        next.project,
         next.url,
         next.expectedStatus,
         next.paused,

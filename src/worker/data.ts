@@ -146,6 +146,7 @@ export async function loadMonitorViews(
     return {
       id: monitor.id,
       name: monitor.name,
+      project: monitor.project,
       url: monitor.url,
       expectedStatus: monitor.expected_status,
       paused: monitor.paused === 1,

@@ -11,7 +11,7 @@ import type {
 } from "./types";
 
 export const RETENTION_DAYS = 30;
-export const MAX_MONITORS = 10;
+export const MAX_MONITORS = 12;
 export const CHECK_INTERVAL_MINUTES = 15;
 export const CHECK_TIMEOUT_MS = 10_000;
 export const PUBLIC_REFRESH_SECONDS = 60;
@@ -100,6 +100,7 @@ export function deriveOverallState(states: MonitorState[]): OverallState {
   if (states.includes("incident")) return "incident";
   if (states.includes("down")) return "down";
   if (states.includes("degraded")) return "degraded";
+  if (states.includes("unknown")) return "unknown";
   const observed = states.filter(
     (state) => state !== "unknown" && state !== "paused",
   );
@@ -118,7 +119,7 @@ export function overallHeadline(state: OverallState): string {
     case "incident":
       return "An incident is active.";
     default:
-      return "Awaiting first checks.";
+      return "Awaiting service checks.";
   }
 }
 

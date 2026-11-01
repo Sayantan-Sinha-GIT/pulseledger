@@ -51,7 +51,7 @@ function heroLede(state: OverallState): string {
     case "degraded":
       return "At least one service is responding slowly or failing intermittently.";
     default:
-      return "PulseLedger is waiting for the first completed checks. No uptime is invented.";
+      return "One or more services await their first completed check. No uptime is invented.";
   }
 }
 
@@ -133,6 +133,9 @@ export function StatusPage() {
   const activeCount = data?.monitors.filter((monitor) => !monitor.paused).length ?? 0;
   const activeIncidents =
     data?.incidents.filter((incident) => incident.status !== "resolved") ?? [];
+  const projects = data
+    ? Array.from(new Set(data.monitors.map((monitor) => monitor.project)))
+    : [];
 
   return (
     <div className="public-shell">
@@ -234,7 +237,7 @@ export function StatusPage() {
                   <h2 id="services-heading">What is being watched</h2>
                 </div>
                 <p className="section-meta">
-                  {data.monitors.length} monitor{data.monitors.length === 1 ? "" : "s"} ·
+                  {projects.length} project{projects.length === 1 ? "" : "s"} · {data.monitors.length} monitor{data.monitors.length === 1 ? "" : "s"} ·
                   checks every {data.meta.checkIntervalMinutes} minutes · 30-day retention
                 </p>
               </div>
@@ -249,14 +252,28 @@ export function StatusPage() {
                   </p>
                 </div>
               ) : (
-                <div className="service-list">
-                  {data.monitors.map((monitor) => (
-                    <ServiceRow
-                      key={monitor.id}
-                      monitor={monitor}
-                      timeoutMs={data.meta.timeoutMs}
-                    />
-                  ))}
+                <div className="project-list">
+                  <nav className="project-index" aria-label="Jump to project">
+                    {projects.map((project, index) => (
+                      <a href={`#project-${index}`} key={project}>{project}</a>
+                    ))}
+                  </nav>
+                  {projects.map((project, index) => {
+                    const projectMonitors = data.monitors.filter((monitor) => monitor.project === project);
+                    return (
+                      <section id={`project-${index}`} className="project-group" key={project} aria-label={`${project} status`}>
+                        <div className="project-heading">
+                          <h3>{project}</h3>
+                          <span>{projectMonitors.length} endpoint{projectMonitors.length === 1 ? "" : "s"}</span>
+                        </div>
+                        <div className="service-list">
+                          {projectMonitors.map((monitor) => (
+                            <ServiceRow key={monitor.id} monitor={monitor} timeoutMs={data.meta.timeoutMs} />
+                          ))}
+                        </div>
+                      </section>
+                    );
+                  })}
                 </div>
               )}
             </section>

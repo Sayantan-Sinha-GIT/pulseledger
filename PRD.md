@@ -2,7 +2,11 @@
 
 ## Purpose
 
-Build and deploy a production-quality uptime and incident dashboard for an independent developer or small team. It must be genuinely useful to this owner: monitor the Haan public website and Worker API, make failures visible, and let the owner manage monitors and incidents. The final public GitHub repository should demonstrate thoughtful product design, secure full-stack engineering, automated checks, and a real live deployment. This PRD overrides PLAYBOOK.txt wherever they differ.
+Build and deploy a production-quality uptime and incident dashboard for an independent developer or small team. It must be genuinely useful to this owner: monitor public endpoints for Haan and the owner's other deployed projects, make failures visible, and let the owner manage monitors and incidents. The final public GitHub repository should demonstrate thoughtful product design, secure full-stack engineering, automated checks, and a real live deployment. This PRD overrides PLAYBOOK.txt wherever they differ.
+
+## Portfolio scope update (2026-11-01)
+
+Monitor the publicly reachable websites and available health/version endpoints for Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch. Group endpoints by editable project label and show those groups on the public page. The CodeSense demo repository is a sample shop; its deployed review service is the monitored product. Each HTTP check proves only the response of that exact endpoint, not an entire application's user journey. Keep a 12-monitor cap, leaving one spare slot.
 
 ## Users and jobs
 
@@ -30,7 +34,7 @@ Build and deploy a production-quality uptime and incident dashboard for an indep
 
 ### Monitoring
 
-- Seed two monitors: `https://haan-kolkata-pilot.pages.dev/` and `https://haan-api.srimantasutapa123.workers.dev/health`. Verify both responses before seeding. If one is unavailable, keep it but reflect actual state.
+- Seed `https://haan-kolkata-pilot.pages.dev/` and `https://haan-api.srimantasutapa123.workers.dev/health`, then add the verified live portfolio endpoints. If one is unavailable, keep it but reflect actual state.
 - Store each completed check with timestamp, HTTP status or network error category, duration, and outcome. A successful check requires a 2xx or 3xx status. Timeouts and failures are down.
 - Set a bounded timeout and do not follow arbitrary redirects to non-HTTPS or private hosts. Validate monitor URLs to avoid SSRF and reject local/private IPs, credentials in URLs, and non-HTTPS schemes.
 - Scheduled checks are idempotent enough to tolerate retries and overlap. Bound retention (e.g. 30 days) and document it. Manual check must use the same check logic and appear in history.
@@ -62,7 +66,7 @@ An editorial operations desk: precise, calm, human-readable, and trustworthy. Gi
 
 - Automated tests cover status calculation, URL safety, authentication/session and CSRF behavior, incident lifecycle, and API responses. Meaningful tests, not snapshots of implementation.
 - Run typecheck, unit/integration tests, production build, and an end-to-end browser test for desktop and mobile.
-- Run a scheduled-trigger check locally, then check that the live deployment records fresh results from both Haan monitors. Verify owner sign-in and at least one CRUD/incident flow live, then clean up test incidents/monitors.
+- Run a scheduled-trigger check locally, then check that the live deployment records fresh results from the portfolio monitors. Verify owner sign-in and at least one CRUD/incident flow live, then clean up test incidents/monitors.
 - Audit the live UI on a desktop and mobile viewport, fix material issues, confirm once. Verify no secrets in git and no credentials in client bundle.
 - Record actual test results and any remaining limitations in README. Do not claim a feature works without a live check.
 

@@ -163,6 +163,10 @@ export async function runScheduledChecks(
   const { results: monitors } = await env.DB.prepare(
     "SELECT * FROM monitors WHERE paused = 0 ORDER BY created_at ASC",
   ).all<MonitorRow>();
+  const { results: existingRows } = await env.DB.prepare(
+    "SELECT monitor_id FROM checks WHERE slot = ?",
+  ).bind(slot).all<{ monitor_id: string }>();
+  const existingIds = new Set(existingRows.map((row) => row.monitor_id));
 
   let checked = 0;
   let skipped = 0;
@@ -173,12 +177,7 @@ export async function runScheduledChecks(
     const batch = monitors.slice(index, index + concurrency);
     const results = await Promise.allSettled(
       batch.map(async (monitor) => {
-        const existing = await env.DB.prepare(
-          "SELECT 1 AS present FROM checks WHERE monitor_id = ? AND slot = ?",
-        )
-          .bind(monitor.id, slot)
-          .first<{ present: number }>();
-        if (existing) return "skipped" as const;
+        if (existingIds.has(monitor.id)) return "skipped" as const;
         const result = await runCheck(env, monitor, "scheduled", slot);
         return result.check.outcome === "up" ? ("up" as const) : ("down" as const);
       }),

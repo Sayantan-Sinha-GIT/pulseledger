@@ -128,6 +128,7 @@ export const api = {
 
   createMonitor(input: {
     name: string;
+      project?: string;
     url: string;
     expectedStatus: string;
     paused?: boolean;
@@ -140,7 +141,7 @@ export const api = {
 
   updateMonitor(
     id: string,
-    input: { name?: string; url?: string; expectedStatus?: string; paused?: boolean },
+      input: { name?: string; project?: string; url?: string; expectedStatus?: string; paused?: boolean },
   ) {
     return request<{ monitor: MonitorRow }>(`/api/admin/monitors/${id}`, {
       method: "PATCH",

@@ -171,6 +171,7 @@ describe("overall state", () => {
     expect(deriveOverallState(["operational", "down"])).toBe("down");
     expect(deriveOverallState(["operational", "degraded"])).toBe("degraded");
     expect(deriveOverallState(["paused", "unknown"])).toBe("unknown");
+    expect(deriveOverallState(["operational", "unknown"])).toBe("unknown");
     expect(deriveOverallState([])).toBe("unknown");
     expect(deriveOverallState(["operational", "paused"])).toBe("operational");
   });

@@ -17,6 +17,7 @@ test.describe("owner monitor and incident lifecycle", () => {
     const renamed = "[E2E] Example service edited";
 
     const addPanel = page.locator("section[aria-labelledby='add-monitor']");
+    await addPanel.getByLabel("Project").fill("E2E");
     await addPanel.getByLabel("Name").fill(name);
     await addPanel.getByLabel("URL").fill("https://example.com/");
     await addPanel.getByLabel("Success rule").selectOption("2xx_3xx");
@@ -36,6 +37,7 @@ test.describe("owner monitor and incident lifecycle", () => {
 
     await card.getByRole("button", { name: "Edit" }).click();
     const editForm = card.locator("form.inline-edit");
+    await editForm.getByLabel("Project").fill("E2E checks");
     await editForm.getByLabel("Name").fill(renamed);
     await editForm.getByRole("button", { name: "Save changes" }).click();
     await expect(page.getByRole("status")).toContainText("Monitor updated.");

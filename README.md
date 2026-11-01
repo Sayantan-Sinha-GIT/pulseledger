@@ -11,7 +11,8 @@ Workers · React 19 + Vite · D1
 
 ## What it does
 
-- Checks the two seeded Haan services every 15 minutes with a real HTTPS request.
+- Checks 11 endpoints across Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch every 15 minutes with real HTTPS requests.
+- Groups endpoints by project. A successful response proves reachability of the named URL, not the whole product's business flow.
 - Publishes six distinct states: operational, degraded, down, paused, unknown, and
   incident-active. A new monitor stays unknown until its first completed check.
 - Computes uptime and latency only from stored checks. No sample data, back-filled
@@ -37,8 +38,8 @@ Workers · React 19 + Vite · D1
                 │                              │
         ┌───────▼────────┐             ┌───────▼────────┐
         │ D1 database    │             │ HTTPS monitors │
-        │ monitors       │             │ Haan website   │
-        │ checks         │             │ Haan API       │
+        │ monitors       │             │ 6 projects     │
+        │ checks         │             │ 11 endpoints   │
         │ incidents      │             └────────────────┘
         │ sessions       │
         │ audit_log      │
@@ -61,7 +62,7 @@ external API key, and no third-party analytics.
 - Checks are retained for 30 days. Sessions expire after 12 hours. Audit entries are
   retained for 180 days. Resolved incidents remain in D1 but leave the public log after
   30 days.
-- Maximum 10 monitors, documented and enforced server-side.
+- Maximum 12 monitors, documented and enforced server-side; one slot is free for another endpoint.
 
 ### Security
 
@@ -160,6 +161,15 @@ read back on the public page — and every test-created row was deleted from the
 database afterward. The live public page has been audited at 1440×900 and 390×844 with no
 horizontal overflow.
 
+Portfolio expansion verification on 2026-11-01: remote D1 migration added nine
+endpoints and the live owner desk completed manual checks for each one. Two initial
+StyleShopZ checks returned 404 only from Worker-to-Worker requests; Cloudflare's
+`global_fetch_strictly_public` compatibility flag corrected the route, and both
+endpoints then returned HTTP 200 from PulseLedger. The failed checks remain in the
+real history, so StyleShopZ may temporarily appear degraded. Dispatch returned HTTP
+200 but its roughly six-second response crossed the configured slow threshold.
+The scheduled trigger still needs to be observed for all eleven endpoints.
+
 ## Deployment
 
 1. Authenticate Wrangler and create the D1 database:
@@ -186,7 +196,7 @@ horizontal overflow.
    ```
 
 5. Confirm `https://<worker>.workers.dev/health` returns `{"status":"ok"}`, wait for the
-   next 15-minute cron, and confirm both seeded monitors have fresh checks in
+   next 15-minute cron, and confirm the seeded monitors have fresh checks in
    `/api/status`. The scheduled trigger can also be inspected with `npx wrangler tail`.
 
 6. Sign in at `/admin` with the generated owner credentials, run one manual check, and
@@ -195,7 +205,7 @@ horizontal overflow.
 ## Limitations
 
 - Single owner account; there is no team or role model.
-- Cloudflare Workers Free plan limits and D1 row limits apply. The ten-monitor cap and
+- Cloudflare Workers Free plan limits and D1 row limits apply. The twelve-monitor cap and
   30-day check retention keep usage bounded.
 - Checks originate from Cloudflare's network only. They are not independent
   multi-region probes and cannot detect a problem isolated to one user's network.
@@ -205,6 +215,10 @@ horizontal overflow.
 - Resolved incidents older than 30 days leave the public log; incident rows are retained
   in D1 unless manually cleaned.
 - Manual checks are synchronous and share the same 10-second timeout as scheduled checks.
+- An HTTP 200 on a page or health endpoint does not verify sign-in, checkout, AI review,
+  database operations, or other private product flows. PulseLedger observes only its
+  configured public URLs. The CodeSense demo repository is separate from the deployed
+  CodeSense review service checked here.
 
 ## License
 

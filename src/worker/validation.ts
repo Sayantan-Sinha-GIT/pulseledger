@@ -52,6 +52,7 @@ function text(
 
 export interface MonitorInput {
   name?: string;
+  project?: string;
   url?: string;
   expectedStatus?: ExpectedStatus;
   paused?: boolean;
@@ -66,6 +67,11 @@ export function validateMonitorInput(
 
   if (input.name !== undefined || !options.partial) {
     result.name = text(input.name, "name", "Name", 1, 60);
+  }
+  if (input.project !== undefined) {
+    result.project = text(input.project, "project", "Project", 1, 40);
+  } else if (!options.partial) {
+    result.project = "Other";
   }
   if (input.url !== undefined || !options.partial) {
     const validation = validateMonitorUrl(input.url);

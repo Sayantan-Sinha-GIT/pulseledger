@@ -68,6 +68,6 @@ export async function capture(
 /** Local-only: ask the dev server to run the real scheduled handler once. */
 export async function triggerLocalSchedule(page: Page): Promise<void> {
   if (process.env.E2E_BASE_URL) return;
-  const response = await page.request.get("/cdn-cgi/local/scheduled");
+  const response = await page.request.get("/cdn-cgi/local/scheduled", { timeout: 55_000 });
   expect(response.ok()).toBe(true);
 }

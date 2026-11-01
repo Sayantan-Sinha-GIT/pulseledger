@@ -682,6 +682,50 @@ li {
 
 /* ---------- Services ---------- */
 
+.project-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0 0 30px;
+}
+
+.project-index a {
+  font-family: var(--mono);
+  font-size: 0.73rem;
+  color: var(--teal);
+  text-underline-offset: 3px;
+}
+
+.project-index a:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 4px;
+}
+
+.project-group + .project-group {
+  margin-top: clamp(34px, 5vw, 62px);
+}
+
+.project-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 11px;
+}
+
+.project-heading h3 {
+  font-family: var(--serif);
+  font-size: clamp(1.55rem, 2.8vw, 2.15rem);
+  line-height: 1.15;
+}
+
+.project-heading span {
+  font-family: var(--mono);
+  color: var(--ink-faint);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
 .service-list {
   border-bottom: 1px solid var(--rule);
 }

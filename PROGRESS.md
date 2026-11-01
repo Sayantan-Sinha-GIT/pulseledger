@@ -12,6 +12,7 @@ Last updated: 2026-11-01
   - https://haan-kolkata-pilot.pages.dev/
   - https://haan-api.srimantasutapa123.workers.dev/health
 - Worker name `pulseledger`; D1 `pulseledger-db` (`82814e6f-e3fe-420e-b7c0-1cf9df759f8e`, APAC).
+- Portfolio expansion: nine additional HTTP 200 endpoints across StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch, for 11 monitors in six project groups. HTTP checks establish only endpoint reachability; they cannot prove full application health. Same-zone StyleShopZ probes initially returned 404 and were corrected with Cloudflare's `global_fetch_strictly_public` compatibility flag; live manual checks then returned 200. Dispatch returned 200 slowly and is visibly degraded.
 
 ## Phases
 
@@ -35,7 +36,7 @@ Last updated: 2026-11-01
 | P2 | Six distinct monitor states + incident-active | done | `deriveMonitorState`; state legend; Playwright label check |
 | P3 | Auto-refresh, manual refresh, last-updated, API failure/empty states | done | 60 s interval + Refresh now + alert/last-snapshot copy; Playwright refresh test |
 | P4 | Accessible responsive public page (keyboard, contrast, reduced motion, no overflow) | done | Skip link focus test; 390 px and 1440 px overflow checks; mobile detail-grid fix |
-| M1 | Two verified Haan monitors seeded | done | `migrations/0002_seed_monitors.sql`; both checked live 2026-11-01 |
+| M1 | Haan and portfolio monitors seeded | in verification | `migrations/0002_seed_monitors.sql`, `0003_portfolio_monitors.sql`; live scheduled results pending |
 | M2 | Check storage (time, status/error, duration, outcome), 2xx/3xx success | done | `checks` schema; real 200 checks recorded locally |
 | M3 | SSRF-safe HTTPS-only URL validation, bounded timeout, no redirect following | done | `src/shared/urlSafety.ts`; 10 s timeout; `redirect: "manual"` |
 | M4 | Idempotent scheduled checks, 30-day retention, manual check same path | done | Slot unique index + skip logic; `pruneOldData`; shared `runCheck` |
@@ -50,7 +51,7 @@ Last updated: 2026-11-01
 | S1 | No secrets in git, .dev.vars.example, setup guide | done | Ignore rules; secret scan script; README setup |
 | S2 | CSP + security headers, same-origin CORS, prepared SQL | done | `securityHeaders`; live local header check |
 | S3 | Worker /health endpoint | done | Returns ok + D1 status locally |
-| S4 | D1 migrations + indexes, reproducible local/remote apply | done | `0001_init.sql`, `0002_seed_monitors.sql`; reset script |
+| S4 | D1 migrations + indexes, reproducible local/remote apply | done | `0001_init.sql` through `0003_portfolio_monitors.sql`; reset script |
 | S5 | GitHub Actions CI: typecheck, tests, build, audit | done | `.github/workflows/ci.yml` |
 | S6 | README: architecture, screenshots, live URL, setup, deploy, limitations | done | README includes live URL and screenshots |
 | V1 | Unit/integration tests for status, URL safety, auth/CSRF, incidents, APIs | done | 66/66 Vitest tests pass |

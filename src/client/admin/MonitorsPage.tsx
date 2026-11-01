@@ -12,17 +12,19 @@ import {
   hostOf,
 } from "../format";
 import type { AdminMonitorView, CheckRow, ExpectedStatus } from "../../shared/types";
-import { formatUptime } from "../../shared/status";
+import { formatUptime, MAX_MONITORS } from "../../shared/status";
 import { ConfirmDialog, FieldError, LoadingBlock, Notice } from "./ui";
 
 interface MonitorFormState {
   name: string;
+  project: string;
   url: string;
   expectedStatus: ExpectedStatus;
 }
 
 const EMPTY_FORM: MonitorFormState = {
   name: "",
+  project: "",
   url: "",
   expectedStatus: "2xx_3xx",
 };
@@ -80,6 +82,7 @@ export function MonitorsPage() {
     try {
       await api.createMonitor({
         name: form.name,
+        project: form.project,
         url: form.url,
         expectedStatus: form.expectedStatus,
       });
@@ -104,6 +107,7 @@ export function MonitorsPage() {
     setEditErrors({});
     setEditForm({
       name: monitor.name,
+      project: monitor.project,
       url: monitor.url,
       expectedStatus: monitor.expectedStatus,
     });
@@ -244,10 +248,17 @@ export function MonitorsPage() {
             <h2 id="add-monitor">Add an HTTPS service</h2>
           </div>
           <p className="panel-note">
-            Maximum 10 monitors. First state is unknown until a check completes.
+            Maximum {MAX_MONITORS} monitors. First state is unknown until a check completes.
           </p>
         </div>
         <form className="form-grid" onSubmit={createMonitor} noValidate>
+          <label className="field">
+            <span className="field-label">Project</span>
+            <input type="text" value={form.project} maxLength={40} required
+              onChange={(event) => setForm({ ...form, project: event.target.value })}
+              placeholder="CodeSense" aria-invalid={Boolean(formErrors.project)} />
+            <FieldError message={formErrors.project} />
+          </label>
           <label className="field">
             <span className="field-label">Name</span>
             <input
@@ -334,6 +345,7 @@ export function MonitorsPage() {
                         {monitor.state}
                       </span>
                       <h3>{monitor.name}</h3>
+                      <span className="rule-note">{monitor.project}</span>
                       <a
                         className="service-url"
                         href={monitor.url}
@@ -437,6 +449,13 @@ export function MonitorsPage() {
                     >
                       <h4>Edit monitor</h4>
                       <div className="form-grid">
+                        <label className="field">
+                          <span className="field-label">Project</span>
+                          <input type="text" value={editForm.project} maxLength={40}
+                            onChange={(event) => setEditForm({ ...editForm, project: event.target.value })}
+                            aria-invalid={Boolean(editErrors.project)} />
+                          <FieldError message={editErrors.project} />
+                        </label>
                         <label className="field">
                           <span className="field-label">Name</span>
                           <input

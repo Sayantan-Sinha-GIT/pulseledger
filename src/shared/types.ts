@@ -44,6 +44,7 @@ export type IncidentStatus =
 export interface MonitorRow {
   id: string;
   name: string;
+  project: string;
   url: string;
   expected_status: ExpectedStatus;
   paused: number;
@@ -131,6 +132,7 @@ export interface DailyBucket {
 export interface MonitorView {
   id: string;
   name: string;
+  project: string;
   url: string;
   expectedStatus: ExpectedStatus;
   paused: boolean;

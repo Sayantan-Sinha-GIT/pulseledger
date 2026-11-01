@@ -9,11 +9,16 @@ test.describe("public status page", () => {
   test("shows real checks, uptime, and expandable check history", async ({
     page,
   }) => {
+    test.setTimeout(90_000);
     await page.goto("/");
 
     await expect(page).toHaveTitle(/PulseLedger/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator(".service")).toHaveCount(2);
+    await expect(page.locator(".service")).toHaveCount(11);
+    await expect(page.locator(".project-group")).toHaveCount(6);
+    await expect(page.getByRole("navigation", { name: "Jump to project" }).getByRole("link")).toHaveCount(6);
+    await expect(page.getByRole("heading", { name: "CodeSense", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "StyleShopZ", exact: true })).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Haan website", exact: true }),
     ).toBeVisible();
@@ -23,7 +28,7 @@ test.describe("public status page", () => {
 
     // Both seeded services answered their real check, so no state may be unknown.
     await expect(page.locator(".service .state-unknown")).toHaveCount(0);
-    await expect(page.locator(".service-strip .day")).toHaveCount(60);
+    await expect(page.locator(".service-strip .day")).toHaveCount(330);
 
     // Last-check text must describe a recorded result, not a placeholder.
     const service = page.locator(".service").first();
@@ -80,7 +85,7 @@ test.describe("public status page", () => {
     page,
   }) => {
     await page.goto("/");
-    await expect(page.locator(".service")).toHaveCount(2);
+    await expect(page.locator(".service")).toHaveCount(11);
     await expectNoHorizontalOverflow(page);
 
     const first = page.locator(".service").first();

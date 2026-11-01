@@ -19,14 +19,14 @@ describe("public status API", () => {
     const data = await status();
     expect(data.monitors).toHaveLength(2);
     expect(data.overall).toBe("unknown");
-    expect(data.headline).toBe("Awaiting first checks.");
+    expect(data.headline).toBe("Awaiting service checks.");
     expect(data.monitors.every((monitor) => monitor.state === "unknown")).toBe(true);
     expect(data.monitors.every((monitor) => monitor.lastCheck === null)).toBe(true);
     expect(data.monitors.every((monitor) => monitor.uptime.h24.percent === null)).toBe(true);
     expect(data.incidents).toEqual([]);
     expect(data.meta.retentionDays).toBe(30);
     expect(data.meta.checkIntervalMinutes).toBe(15);
-    expect(data.meta.maxMonitors).toBe(10);
+    expect(data.meta.maxMonitors).toBe(12);
     expect(data.monitors[0].url).toMatch(/^https:\/\//);
   });
 
@@ -156,7 +156,7 @@ describe("owner monitor API", () => {
 
   it("enforces the documented monitor limit", async () => {
     const session = await login();
-    for (let index = 0; index < 8; index += 1) {
+    for (let index = 0; index < 10; index += 1) {
       const response = await adminRequest("/api/admin/monitors", session, {
         method: "POST",
         body: { name: `Extra ${index}`, url: `https://example${index}.com/` },
