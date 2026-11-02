@@ -93,4 +93,35 @@ test.describe("public status page", () => {
     await expect(first.locator(".service-detail")).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });
+
+  test("preserves anchor navigation offsets clear of the sticky masthead", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const mastheadBox = await page.locator(".masthead").boundingBox();
+    const mastheadBottom = (mastheadBox?.y ?? 0) + (mastheadBox?.height ?? 0);
+
+    // Test Launch Signal Probe CTA
+    await page.locator(".jump-probe-btn").click();
+    await page.waitForFunction(() => {
+      return new Promise((resolve) => {
+        let lastPos = window.scrollY;
+        const check = () => {
+          setTimeout(() => {
+            if (Math.abs(window.scrollY - lastPos) < 2) resolve(true);
+            else { lastPos = window.scrollY; check(); }
+          }, 80);
+        };
+        check();
+      });
+    }, { timeout: 10000 });
+
+    const probeBox = await page.locator("#probe").boundingBox();
+    expect(probeBox).not.toBeNull();
+    expect(probeBox!.y).toBeGreaterThanOrEqual(mastheadBottom);
+
+    const headingBox = await page.locator("#probe-heading").boundingBox();
+    expect(headingBox).not.toBeNull();
+    expect(headingBox!.y).toBeGreaterThan(mastheadBottom + 10);
+  });
 });

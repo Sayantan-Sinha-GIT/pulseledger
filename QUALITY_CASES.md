@@ -43,3 +43,4 @@
 | TC-ACC-03 | REQ-RESPONSIVE-ACCESSIBILITY | must | 3 | Prefers-reduced-motion halts continuous animation loops | Reduced motion query disables canvas loop and shows static frame | Playwright reduced-motion inspection | Static frame rendered 0 anim loops | passed | docs/motion-review/round5-reduced-motion-desktop.png |
 | TC-ART-01 | REQ-PORTFOLIO-MONITORS | artifact | 1 | Portfolio seed migration contains 11 verified endpoints | Migration SQL seeds 11 endpoints across 6 projects | SQL migration inspection | 11 monitors configured | passed | migrations/0003_portfolio_monitors.sql |
 | TC-ART-02 | REQ-DEPLOY-CONFIG | artifact | 1 | Cloudflare Worker configuration and security headers | Wrangler config declares D1 binding static assets and CSP headers | Wrangler JSONC and security headers check | All security headers declared | passed | wrangler.jsonc |
+

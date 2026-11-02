@@ -21,7 +21,8 @@ Last updated: 2026-11-02
 2. Implementation: Living background canvas, choreographed hero, interactive probe sandbox, redesigned fleet matrix and incident ledger — complete
 3. Six visual & motion review rounds (Composition, Interaction, Craft, Release, Motion Performance, Final Visual Comparison) documented in `UI_REVIEW.md` and `MOTION_REVIEW.md` — complete
 4. Bounded testing loop: Executed 3 iterations with frozen CORE suite in `QUALITY_CASES.md` and `REGRESSION_RUNS.md`, validated with `CHECK_QUALITY_CASES.ps1` — complete (QUALITY GATE: READY, 41 cases)
-5. Production verification & deployment: Deploy to Cloudflare Workers, verify live public endpoint, run secret scan, commit and push to GitHub — in progress
+5. Production verification & deployment: Deploy to Cloudflare Workers, verify live public endpoint, run secret scan, commit and push to GitHub — complete
+6. Live QA Navigation Fix: Corrected anchor offsets (`scroll-margin-top: 104px` desktop, `180px` mobile) for `#probe`, `#services`, `#project-*`, `#incidents`, `#method`; added automated Playwright regression test; redeployed and verified live — complete
 
 ## Feature Ledger
 

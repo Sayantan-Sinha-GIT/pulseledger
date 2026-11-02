@@ -88,3 +88,4 @@ PulseLedger is an independent uptime and incident operations desk. Its visual me
 - **Offscreen Throttling**: Particle/radar canvas pauses rendering when not in viewport (`IntersectionObserver`).
 - **Tab Background Throttling**: Animation loops cancel when document is hidden (`document.visibilityState === "hidden"`).
 - **Bundle Size**: Pure vanilla TypeScript/React + SVG + HTML5 Canvas. Zero heavy 3D or bloated third-party animation libraries added.
+

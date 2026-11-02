@@ -1642,7 +1642,15 @@ li {
   box-shadow: 0 0 26px rgba(0, 229, 153, 0.55);
 }
 
-/* Sections */
+/* Sections & Navigation Anchor Offsets (Accounting for Sticky Masthead) */
+.telemetric-world .section,
+.telemetric-world #probe,
+.telemetric-world .probe-sandbox,
+.telemetric-world .project-group,
+.telemetric-world [id] {
+  scroll-margin-top: 104px;
+}
+
 .telemetric-world .section {
   border-bottom: 1px solid var(--tele-border);
   padding: clamp(40px, 6vw, 68px) 0;
@@ -2370,6 +2378,13 @@ li {
 }
 
 @media (max-width: 680px) {
+  .telemetric-world .section,
+  .telemetric-world #probe,
+  .telemetric-world .probe-sandbox,
+  .telemetric-world .project-group,
+  .telemetric-world [id] {
+    scroll-margin-top: 180px;
+  }
   .telemetric-world .stage-telemetry-breakdown {
     grid-template-columns: repeat(2, 1fr);
   }
