@@ -12,7 +12,9 @@ Workers · React 19 + Vite · D1
 ## What it does
 
 - Checks 11 endpoints across Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch every 15 minutes with real HTTPS requests.
-- Groups endpoints by project. A successful response proves reachability of the named URL, not the whole product's business flow.
+- Living telemetric signal world: background telemetry canvas, choreographed hero sequence with live status heartbeat aura, and four distinct scroll chapters.
+- Interactive Signal Probe sandbox: real-time edge check simulation (DNS, TLS, HTTP, validation, D1 commit) with live oscilloscope waveform visualization.
+- Groups endpoints by project with instant filter pills. A successful response proves reachability of the named URL, not the whole product's business flow.
 - Publishes six distinct states: operational, degraded, down, paused, unknown, and
   incident-active. A new monitor stays unknown until its first completed check.
 - Computes uptime and latency only from stored checks. No sample data, back-filled

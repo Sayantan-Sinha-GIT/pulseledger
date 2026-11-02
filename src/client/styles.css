@@ -51,6 +51,11 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body:has(.telemetric-world) {
+  background: #070a10;
+  color: #f8fafc;
+}
+
 ::selection {
   background: var(--teal);
   color: var(--paper-raised);
@@ -1328,6 +1333,1058 @@ li {
 
 .login-form .button {
   width: 100%;
+}
+
+/* ==========================================================================
+   TELEMETRIC SIGNAL WORLD (Public Operations Desk Redesign)
+   ========================================================================== */
+
+.telemetric-world {
+  --tele-bg: #070a10;
+  --tele-surface: rgba(14, 21, 36, 0.72);
+  --tele-surface-solid: #0e1524;
+  --tele-surface-sunken: #090e17;
+  --tele-surface-raised: #141e33;
+  --tele-border: rgba(148, 163, 184, 0.14);
+  --tele-border-glow: rgba(0, 229, 153, 0.35);
+  --tele-emerald: #00e599;
+  --tele-emerald-glow: rgba(0, 229, 153, 0.4);
+  --tele-cyan: #00d4ff;
+  --tele-cyan-glow: rgba(0, 212, 255, 0.4);
+  --tele-amber: #fbbf24;
+  --tele-amber-glow: rgba(251, 191, 36, 0.4);
+  --tele-rose: #f43f5e;
+  --tele-rose-glow: rgba(244, 63, 94, 0.4);
+  --tele-text: #f8fafc;
+  --tele-text-soft: #94a3b8;
+  --tele-text-faint: #64748b;
+  position: relative;
+  z-index: 1;
+  color: var(--tele-text);
+  min-height: 100vh;
+}
+
+/* Background canvas */
+.telemetry-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Masthead */
+.telemetric-world .masthead {
+  border-bottom: 1px solid var(--tele-border);
+  padding: 16px 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(7, 10, 16, 0.75);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.telemetric-world .masthead-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.telemetric-world .brand-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tele-emerald);
+  box-shadow: 0 0 10px var(--tele-emerald);
+  animation: pulseDot 2.4s infinite ease-in-out;
+}
+
+.telemetric-world .wordmark {
+  color: var(--tele-text);
+  font-family: var(--sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.telemetric-world .wordmark span {
+  color: var(--tele-emerald);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.telemetric-world .telemetry-badge {
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  color: var(--tele-text-soft);
+}
+
+.telemetric-world .masthead-nav a {
+  color: var(--tele-text-soft);
+  transition: color 150ms ease;
+}
+
+.telemetric-world .masthead-nav a:hover {
+  color: var(--tele-cyan);
+  text-decoration: none;
+}
+
+.telemetric-world .masthead-nav .owner-link {
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: var(--tele-text);
+  border-radius: 4px;
+  transition: all 180ms ease;
+}
+
+.telemetric-world .masthead-nav .owner-link:hover {
+  border-color: var(--tele-cyan);
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--tele-cyan);
+  box-shadow: 0 0 14px rgba(0, 212, 255, 0.25);
+}
+
+/* Choreographed Hero Section */
+.telemetric-world .hero {
+  border-bottom: 1px solid var(--tele-border);
+  padding: clamp(48px, 8vw, 84px) 0 clamp(36px, 6vw, 60px);
+  animation: heroEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.telemetric-world .hero-eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.telemetric-world .telemetry-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tele-emerald);
+  box-shadow: 0 0 8px var(--tele-emerald);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+.telemetric-world .eyebrow {
+  color: var(--tele-text-soft);
+  margin-bottom: 0;
+}
+
+.telemetric-world .hero h1 {
+  color: var(--tele-text);
+  font-family: var(--sans);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+}
+
+.telemetric-world .hero-lede {
+  color: var(--tele-text-soft);
+  font-size: clamp(1.05rem, 1.4vw, 1.18rem);
+  line-height: 1.6;
+}
+
+.telemetric-world .status-badge-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.telemetric-world .status-halo {
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.telemetric-world .halo-operational {
+  box-shadow: 0 0 20px var(--tele-emerald-glow);
+  animation: haloBreathe 3.5s infinite ease-in-out;
+}
+
+.telemetric-world .halo-degraded {
+  box-shadow: 0 0 20px var(--tele-amber-glow);
+  animation: haloBreathe 3s infinite ease-in-out;
+}
+
+.telemetric-world .halo-down,
+.telemetric-world .halo-incident {
+  box-shadow: 0 0 20px var(--tele-rose-glow);
+  animation: haloBreathe 2s infinite ease-in-out;
+}
+
+.telemetric-world .hero-figure {
+  border-left: 0;
+  background: rgba(14, 21, 36, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--tele-border);
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.telemetric-world .hero-figure::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tele-emerald), transparent);
+}
+
+.telemetric-world .figure-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.telemetric-world .figure-label {
+  color: var(--tele-text-soft);
+}
+
+.telemetric-world .figure-chip {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(0, 229, 153, 0.12);
+  border: 1px solid rgba(0, 229, 153, 0.3);
+  color: var(--tele-emerald);
+}
+
+.telemetric-world .figure-value {
+  color: var(--tele-text);
+  font-family: var(--mono);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 24px rgba(0, 229, 153, 0.25);
+  margin: 12px 0 10px;
+}
+
+.telemetric-world .figure-note {
+  color: var(--tele-text-soft);
+  font-size: 0.82rem;
+}
+
+.telemetric-world .figure-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--tele-border);
+}
+
+.telemetric-world .fstat-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--tele-text-faint);
+}
+
+.telemetric-world .fstat-val {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--tele-text);
+  margin-top: 2px;
+}
+
+/* Button & Action styles */
+.telemetric-world .button {
+  border-radius: 4px;
+  font-family: var(--sans);
+  font-weight: 600;
+  transition: all 180ms ease;
+}
+
+.telemetric-world .button-quiet {
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid var(--tele-border);
+  color: var(--tele-text);
+}
+
+.telemetric-world .button-quiet:hover:not(:disabled) {
+  border-color: var(--tele-cyan);
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--tele-cyan);
+}
+
+.telemetric-world .button-accent {
+  background: linear-gradient(135deg, var(--tele-emerald), #00b4d8);
+  border: 0;
+  color: #05080e;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 0 18px rgba(0, 229, 153, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 9px 18px;
+  border-radius: 4px;
+}
+
+.telemetric-world .button-accent:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 26px rgba(0, 229, 153, 0.55);
+}
+
+/* Sections */
+.telemetric-world .section {
+  border-bottom: 1px solid var(--tele-border);
+  padding: clamp(40px, 6vw, 68px) 0;
+}
+
+.telemetric-world .section-kicker {
+  color: var(--tele-cyan);
+}
+
+.telemetric-world .section-head h2 {
+  color: var(--tele-text);
+  font-family: var(--sans);
+  font-weight: 700;
+}
+
+.telemetric-world .section-meta {
+  color: var(--tele-text-soft);
+}
+
+/* Project Filter Bar */
+.telemetric-world .project-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 24px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.telemetric-world .project-filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.telemetric-world .filter-pill {
+  background: rgba(14, 21, 36, 0.65);
+  border: 1px solid var(--tele-border);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--tele-text-soft);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 180ms ease;
+  min-height: 36px;
+}
+
+.telemetric-world .filter-pill:hover {
+  border-color: var(--tele-emerald);
+  color: var(--tele-text);
+  background: rgba(0, 229, 153, 0.08);
+}
+
+.telemetric-world .filter-pill.active {
+  background: rgba(0, 229, 153, 0.14);
+  border-color: var(--tele-emerald);
+  color: var(--tele-emerald);
+  box-shadow: 0 0 14px rgba(0, 229, 153, 0.25);
+  font-weight: 600;
+}
+
+.telemetric-world .filtered-hidden {
+  display: none !important;
+}
+
+/* Project Groups & Services */
+.telemetric-world .project-group {
+  background: rgba(14, 21, 36, 0.55);
+  border: 1px solid var(--tele-border);
+  border-radius: 10px;
+  padding: clamp(20px, 3vw, 28px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+.telemetric-world .project-group + .project-group {
+  margin-top: 32px;
+}
+
+.telemetric-world .project-heading {
+  border-bottom: 1px solid var(--tele-border);
+  padding-bottom: 14px;
+}
+
+.telemetric-world .project-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.telemetric-world .project-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--tele-cyan);
+  box-shadow: 0 0 8px var(--tele-cyan);
+}
+
+.telemetric-world .project-heading h3 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+  color: var(--tele-text);
+}
+
+.telemetric-world .project-count-badge {
+  font-size: 0.68rem;
+  color: var(--tele-text-soft);
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.telemetric-world .service-list {
+  border-bottom: 0;
+}
+
+.telemetric-world .service {
+  background: rgba(10, 16, 28, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 16px;
+  transition: all 200ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.telemetric-world .service:hover {
+  border-color: rgba(0, 229, 153, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.telemetric-world .service-state-down,
+.telemetric-world .service-state-incident {
+  border-left: 3px solid var(--tele-rose);
+}
+
+.telemetric-world .service-state-degraded {
+  border-left: 3px solid var(--tele-amber);
+}
+
+.telemetric-world .service-state-operational {
+  border-left: 3px solid var(--tele-emerald);
+}
+
+.telemetric-world .service-identity h3 {
+  color: var(--tele-text);
+  font-family: var(--sans);
+  font-weight: 600;
+}
+
+.telemetric-world .service-url {
+  color: var(--tele-cyan);
+  text-decoration: none;
+}
+
+.telemetric-world .service-url:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 10px var(--tele-cyan-glow);
+}
+
+.telemetric-world .service-stats dt {
+  color: var(--tele-text-faint);
+}
+
+.telemetric-world .service-stats dd {
+  color: var(--tele-text);
+}
+
+.telemetric-world .uptime-strip {
+  gap: 3px;
+  height: 28px;
+}
+
+.telemetric-world .uptime-strip .day {
+  border-radius: 2px;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.telemetric-world .uptime-strip .day:hover {
+  transform: scaleY(1.2);
+  opacity: 1;
+}
+
+.telemetric-world .uptime-strip .day-up {
+  background: var(--tele-emerald);
+  box-shadow: 0 0 6px rgba(0, 229, 153, 0.45);
+}
+
+.telemetric-world .uptime-strip .day-down {
+  background: var(--tele-rose);
+  box-shadow: 0 0 6px rgba(244, 63, 94, 0.45);
+}
+
+.telemetric-world .uptime-strip .day-mixed {
+  background: var(--tele-amber);
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.45);
+}
+
+.telemetric-world .uptime-strip .day-empty {
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.telemetric-world .strip-caption {
+  color: var(--tele-text-soft);
+}
+
+.telemetric-world .service-detail {
+  border-top: 1px solid var(--tele-border);
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+.telemetric-world .sparkline svg {
+  border-bottom: 1px solid var(--tele-border);
+  background: rgba(7, 10, 16, 0.4);
+  border-radius: 4px;
+}
+
+.telemetric-world .spark-line {
+  stroke: var(--tele-emerald);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px var(--tele-emerald));
+}
+
+.telemetric-world .spark-down {
+  fill: var(--tele-rose);
+  stroke: var(--tele-bg);
+}
+
+.telemetric-world .data-table th {
+  border-bottom: 1px solid var(--tele-border);
+  color: var(--tele-text-soft);
+}
+
+.telemetric-world .data-table td {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  color: var(--tele-text);
+}
+
+.telemetric-world .result-up {
+  color: var(--tele-emerald);
+  border-color: var(--tele-emerald);
+  background: rgba(0, 229, 153, 0.1);
+}
+
+.telemetric-world .result-down {
+  color: var(--tele-rose);
+  border-color: var(--tele-rose);
+  background: rgba(244, 63, 94, 0.1);
+}
+
+/* State badges */
+.telemetric-world .state {
+  border-radius: 999px;
+  padding: 5px 11px;
+}
+
+.telemetric-world .state-operational {
+  color: var(--tele-emerald);
+  border-color: rgba(0, 229, 153, 0.4);
+  background: rgba(0, 229, 153, 0.12);
+}
+
+.telemetric-world .state-degraded {
+  color: var(--tele-amber);
+  border-color: rgba(251, 191, 36, 0.4);
+  background: rgba(251, 191, 36, 0.12);
+}
+
+.telemetric-world .state-down,
+.telemetric-world .state-incident {
+  color: var(--tele-rose);
+  border-color: rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.12);
+}
+
+.telemetric-world .state-paused {
+  color: var(--tele-text-soft);
+  border-color: rgba(148, 163, 184, 0.3);
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.telemetric-world .state-unknown {
+  color: var(--tele-text-faint);
+  border-color: rgba(148, 163, 184, 0.2);
+  background: transparent;
+}
+
+/* Interactive Probe Sandbox */
+.telemetric-world .probe-sandbox {
+  background: rgba(14, 21, 36, 0.65);
+  border: 1px solid rgba(0, 229, 153, 0.28);
+  border-radius: 12px;
+  padding: clamp(20px, 3.5vw, 36px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.45);
+  position: relative;
+  overflow: hidden;
+}
+
+.telemetric-world .probe-sandbox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tele-cyan), var(--tele-emerald), transparent);
+}
+
+.telemetric-world .probe-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.25fr);
+  gap: 28px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.telemetric-world .probe-controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.telemetric-world .probe-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.telemetric-world .probe-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tele-text-soft);
+}
+
+.telemetric-world .probe-select {
+  background: rgba(7, 10, 16, 0.85);
+  border: 1px solid var(--tele-border);
+  border-radius: 6px;
+  color: var(--tele-text);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  width: 100%;
+  transition: border-color 150ms ease;
+}
+
+.telemetric-world .probe-select:focus {
+  outline: 2px solid var(--tele-emerald);
+  border-color: var(--tele-emerald);
+}
+
+.telemetric-world .probe-details-strip {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  background: rgba(7, 10, 16, 0.6);
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--tele-border);
+}
+
+.telemetric-world .probe-meta-label {
+  display: block;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  color: var(--tele-text-faint);
+  font-family: var(--mono);
+}
+
+.telemetric-world .probe-meta-value {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--tele-cyan);
+  margin-top: 2px;
+}
+
+.telemetric-world .probe-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.telemetric-world .probe-button {
+  min-height: 44px;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.telemetric-world .probe-radar-icon {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #070a10;
+  border-top-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.telemetric-world .probe-radar-icon.spinning {
+  animation: radarSpin 0.8s linear infinite;
+}
+
+.telemetric-world .waveform-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.telemetric-world .button-chip {
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid var(--tele-border);
+  border-radius: 4px;
+  color: var(--tele-text-soft);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  min-height: 32px;
+}
+
+.telemetric-world .button-chip.active {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: var(--tele-cyan);
+  color: var(--tele-cyan);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.25);
+}
+
+.telemetric-world .probe-pipeline-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(7, 10, 16, 0.65);
+  padding: 11px 16px;
+  border-radius: 6px;
+  border-left: 3px solid var(--tele-emerald);
+}
+
+.telemetric-world .pipeline-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tele-emerald);
+  box-shadow: 0 0 8px var(--tele-emerald);
+}
+
+.telemetric-world .pipeline-indicator.probing {
+  background: var(--tele-cyan);
+  box-shadow: 0 0 12px var(--tele-cyan);
+  animation: pulseDot 0.6s infinite ease-in-out;
+}
+
+.telemetric-world .pipeline-text {
+  font-size: 0.78rem;
+  color: var(--tele-text);
+}
+
+.telemetric-world .stage-telemetry-breakdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.telemetric-world .breakdown-card {
+  background: rgba(7, 10, 16, 0.5);
+  border: 1px solid var(--tele-border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.telemetric-world .breakdown-title {
+  display: block;
+  font-size: 0.58rem;
+  color: var(--tele-text-faint);
+  font-family: var(--mono);
+}
+
+.telemetric-world .breakdown-val {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--tele-emerald);
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+.telemetric-world .probe-screen-panel {
+  background: #04070d;
+  border: 1px solid rgba(0, 229, 153, 0.25);
+  border-radius: 8px;
+  padding: 18px;
+  box-shadow: inset 0 0 30px rgba(0, 229, 153, 0.04);
+}
+
+.telemetric-world .oscilloscope-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.66rem;
+  color: var(--tele-emerald);
+  margin-bottom: 12px;
+}
+
+.telemetric-world .oscilloscope-viewport {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #020407;
+  border: 1px solid rgba(0, 229, 153, 0.15);
+}
+
+.telemetric-world .oscilloscope-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.telemetric-world .oscilloscope-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.telemetric-world .hud-label {
+  display: block;
+  font-size: 0.58rem;
+  color: var(--tele-text-faint);
+  font-family: var(--mono);
+  text-transform: uppercase;
+}
+
+.telemetric-world .hud-val {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--tele-text);
+  margin-top: 3px;
+}
+
+.telemetric-world .highlight-green {
+  color: var(--tele-emerald) !important;
+  font-weight: 700;
+}
+
+.telemetric-world .truncate-hash {
+  max-width: 14ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--tele-cyan);
+}
+
+/* Incident section */
+.telemetric-world .incident-clean-seal {
+  text-align: center;
+  padding: 40px 24px;
+  background: rgba(14, 21, 36, 0.5);
+  border: 1px solid rgba(0, 229, 153, 0.22);
+  border-radius: 10px;
+}
+
+.telemetric-world .seal-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  color: var(--tele-emerald);
+  background: rgba(0, 229, 153, 0.12);
+  border: 1px solid rgba(0, 229, 153, 0.35);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 14px;
+  letter-spacing: 0.12em;
+}
+
+.telemetric-world .incident {
+  background: rgba(14, 21, 36, 0.65);
+  border: 1px solid var(--tele-border);
+  border-radius: 8px;
+}
+
+.telemetric-world .incident h3 {
+  color: var(--tele-text);
+}
+
+.telemetric-world .incident-latest > p:last-child {
+  color: var(--tele-text-soft);
+}
+
+/* Method section */
+.telemetric-world .method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.telemetric-world .method-card {
+  background: rgba(14, 21, 36, 0.55);
+  border: 1px solid var(--tele-border);
+  border-radius: 10px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.telemetric-world .method-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.telemetric-world .card-num {
+  font-size: 0.72rem;
+  color: var(--tele-emerald);
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(0, 229, 153, 0.12);
+  border: 1px solid rgba(0, 229, 153, 0.3);
+}
+
+.telemetric-world .method-card h3 {
+  color: var(--tele-text);
+  font-family: var(--sans);
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.telemetric-world .method-card p {
+  color: var(--tele-text-soft);
+}
+
+.telemetric-world .state-legend {
+  color: var(--tele-text-soft);
+}
+
+/* Footer */
+.telemetric-world .footer {
+  border-top: 1px solid var(--tele-border);
+  color: var(--tele-text-soft);
+}
+
+.telemetric-world .footer-wordmark {
+  color: var(--tele-text);
+  font-family: var(--sans);
+  font-weight: 700;
+}
+
+.telemetric-world .footer-wordmark span {
+  color: var(--tele-emerald);
+}
+
+.telemetric-world .footer-links a {
+  color: var(--tele-text-soft);
+}
+
+.telemetric-world .footer-links a:hover {
+  color: var(--tele-cyan);
+}
+
+/* Keyframe Animations */
+@keyframes pulseDot {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes haloBreathe {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes radarSpin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes heroEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 900px) {
+  .telemetric-world .hero {
+    grid-template-columns: 1fr;
+  }
+  .telemetric-world .probe-grid {
+    grid-template-columns: 1fr;
+  }
+  .telemetric-world .method-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .telemetric-world .stage-telemetry-breakdown {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .telemetric-world .service-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 420px) {
+  .telemetric-world .service-stats {
+    grid-template-columns: 1fr;
+  }
+  .telemetric-world .stage-telemetry-breakdown {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- Admin shell ---------- */

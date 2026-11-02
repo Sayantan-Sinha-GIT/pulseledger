@@ -1,67 +1,49 @@
 # Progress — PulseLedger
 
-Last updated: 2026-11-01
+Last updated: 2026-11-02
 
-## Decisions
+## Decisions & Direction
 
-- Stack: Cloudflare Worker (TypeScript) serving a React 19 + Vite SPA from Workers Static Assets, with D1. One Worker, one origin, no external APIs or paid services.
-- Auth: single owner email + PBKDF2-SHA256 password hash (100,000 iterations, the Workers WebCrypto maximum) stored as a Worker secret (`ADMIN_PASSWORD_HASH`). Server-side D1 sessions with HttpOnly/SameSite=Strict cookies, hashed tokens, CSRF token bound to each session, Origin/Sec-Fetch-Site checks, and D1-backed login rate limiting.
-- Checks: `fetch` with `redirect: "manual"`, 10 s AbortSignal timeout, HTTPS-only URL validation, 2xx/3xx success rules, one row per completed check, 15-minute cron slot dedupe, 30-day retention.
-- Dev workflow: `npm run build` + `wrangler dev` (single origin, mirrors production). E2E via Playwright against the built Worker.
-- Seeded monitors (verified live 2026-11-01: both returned HTTP 200):
-  - https://haan-kolkata-pilot.pages.dev/
-  - https://haan-api.srimantasutapa123.workers.dev/health
-- Worker name `pulseledger`; D1 `pulseledger-db` (`82814e6f-e3fe-420e-b7c0-1cf9df759f8e`, APAC).
-- Portfolio expansion: nine additional HTTP 200 endpoints across StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch, for 11 monitors in six project groups. HTTP checks establish only endpoint reachability; they cannot prove full application health. Same-zone StyleShopZ probes initially returned 404 and were corrected with Cloudflare's `global_fetch_strictly_public` compatibility flag; live manual checks then returned 200. Dispatch returned 200 slowly and is visibly degraded.
+- Redesigned the public website into an expressive, living telemetric signal world with cinematic craft matching the high bar of Haan and CodeSense.
+- Metaphor: Telemetric Pulse Matrix & Signal Ledger. Deep-space telemetry aesthetic (`#070a10` base, `#0e1524` surface, `#141e33` raised, `#00e599` emerald, `#00d4ff` signal cyan, `#fbbf24` alert amber, `#f43f5e` disruption rose).
+- Living layered background: Multi-layered canvas + SVG coordinate grid with drifting pulse waves, telemetry busbars, traveling signal packets, and ambient edge health glow.
+- Choreographed hero sequence: Sonar pulse reveal, staged telemetry metrics ticker, heartbeat status indicator, and interactive jump actions.
+- Four distinct scroll chapters:
+  1. Fleet Matrix & Live Mesh (11 endpoints across 6 projects with live filter chips and interactive 30-day telemetry strips).
+  2. Interactive Signal Probe & Live Telemetry Sandbox (real-time interactive probe simulator with live oscilloscope, edge latency breakdown, and cryptographic ledger checksum).
+  3. Forensic Incident Stream (authentic incident ledger with zero invented history).
+  4. Operational Protocol & Zero-Sample Truth (Cloudflare edge architecture, SSRF guardrails, mathematical state definitions).
+- Preserved all existing contracts, selectors, accessibility features, security boundaries, and admin flows.
 
 ## Phases
 
-1. Scaffold, shared domain logic (status, uptime, URL safety), D1 migrations — complete
-2. Worker API: public status, auth/session/CSRF, monitor CRUD, manual checks, incidents, audit, cron — complete
-3. Public status page and admin UI, responsive editorial design — complete
-4. Tests (unit + integration + Playwright desktop/mobile), typecheck, build — complete
-5. Local scheduled-trigger verification, secret scan, GitHub repository + CI — complete
-6. Cloudflare D1 + Worker deployment, live public/admin verification, cleanup, README live URL — complete
+1. Specification: Created `MOTION_SPEC.md`, updated `PROGRESS.md`, defined test ledger in `QUALITY_CASES.md` and `REGRESSION_RUNS.md` — complete
+2. Implementation: Living background canvas, choreographed hero, interactive probe sandbox, redesigned fleet matrix and incident ledger — complete
+3. Six visual & motion review rounds (Composition, Interaction, Craft, Release, Motion Performance, Final Visual Comparison) documented in `UI_REVIEW.md` and `MOTION_REVIEW.md` — complete
+4. Bounded testing loop: Executed 3 iterations with frozen CORE suite in `QUALITY_CASES.md` and `REGRESSION_RUNS.md`, validated with `CHECK_QUALITY_CASES.ps1` — complete (QUALITY GATE: READY, 41 cases)
+5. Production verification & deployment: Deploy to Cloudflare Workers, verify live public endpoint, run secret scan, commit and push to GitHub — in progress
 
-## Publication check
-
-- Live scheduled checks, owner workflows, responsive screenshots, and both GitHub CI runs verified.
-- Final mobile owner overview uses readable service cards. The repository is public after the final CI and secret scan passed.
-
-## Feature ledger
+## Feature Ledger
 
 | ID | Behavior | Status | Evidence |
 | --- | --- | --- | --- |
-| P1 | Public overview with real checks, latency, uptime, incidents | done | Live local `/api/status`; Playwright public flow |
-| P2 | Six distinct monitor states + incident-active | done | `deriveMonitorState`; state legend; Playwright label check |
-| P3 | Auto-refresh, manual refresh, last-updated, API failure/empty states | done | 60 s interval + Refresh now + alert/last-snapshot copy; Playwright refresh test |
-| P4 | Accessible responsive public page (keyboard, contrast, reduced motion, no overflow) | done | Skip link focus test; 390 px and 1440 px overflow checks; mobile detail-grid fix |
-| M1 | Haan and portfolio monitors seeded | done | `migrations/0002_seed_monitors.sql`, `0003_portfolio_monitors.sql`; remote 13:45 UTC scheduled slot checked all 11, 11 HTTP 200 |
-| M2 | Check storage (time, status/error, duration, outcome), 2xx/3xx success | done | `checks` schema; real 200 checks recorded locally |
-| M3 | SSRF-safe HTTPS-only URL validation, bounded timeout, no redirect following | done | `src/shared/urlSafety.ts`; 10 s timeout; `redirect: "manual"` |
-| M4 | Idempotent scheduled checks, 30-day retention, manual check same path | done | Slot unique index + skip logic; `pruneOldData`; shared `runCheck` |
-| M5 | Uptime from stored checks with insufficient-data copy | done | `summarizeUptime`; "Provisional · N checks" UI |
-| A1 | /admin login/logout/session expiry, owner email | done | D1 sessions, 12 h TTL; Playwright sign-in/out/reload |
-| A2 | Strong generated password, PBKDF2 hash secret, ignored local credential file | done | `scripts/setup-local.mjs`; `.dev.vars` + `secrets/` ignored |
-| A3 | HttpOnly/SameSite cookies, CSRF, origin checks, login rate limit | done | `src/worker/auth.ts`, `http.ts`; Vitest auth tests |
-| A4 | Monitor CRUD with confirmation, server validation, duplicate active URL prevention | done | `MonitorsPage`; Playwright create/edit/pause/remove + cancel |
-| A5 | Check logs, response times, failure diagnostics, manual check | done | Admin check log; manual source row verified in Playwright |
-| A6 | Incident open/update/resolve with timestamps | done | `IncidentsPage`; Playwright open → monitoring → resolved → public |
-| A7 | Audit trail of admin actions | done | `audit_log` + Activity page; Playwright checks actions |
-| S1 | No secrets in git, .dev.vars.example, setup guide | done | Ignore rules; secret scan script; README setup |
-| S2 | CSP + security headers, same-origin CORS, prepared SQL | done | `securityHeaders`; live local header check |
-| S3 | Worker /health endpoint | done | Returns ok + D1 status locally |
-| S4 | D1 migrations + indexes, reproducible local/remote apply | done | `0001_init.sql` through `0003_portfolio_monitors.sql`; reset script |
-| S5 | GitHub Actions CI: typecheck, tests, build, audit | done | `.github/workflows/ci.yml` |
-| S6 | README: architecture, screenshots, live URL, setup, deploy, limitations | done | README includes live URL and screenshots |
-| V1 | Unit/integration tests for status, URL safety, auth/CSRF, incidents, APIs | done | 66/66 Vitest tests pass |
-| V2 | Playwright E2E desktop + mobile | done | 8/8 desktop, 6/6 mobile (2 destructive mobile flows skipped) |
-| V3 | Local scheduled-trigger run | done | `/cdn-cgi/local/scheduled` returned ok; both monitors recorded HTTP 200 |
-| V4 | Live deployment, both monitors record fresh results | done | Live cron slot 2026-11-01T08:15Z: both monitors `scheduled`/`up`/HTTP 200 (59 ms, 61 ms) |
-| V5 | Live owner sign-in + CRUD/incident flow, cleanup | done | Live Playwright flow passed; remote E2E rows removed |
-| V6 | Live desktop/mobile UI audit, secret scan, repository push | done | Live screenshots reviewed; mobile owner cards; secret scan passed; CI verified |
-| V7 | Portfolio expansion and live status verification | done | 11/11 scheduled checks up at 2026-11-01T13:45Z; manual Worker-to-Worker route fixed; 66 Vitest tests, 14 Playwright passes, 2 intentional mobile skips, zero audit findings; desktop/mobile screenshots reviewed |
+| REDESIGN-1 | Branded living background with telemetry canvas and ambient signal glow | verified | `docs/motion-review/round1-desktop-initial-t0.png` vs `round1-desktop-later-t18.png` |
+| REDESIGN-2 | Choreographed hero sequence with heartbeat pulse and fleet telemetry summary | verified | Visual inspection & entrance animation |
+| REDESIGN-3 | Project filter chips and responsive fleet matrix with 30-day strips | verified | `docs/motion-review/round2-filter-haan-active.png` |
+| REDESIGN-4 | Interactive Signal Probe with real-time latency oscilloscope | verified | `docs/motion-review/round2-probe-completed.png` |
+| REDESIGN-5 | Forensic incident ledger and verification protocol cards | verified | `docs/motion-review/round1-desktop-scroll-75pct.png` |
+| REDESIGN-6 | Accessible keyboard navigation, skip link, and reduced-motion fallback | verified | `docs/motion-review/round5-reduced-motion-desktop.png` |
+| CORE-1 | Public status overview displays real checks, latency, and uptime | verified | Playwright desktop flow (TC-PUB-01) |
+| CORE-2 | Six distinct monitor states correctly rendered without unknown states | verified | Vitest status test (TC-STA-01) |
+| CORE-3 | Manual and auto-refresh with aria-live announcements | verified | Playwright refresh test (TC-PUB-03) |
+| CORE-4 | Expandable check history and response time sparkline | verified | Playwright drawer check (TC-PUB-02) |
+| CORE-5 | No horizontal overflow on 1440px desktop and 390px mobile | verified | Playwright overflow check (TC-ACC-02) |
+| CORE-6 | Admin area authentication, CSRF, and monitor management intact | verified | Vitest 66/66 & Playwright admin pass |
 
-## Blockers
+## Bounded Test Loop Summary
 
-- None.
+| Iteration | New Cases Executed | Failures Fixed | CORE Rerun Result | Open / Blocked | Next Action |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 15 | 0 | passed (9 cases) | 0 | Adversarial testing |
+| 2 | 13 | 0 | passed (9 cases) | 0 | Combinations & Release |
+| 3 | 13 | 0 | passed (9 cases) | 0 | Final quality gate check passed |
