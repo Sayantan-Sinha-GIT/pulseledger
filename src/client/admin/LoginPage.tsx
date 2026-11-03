@@ -37,22 +37,31 @@ export function LoginPage({
   };
 
   return (
-    <div className="login-shell">
+    <div className="login-shell telemetric-world">
       <a className="skip-link" href="#login">
         Skip to sign in
       </a>
-      <header className="masthead">
-        <a className="wordmark" href="/" aria-label="PulseLedger public status page">
-          Pulse<span>Ledger</span>
-        </a>
-        <a className="owner-link" href="/">
-          Public status
-        </a>
+      <header className="masthead admin-masthead">
+        <div className="masthead-brand">
+          <span className="brand-dot" aria-hidden="true" />
+          <a className="wordmark" href="/" aria-label="PulseLedger public status page">
+            Pulse<span>Ledger</span>
+          </a>
+          <span className="telemetry-badge">OPERATIONS // DESK</span>
+        </div>
+        <nav className="masthead-nav">
+          <a className="owner-link" href="/">
+            Public status
+          </a>
+        </nav>
       </header>
 
       <main id="login" className="login-main">
         <div className="login-intro">
-          <p className="eyebrow">Owner desk</p>
+          <div className="hero-eyebrow-row">
+            <span className="telemetry-pulse-dot" aria-hidden="true" />
+            <p className="eyebrow">Owner Desk · Restricted Access</p>
+          </div>
           <h1>Sign in to the operations desk.</h1>
           <p className="hero-lede">
             Manage HTTPS monitors, read check history, and write the incident record.
@@ -61,15 +70,19 @@ export function LoginPage({
           <dl className="login-facts">
             <div>
               <dt>Owner</dt>
-              <dd>{OWNER_EMAIL}</dd>
+              <dd className="mono">{OWNER_EMAIL}</dd>
             </div>
             <div>
               <dt>Session</dt>
-              <dd>12 hours, HttpOnly cookie</dd>
+              <dd className="mono">12 hours, HttpOnly cookie</dd>
             </div>
             <div>
               <dt>Sign-in limit</dt>
-              <dd>5 attempts per 15 minutes</dd>
+              <dd className="mono">5 attempts per 15 minutes</dd>
+            </div>
+            <div>
+              <dt>Security</dt>
+              <dd className="mono">PBKDF2-SHA256 · Constant-time verify</dd>
             </div>
           </dl>
         </div>
@@ -104,7 +117,6 @@ export function LoginPage({
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
-              autoFocus
             />
           </label>
 

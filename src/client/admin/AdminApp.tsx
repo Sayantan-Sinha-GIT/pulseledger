@@ -67,7 +67,7 @@ export function AdminApp() {
 
   if (checking) {
     return (
-      <div className="admin-shell">
+      <div className="admin-shell telemetric-world">
         <main className="admin-main">
           <LoadingBlock label="Checking owner session" />
         </main>
@@ -88,16 +88,22 @@ export function AdminApp() {
   }
 
   return (
-    <div className="admin-shell">
+    <div className="admin-shell telemetric-world">
       <a className="skip-link" href="#admin-main">
         Skip to owner content
       </a>
       <header className="admin-header">
         <div className="admin-header-top">
-          <Link className="wordmark" href="/" aria-label="PulseLedger public status page">
-            Pulse<span>Ledger</span>
-          </Link>
-          <span className="admin-tag">Owner desk</span>
+          <div className="admin-brand-wrap">
+            <span className="brand-dot" aria-hidden="true" />
+            <Link className="wordmark" href="/" aria-label="PulseLedger public status page">
+              Pulse<span>Ledger</span>
+            </Link>
+          </div>
+          <span className="admin-tag">
+            <span className="admin-tag-pip" aria-hidden="true" />
+            Owner desk
+          </span>
           <div className="admin-account">
             <span className="admin-email">{session.email}</span>
             <a className="text-link" href="/">
@@ -138,8 +144,11 @@ export function AdminApp() {
       </main>
 
       <footer className="admin-footer">
-        <span>PulseLedger owner desk</span>
-        <span>Session expires {new Date(session.expiresAt).toISOString().slice(0, 16).replace("T", " ")} UTC</span>
+        <div className="admin-footer-left">
+          <span className="admin-footer-dot" aria-hidden="true" />
+          <span>PulseLedger owner desk · Live Edge Telemetry</span>
+        </div>
+        <span className="mono">Session expires {new Date(session.expiresAt).toISOString().slice(0, 16).replace("T", " ")} UTC</span>
       </footer>
     </div>
   );

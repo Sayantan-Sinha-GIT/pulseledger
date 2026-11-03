@@ -11,19 +11,23 @@ Workers · React 19 + Vite · D1
 
 ## What it does
 
-- Checks 11 endpoints across Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch every 15 minutes with real HTTPS requests.
-- Living telemetric signal world: background telemetry canvas, choreographed hero sequence with live status heartbeat aura, and four distinct scroll chapters.
-- Interactive Signal Probe sandbox: real-time edge check simulation (DNS, TLS, HTTP, validation, D1 commit) with live oscilloscope waveform visualization.
-- Groups endpoints by project with instant filter pills. A successful response proves reachability of the named URL, not the whole product's business flow.
-- Publishes six distinct states: operational, degraded, down, paused, unknown, and
-  incident-active. A new monitor stays unknown until its first completed check.
-- Computes uptime and latency only from stored checks. No sample data, back-filled
-  history, or invented percentages. Small samples are labelled provisional.
-- Auto-refreshes the public page every 60 seconds and offers a keyboard-accessible manual
-  refresh with a visible last-updated time.
-- Shows incident severity, status, timestamps, the latest update, and earlier updates.
-- Provides a private `/admin` area for monitor CRUD, pause/resume, manual checks, check
-  logs, incident lifecycle, and an audit trail.
+- **Unified Visual Identity**: Self-hosted **Space Grotesk** (display & UI) and **JetBrains Mono** (telemetry numbers, code, timestamps) under SIL Open Font License 1.1 with WOFF2 preloading, replacing all generic system fonts across the entire application.
+- **Consistent Design System**: Public status page (`/`), private owner sign-in (`/admin`), and authenticated operations desk (Overview, Monitors, Incidents, Activity) share a single precision dark telemetry chassis (`#070a10` base, `#0e1524` surfaces, `#00e599` emerald, `#00d4ff` signal cyan).
+- **Living Signal World**: Background telemetry canvas, choreographed hero sequence with live status heartbeat aura, and four distinct scroll chapters.
+- **Interactive Signal Probe**: Real-time edge check simulation (DNS, TLS, HTTP, validation, D1 commit) with live oscilloscope waveform visualization.
+- **Real Edge Checks**: Checks 11 endpoints across Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch every 15 minutes with real HTTPS requests.
+- **Zero-Inventory Truth**: Computes uptime and latency exclusively from stored Cloudflare D1 checks—zero synthetic backfills, zero invented statistics.
+- **Private Owner Desk**: Restrained operational console for monitor CRUD, pause/resume, manual checks, check logs, incident updates, and activity audit trail.
+- **Strict Security Boundaries**: PBKDF2-SHA256 password verification, HttpOnly SameSite=Strict cookies, HMAC CSRF tokens, strict origin verification, and SQL prepared statements.
+
+## Interface Gallery
+
+| View | Desktop (1440px) | Mobile (390px) |
+| --- | --- | --- |
+| **Public Status Page** | ![Public Status Desktop](docs/screenshots/public-status-desktop.png) | ![Public Status Mobile](docs/screenshots/public-status-mobile.png) |
+| **Owner Sign-In Console** | ![Admin Sign-In Desktop](docs/screenshots/admin-login-desktop.png) | ![Admin Sign-In Mobile](docs/screenshots/admin-login-mobile.png) |
+| **Owner Overview Desk** | ![Admin Overview Desktop](docs/screenshots/admin-overview-desktop.png) | ![Admin Overview Mobile](docs/screenshots/admin-overview-mobile.png) |
+| **Monitors Manager** | ![Admin Monitors Desktop](docs/screenshots/admin-monitors-desktop.png) | ![Admin Monitors Mobile](docs/screenshots/admin-monitors-mobile.png) |
 
 ## Architecture
 

@@ -37,12 +37,35 @@ async function adminPage(name, contextOptions) {
   }
   const context = await browser.newContext(contextOptions);
   const page = await context.newPage();
+  
+  // 1. Capture Login Screen
   await page.goto(`${baseURL}/admin`, { waitUntil: "networkidle" });
+  await page.getByLabel("Password").waitFor();
+  await page.screenshot({ path: resolve(output, `admin-login-${name}.png`), fullPage: true });
+
+  // 2. Sign In to Overview
   await page.getByLabel("Password").fill(password);
   await page.getByRole("button", { name: "Sign in" }).click();
   await page.getByRole("heading", { name: "Operations at a glance." }).waitFor();
   await page.getByRole("region", { name: "Owner summary" }).waitFor();
   await page.screenshot({ path: resolve(output, `admin-overview-${name}.png`), fullPage: true });
+
+  // 3. Capture Monitors Screen
+  await page.goto(`${baseURL}/admin/monitors`, { waitUntil: "networkidle" });
+  await page.getByRole("heading", { name: "Decide what gets checked." }).waitFor();
+  await page.screenshot({ path: resolve(output, `admin-monitors-${name}.png`), fullPage: true });
+
+  // 4. Capture Incidents Screen
+  await page.goto(`${baseURL}/admin/incidents`, { waitUntil: "networkidle" });
+  await page.getByRole("heading", { name: "Write the record while it happens." }).waitFor();
+  await page.screenshot({ path: resolve(output, `admin-incidents-${name}.png`), fullPage: true });
+
+  // 5. Capture Activity Screen
+  await page.goto(`${baseURL}/admin/audit`, { waitUntil: "networkidle" });
+  await page.getByRole("heading", { name: "Who changed what." }).waitFor();
+  await page.screenshot({ path: resolve(output, `admin-audit-${name}.png`), fullPage: true });
+
+  // Sign out cleanly
   await page.getByRole("button", { name: "Sign out" }).click();
   await page.getByLabel("Password").waitFor();
   await context.close();

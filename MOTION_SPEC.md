@@ -14,7 +14,12 @@ PulseLedger is an independent uptime and incident operations desk. Its visual me
   - `Paused`: Telemetric slate `#64748b` (core), `#475569` (border).
   - `Unknown`: Neutral zinc `#71717a`.
 - **Signal Accents**: Cyan `#00d4ff` (ping trace and active beam), Ice White `#f8fafc` (primary typography), Muted Phosphor `#94a3b8` (secondary telemetry tags).
-- **Typography**: Cascadia Code / Monospace for latency figures, timestamps, status codes, and coordinate chips; crisp high-legibility sans for body copy and headings.
+- **Typography & Brand Identity**:
+  - Display, Headings, and Interface: **Space Grotesk** (self-hosted WOFF2 variable font, SIL Open Font License 1.1). Precision engineered geometric character.
+  - Telemetry Data, Numbers, Code, and Timestamps: **JetBrains Mono** (self-hosted WOFF2 variable font, SIL Open Font License 1.1). Monospace clarity with clear 0/O distinction and tabular figures.
+  - Zero generic system type (`Segoe UI`, `Iowan Old Style` serif removed across both public and private areas).
+- **Unified Surface Architecture**:
+  - The entire site—public status (`/`), private owner sign-in (`/admin`), and authenticated operations desk (Overview, Monitors, Incidents, Activity)—is unified around the dark telemetric chassis. Admin tasks maintain restrained operational density, low eye strain, and rapid keyboard/touch response.
 
 ## 3. Layered Living Environment (Above & Below Fold)
 - **Layer 1: Edge Ambient Gradient Field**:

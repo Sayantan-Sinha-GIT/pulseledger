@@ -13,14 +13,20 @@ export function App() {
     return <StatusPage />;
   }
   return (
-    <div className="public-shell">
+    <div className="public-shell telemetric-world">
       <header className="masthead">
-        <Link className="wordmark" href="/">
-          Pulse<span>Ledger</span>
-        </Link>
+        <div className="masthead-brand">
+          <span className="brand-dot" aria-hidden="true" />
+          <Link className="wordmark" href="/">
+            Pulse<span>Ledger</span>
+          </Link>
+        </div>
       </header>
       <main id="main" className="section">
-        <p className="eyebrow">404</p>
+        <div className="hero-eyebrow-row">
+          <span className="telemetry-pulse-dot" aria-hidden="true" />
+          <p className="eyebrow">404 · Unmapped Signal</p>
+        </div>
         <h1>That page is not on the desk.</h1>
         <p className="hero-lede">
           Return to the <Link href="/">public status page</Link> or sign in to the{" "}
