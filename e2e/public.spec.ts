@@ -156,6 +156,29 @@ test.describe("public status page", () => {
 
     // 1. Hero & Chapter 1 (#services & .service row physical ledger strip unspooling)
     await scrollToY(0);
+    const renderCountBefore = await page.evaluate(() =>
+      Number(document.querySelector(".public-shell")?.getAttribute("data-render-count") ?? "0"),
+    );
+
+    // Verify bursting 10 raw scroll events in a single frame coalesces to 1 rAF update and 0 React rerenders
+    const burstStats = await page.evaluate(async () => {
+      const shell = document.querySelector(".public-shell");
+      const beforeRaf = Number(shell?.getAttribute("data-raf-updates") ?? "0");
+      const beforeRenders = Number(shell?.getAttribute("data-render-count") ?? "0");
+      for (let i = 0; i < 10; i++) {
+        window.dispatchEvent(new Event("scroll"));
+      }
+      await new Promise((resolve) => window.requestAnimationFrame(() => resolve(true)));
+      const afterRaf = Number(shell?.getAttribute("data-raf-updates") ?? "0");
+      const afterRenders = Number(shell?.getAttribute("data-render-count") ?? "0");
+      return {
+        rafDelta: afterRaf - beforeRaf,
+        renderDelta: afterRenders - beforeRenders,
+      };
+    });
+    expect(burstStats.rafDelta).toBe(1);
+    expect(burstStats.renderDelta).toBe(0);
+
     const ch1Before = await getChapterMetrics("#services");
     const spoolFillBefore = await getChapterMetrics("#services-spool-fill");
     const spoolWheelBefore = await getChapterMetrics("#services-spool-wheel");
@@ -241,6 +264,10 @@ test.describe("public status page", () => {
     expect(spineAfter?.transform).not.toBe(spineBefore?.transform);
     expect(broadsheetAfter?.transform).not.toBe(broadsheetBefore?.transform);
 
+    const sealProgressLabel = await page.locator("#incident-seal-progress-text").textContent();
+    expect(sealProgressLabel).toMatch(/^SEAL DRAWN · \d+%$/);
+    expect(sealProgressLabel).not.toContain("D1 VERIFIED");
+
     // 4. Chapter 4 (#method — Scroll-Wired Protocol Schematic)
     const methodDocTop = await page.evaluate(() => {
       const el = document.getElementById("method");
@@ -263,6 +290,12 @@ test.describe("public status page", () => {
     expect(Number(ch4After?.progress) - Number(ch4Before?.progress)).toBeGreaterThan(0.55);
     expect(parseFloat(busBefore?.strokeDashoffset ?? "0") - parseFloat(busAfter?.strokeDashoffset ?? "0")).toBeGreaterThan(550);
     expect(carriageAfter?.transform).not.toBe(carriageBefore?.transform);
+
+    // Verify scrolling across the entire page caused 0 whole-page React rerenders
+    const renderCountAfter = await page.evaluate(() =>
+      Number(document.querySelector(".public-shell")?.getAttribute("data-render-count") ?? "0"),
+    );
+    expect(renderCountAfter).toBe(renderCountBefore);
 
     await expectNoHorizontalOverflow(page);
   });

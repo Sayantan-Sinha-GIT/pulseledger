@@ -96,14 +96,10 @@ interface ScrollChoreography {
  */
 function TelemetryCanvas({
   overallState = "operational",
-  scrollY = 0,
 }: {
   overallState?: OverallState;
-  scrollY?: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const scrollYRef = useRef<number>(scrollY);
-  scrollYRef.current = scrollY;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -195,7 +191,7 @@ function TelemetryCanvas({
       const isDegradedOrDown =
         overallState === "degraded" || overallState === "down" || overallState === "incident";
       const speedMultiplier = isDegradedOrDown ? 1.8 : 1.0;
-      const currentScroll = scrollYRef.current;
+      const currentScroll = window.scrollY || window.pageYOffset || 0;
       phaseA += dt * 1.35 * speedMultiplier;
       phaseB += dt * 0.95 * speedMultiplier;
 
@@ -357,14 +353,12 @@ function TelemetryCanvas({
     };
   }, [overallState]);
 
-  const paperOffset = Math.round((scrollY * 0.45) % 140);
-
   return (
     <canvas
       ref={canvasRef}
       className="telemetry-canvas"
-      data-scroll-y={Math.round(scrollY)}
-      data-paper-offset={paperOffset}
+      data-scroll-y={0}
+      data-paper-offset={0}
       aria-hidden="true"
     />
   );
@@ -372,7 +366,7 @@ function TelemetryCanvas({
 
 /**
  * Hero 30-Day Aggregate Seismograph SVG computed from real monitor daily buckets.
- * Includes a scroll-coupled drum carriage playhead.
+ * Includes a scroll-coupled drum carriage playhead updated via requestAnimationFrame.
  */
 function HeroFleetSeismograph({
   monitors,
@@ -433,7 +427,7 @@ function HeroFleetSeismograph({
     <div className="hero-seismograph-block" aria-hidden="true">
       <div className="seismo-header mono">
         <span>30D DRUM SEISMOGRAPH</span>
-        <span>CARRIAGE: {Math.round(heroProgress * 100)}%</span>
+        <span id="hero-carriage-readout">CARRIAGE: {Math.round(heroProgress * 100)}%</span>
       </div>
       <svg
         id="hero-seismograph-svg"
@@ -505,10 +499,12 @@ function InteractiveProbeSandbox({
   monitors,
   timeoutMs,
   chapterProgress,
+  onTargetChange,
 }: {
   monitors: MonitorView[];
   timeoutMs: number;
   chapterProgress: number;
+  onTargetChange?: () => void;
 }) {
   const [selectedMonitorId, setSelectedMonitorId] = useState<string>(
     monitors[0]?.id ?? "mon_haan_web",
@@ -808,6 +804,10 @@ function InteractiveProbeSandbox({
     }, 400);
   };
 
+  useEffect(() => {
+    onTargetChange?.();
+  }, [selectedMonitorId, onTargetChange]);
+
   return (
     <div
       className="probe-sandbox"
@@ -842,18 +842,21 @@ function InteractiveProbeSandbox({
           <div id="timeline-scroll-readout" className="timeline-scroll-readout mono">
             {scrubbedSample ? (
               <>
-                <span>SAMPLE: {scrubbedSample.label}</span>
+                <span id="timeline-sample-label">SAMPLE: {scrubbedSample.label}</span>
                 <span>·</span>
-                <span>{formatShortTime(scrubbedSample.at)}</span>
+                <span id="timeline-sample-time">{formatShortTime(scrubbedSample.at)}</span>
                 <span>·</span>
-                <span className={scrubbedSample.outcome === "up" ? "highlight-green" : "value-down"}>
+                <span
+                  id="timeline-sample-ms"
+                  className={scrubbedSample.outcome === "up" ? "highlight-green" : "value-down"}
+                >
                   {scrubbedSample.ms}ms ({scrubbedSample.outcome.toUpperCase()})
                 </span>
               </>
             ) : (
               <span>0 RECORDED SAMPLES IN D1 WINDOW</span>
             )}
-            <span className="timeline-sweep-pct">
+            <span id="timeline-sweep-pct" className="timeline-sweep-pct">
               SWEEP {Math.round(chapterProgress * 100)}%
             </span>
           </div>
@@ -937,6 +940,12 @@ function InteractiveProbeSandbox({
               return (
                 <circle
                   key={c.sample.id}
+                  className="timeline-sample-node"
+                  data-threshold={nodeThreshold.toFixed(4)}
+                  data-outcome={c.sample.outcome}
+                  data-label={c.sample.label}
+                  data-time={formatShortTime(c.sample.at)}
+                  data-ms={String(c.sample.ms)}
                   cx={c.x}
                   cy={c.y}
                   r={isRevealed ? 3.8 : 1.5}
@@ -983,6 +992,7 @@ function InteractiveProbeSandbox({
                 strokeWidth="1"
               />
               <text
+                id="timeline-playhead-pct"
                 x={padLeft}
                 y={padTop + chartH + 17}
                 textAnchor="middle"
@@ -1261,8 +1271,13 @@ export function StatusPage() {
   const [announcement, setAnnouncement] = useState("");
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string>("all");
   const abortRef = useRef<AbortController | null>(null);
+  const shellRef = useRef<HTMLDivElement | null>(null);
+  const rafPendingRef = useRef<number | null>(null);
+  const rafUpdateCountRef = useRef<number>(0);
+  const renderCountRef = useRef<number>(0);
+  renderCountRef.current += 1;
 
-  const [scrollState, setScrollState] = useState<ScrollChoreography>({
+  const scrollRef = useRef<ScrollChoreography>({
     scrollY: 0,
     pageProgress: 0,
     heroProgress: 0,
@@ -1320,28 +1335,10 @@ export function StatusPage() {
     };
   }, [load]);
 
-  // Deterministic Scroll Choreography Engine
-  const updateScrollChoreography = useCallback(() => {
+  // Deterministic Scroll Choreography Engine (DOM-direct, coalesced to 1 requestAnimationFrame per frame, 0 React rerenders on scroll)
+  const applyScrollChoreography = useCallback(() => {
     if (typeof window === "undefined") return;
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (isReduced) {
-      const fullRows: Record<string, number> = {};
-      if (data?.monitors) {
-        for (const m of data.monitors) fullRows[m.id] = 1;
-      }
-      setScrollState({
-        scrollY: window.scrollY,
-        pageProgress: 1,
-        heroProgress: 1,
-        chapter1Progress: 1,
-        chapter2Progress: 1,
-        chapter3Progress: 1,
-        chapter4Progress: 1,
-        rowProgress: fullRows,
-      });
-      return;
-    }
-
     const scrollY = window.scrollY || window.pageYOffset || 0;
     const vh = Math.max(window.innerHeight || 900, 1);
     const docHeight = Math.max(
@@ -1350,52 +1347,65 @@ export function StatusPage() {
       vh,
     );
     const maxScroll = Math.max(1, docHeight - vh);
-    const pageProgress = clamp01(scrollY / maxScroll);
-    const heroProgress = clamp01(scrollY / (vh * 0.55));
 
-    const computeChapterProgress = (el: HTMLElement | null, isServices = false): number => {
-      if (!el) return 0;
-      if (isServices) {
-        // Chapter 1 (#services) starts right below the hero; progress tracks scrolling into & through the matrix
-        if (scrollY <= 8) return 0;
-        const rect = el.getBoundingClientRect();
-        const entryAndTraverse = (vh * 0.58 - rect.top) / (vh * 1.15);
-        return clamp01(Math.max(scrollY / (vh * 1.25), entryAndTraverse));
-      }
-      const rect = el.getBoundingClientRect();
-      const elDocTop = rect.top + scrollY;
-      const minPossibleTop = elDocTop - maxScroll;
-      const targetTop = Math.max(-vh * 0.12, minPossibleTop + 16);
-      const startTop = Math.max(vh * 0.92, targetTop + vh * 0.45);
-      return clamp01((startTop - rect.top) / Math.max(1, startTop - targetTop));
-    };
+    let pageProgress = 1;
+    let heroProgress = 1;
+    let chapter1Progress = 1;
+    let chapter2Progress = 1;
+    let chapter3Progress = 1;
+    let chapter4Progress = 1;
+    const rowProgress: Record<string, number> = {};
 
     const servicesEl = document.getElementById("services");
     const probeEl = document.getElementById("probe");
     const incidentsEl = document.getElementById("incidents");
     const methodEl = document.getElementById("method");
-
-    const chapter1Progress = computeChapterProgress(servicesEl, true);
-    const chapter2Progress = computeChapterProgress(probeEl, false);
-    const chapter3Progress = computeChapterProgress(incidentsEl, false);
-    const chapter4Progress = computeChapterProgress(methodEl, false);
-
-    const rowProgress: Record<string, number> = {};
     const serviceNodes = document.querySelectorAll<HTMLElement>(".service[data-monitor-id]");
-    serviceNodes.forEach((node) => {
-      const id = node.getAttribute("data-monitor-id");
-      if (!id) return;
-      const rect = node.getBoundingClientRect();
-      const elDocTop = rect.top + scrollY;
-      const minPossibleTop = elDocTop - maxScroll;
-      const targetTop = Math.max(vh * 0.24, minPossibleTop + 16);
-      const startTop = Math.max(vh * 0.92, targetTop + vh * 0.42);
-      // At scrollY = 0, first row is partially visible while lower rows are unspooled (0)
-      const raw = clamp01((startTop - rect.top) / Math.max(1, startTop - targetTop));
-      rowProgress[id] = scrollY <= 4 ? Math.min(raw, 0.25) : raw;
-    });
 
-    setScrollState({
+    if (isReduced) {
+      serviceNodes.forEach((node) => {
+        const id = node.getAttribute("data-monitor-id");
+        if (id) rowProgress[id] = 1;
+      });
+    } else {
+      pageProgress = clamp01(scrollY / maxScroll);
+      heroProgress = clamp01(scrollY / (vh * 0.55));
+
+      const computeChapterProgress = (el: HTMLElement | null, isServices = false): number => {
+        if (!el) return 0;
+        if (isServices) {
+          if (scrollY <= 8) return 0;
+          const rect = el.getBoundingClientRect();
+          const entryAndTraverse = (vh * 0.58 - rect.top) / (vh * 1.15);
+          return clamp01(Math.max(scrollY / (vh * 1.25), entryAndTraverse));
+        }
+        const rect = el.getBoundingClientRect();
+        const elDocTop = rect.top + scrollY;
+        const minPossibleTop = elDocTop - maxScroll;
+        const targetTop = Math.max(-vh * 0.12, minPossibleTop + 16);
+        const startTop = Math.max(vh * 0.92, targetTop + vh * 0.45);
+        return clamp01((startTop - rect.top) / Math.max(1, startTop - targetTop));
+      };
+
+      chapter1Progress = computeChapterProgress(servicesEl, true);
+      chapter2Progress = computeChapterProgress(probeEl, false);
+      chapter3Progress = computeChapterProgress(incidentsEl, false);
+      chapter4Progress = computeChapterProgress(methodEl, false);
+
+      serviceNodes.forEach((node) => {
+        const id = node.getAttribute("data-monitor-id");
+        if (!id) return;
+        const rect = node.getBoundingClientRect();
+        const elDocTop = rect.top + scrollY;
+        const minPossibleTop = elDocTop - maxScroll;
+        const targetTop = Math.max(vh * 0.24, minPossibleTop + 16);
+        const startTop = Math.max(vh * 0.92, targetTop + vh * 0.42);
+        const raw = clamp01((startTop - rect.top) / Math.max(1, startTop - targetTop));
+        rowProgress[id] = scrollY <= 4 ? Math.min(raw, 0.25) : raw;
+      });
+    }
+
+    scrollRef.current = {
       scrollY,
       pageProgress,
       heroProgress,
@@ -1404,22 +1414,262 @@ export function StatusPage() {
       chapter3Progress,
       chapter4Progress,
       rowProgress,
+    };
+
+    rafUpdateCountRef.current += 1;
+
+    // 0. Root shell CSS custom properties & telemetry canvas attributes
+    const shellEl = shellRef.current;
+    if (shellEl) {
+      shellEl.style.setProperty("--page-scroll", pageProgress.toFixed(3));
+      shellEl.style.setProperty("--hero-progress", heroProgress.toFixed(3));
+      shellEl.style.setProperty("--chapter-1-progress", chapter1Progress.toFixed(3));
+      shellEl.style.setProperty("--chapter-2-progress", chapter2Progress.toFixed(3));
+      shellEl.style.setProperty("--chapter-3-progress", chapter3Progress.toFixed(3));
+      shellEl.style.setProperty("--chapter-4-progress", chapter4Progress.toFixed(3));
+      shellEl.setAttribute("data-raf-updates", String(rafUpdateCountRef.current));
+    }
+
+    const canvasEl = document.querySelector<HTMLElement>(".telemetry-canvas");
+    if (canvasEl) {
+      canvasEl.setAttribute("data-scroll-y", String(Math.round(scrollY)));
+      canvasEl.setAttribute("data-paper-offset", String(Math.round((scrollY * 0.45) % 140)));
+    }
+
+    const mastheadFill = document.getElementById("masthead-scroll-fill");
+    if (mastheadFill) {
+      mastheadFill.style.transform = `scaleX(${pageProgress.toFixed(3)})`;
+    }
+
+    // 1. Hero section & 30-day drum carriage
+    const heroEl = document.getElementById("hero-section");
+    if (heroEl) {
+      heroEl.setAttribute("data-scroll-progress", heroProgress.toFixed(3));
+    }
+    const heroCopyEl = document.getElementById("hero-copy-plate");
+    if (heroCopyEl) {
+      heroCopyEl.style.transform = `translate3d(0px, ${(-heroProgress * 18).toFixed(1)}px, 0px)`;
+    }
+    const heroFigEl = document.getElementById("hero-figure-plate");
+    if (heroFigEl) {
+      heroFigEl.style.transform = `translate3d(0px, ${(heroProgress * 20).toFixed(1)}px, 0px)`;
+    }
+    const heroCarriageEl = document.getElementById("hero-drum-carriage");
+    if (heroCarriageEl) {
+      heroCarriageEl.style.transform = `translate3d(${(heroProgress * 296).toFixed(1)}px, 0px, 0px)`;
+    }
+    const heroCarriageReadout = document.getElementById("hero-carriage-readout");
+    if (heroCarriageReadout) {
+      heroCarriageReadout.textContent = `CARRIAGE: ${Math.round(heroProgress * 100)}%`;
+    }
+
+    // 2. Chapter 1 (#services): Spool apparatus & per-row physical ledger strip unspooling
+    if (servicesEl) {
+      servicesEl.setAttribute("data-scroll-progress", chapter1Progress.toFixed(3));
+    }
+    const spoolWheelEl = document.getElementById("services-spool-wheel");
+    if (spoolWheelEl) {
+      spoolWheelEl.style.transform = `rotate(${(chapter1Progress * 180).toFixed(1)}deg)`;
+    }
+    const spoolFillEl = document.getElementById("services-spool-fill");
+    if (spoolFillEl) {
+      spoolFillEl.style.transform = `scaleX(${chapter1Progress.toFixed(3)})`;
+    }
+    const spoolPctEl = document.getElementById("services-spool-pct");
+    if (spoolPctEl) {
+      spoolPctEl.textContent = `FEED: ${Math.round(chapter1Progress * 100)}%`;
+    }
+
+    let engagedCount = 0;
+    serviceNodes.forEach((node) => {
+      const id = node.getAttribute("data-monitor-id");
+      const clamped = clamp01(id ? (rowProgress[id] ?? 0.2) : 0.2);
+      if (clamped >= 0.5) engagedCount += 1;
+
+      const clipInsetRight = ((1 - clamped) * 88).toFixed(1);
+      const stripShiftX = (-(1 - clamped) * 18).toFixed(1);
+      const printheadX = (clamped * 100).toFixed(1);
+      const rowShiftX = (-(1 - clamped) * 12).toFixed(1);
+
+      node.setAttribute("data-row-progress", clamped.toFixed(3));
+      node.style.setProperty("--row-progress", clamped.toFixed(3));
+      node.style.transform = `translate3d(${rowShiftX}px, 0px, 0px)`;
+
+      const stripEl = node.querySelector<HTMLElement>(".uptime-strip");
+      if (stripEl) {
+        stripEl.style.clipPath = `inset(0px ${clipInsetRight}% 0px 0px)`;
+        stripEl.style.transform = `translate3d(${stripShiftX}px, 0px, 0px)`;
+      }
+      const printheadEl = node.querySelector<HTMLElement>(".strip-printhead");
+      if (printheadEl) {
+        printheadEl.style.transform = `translate3d(${printheadX}%, 0px, 0px)`;
+        printheadEl.style.left = `${(12 + clamped * 88).toFixed(1)}%`;
+      }
+    });
+
+    const spoolEngagedEl = document.getElementById("services-spool-engaged");
+    if (spoolEngagedEl && data?.monitors) {
+      spoolEngagedEl.textContent = `${engagedCount}/${data.monitors.length} STRIPS UNSPOOLED`;
+    }
+
+    // 3. Chapter 2 (#probe): Scroll-drawn live monitoring timeline & playhead carriage
+    if (probeEl) {
+      probeEl.setAttribute("data-scroll-progress", chapter2Progress.toFixed(3));
+      probeEl.style.setProperty("--chapter-2-progress", chapter2Progress.toFixed(3));
+    }
+    const timelineStageEl = document.getElementById("monitoring-timeline-stage");
+    if (timelineStageEl) {
+      timelineStageEl.setAttribute("data-scroll-progress", chapter2Progress.toFixed(3));
+    }
+    const timelineAreaEl = document.getElementById("timeline-area-group");
+    if (timelineAreaEl) {
+      timelineAreaEl.style.clipPath = `inset(0px ${((1 - chapter2Progress) * 100).toFixed(1)}% 0px 0px)`;
+    }
+    const timelineTraceEl = document.getElementById("timeline-svg-trace");
+    if (timelineTraceEl) {
+      const traceDashoffset = Math.round((1 - chapter2Progress) * 1000);
+      timelineTraceEl.setAttribute("stroke-dashoffset", String(traceDashoffset));
+      timelineTraceEl.style.strokeDashoffset = `${traceDashoffset}px`;
+    }
+    const timelinePlayheadEl = document.getElementById("timeline-playhead-group");
+    if (timelinePlayheadEl) {
+      timelinePlayheadEl.style.transform = `translate3d(${(chapter2Progress * 720).toFixed(1)}px, 0px, 0px)`;
+    }
+    const timelinePlayheadPctEl = document.getElementById("timeline-playhead-pct");
+    if (timelinePlayheadPctEl) {
+      timelinePlayheadPctEl.textContent = `${Math.round(chapter2Progress * 100)}%`;
+    }
+    const timelineSweepPctEl = document.getElementById("timeline-sweep-pct");
+    if (timelineSweepPctEl) {
+      timelineSweepPctEl.textContent = `SWEEP ${Math.round(chapter2Progress * 100)}%`;
+    }
+    const probeChassisEl = document.getElementById("probe-chassis-stage");
+    if (probeChassisEl) {
+      probeChassisEl.style.transform = `translate3d(0px, ${((1 - chapter2Progress) * 26).toFixed(1)}px, 0px)`;
+    }
+
+    const sampleNodes = document.querySelectorAll<SVGCircleElement>(".timeline-sample-node");
+    if (sampleNodes.length > 0) {
+      sampleNodes.forEach((circle) => {
+        const threshold = Number(circle.getAttribute("data-threshold") ?? "0");
+        const outcome = circle.getAttribute("data-outcome") ?? "up";
+        const isRevealed = chapter2Progress >= threshold - 0.02;
+        circle.setAttribute("r", isRevealed ? "3.8" : "1.5");
+        circle.setAttribute(
+          "fill",
+          !isRevealed ? "#283243" : outcome === "down" ? "#f85149" : "#3fb950",
+        );
+      });
+      const activeIdx = Math.min(
+        sampleNodes.length - 1,
+        Math.max(0, Math.floor(chapter2Progress * sampleNodes.length)),
+      );
+      const activeNode = sampleNodes[activeIdx];
+      if (activeNode) {
+        const label = activeNode.getAttribute("data-label") ?? "";
+        const time = activeNode.getAttribute("data-time") ?? "";
+        const ms = activeNode.getAttribute("data-ms") ?? "";
+        const outcome = activeNode.getAttribute("data-outcome") ?? "up";
+        const labelEl = document.getElementById("timeline-sample-label");
+        const timeEl = document.getElementById("timeline-sample-time");
+        const msEl = document.getElementById("timeline-sample-ms");
+        if (labelEl) labelEl.textContent = `SAMPLE: ${label}`;
+        if (timeEl) timeEl.textContent = time;
+        if (msEl) {
+          msEl.textContent = `${ms}ms (${outcome.toUpperCase()})`;
+          msEl.className = outcome === "up" ? "highlight-green" : "value-down";
+        }
+      }
+    }
+
+    // 4. Chapter 3 (#incidents): Rotary verification seal & unfolding broadsheet
+    if (incidentsEl) {
+      incidentsEl.setAttribute("data-scroll-progress", chapter3Progress.toFixed(3));
+    }
+    const dossierStageEl = document.getElementById("incident-dossier-stage");
+    if (dossierStageEl) {
+      dossierStageEl.setAttribute("data-scroll-progress", chapter3Progress.toFixed(3));
+    }
+    const sealRingEl = document.getElementById("incident-seal-ring");
+    if (sealRingEl) {
+      const sealDashoffset = Math.round((1 - chapter3Progress) * 1000);
+      sealRingEl.setAttribute("stroke-dashoffset", String(sealDashoffset));
+      sealRingEl.style.strokeDashoffset = `${sealDashoffset}px`;
+    }
+    const sealRotorEl = document.getElementById("incident-seal-rotor");
+    if (sealRotorEl) {
+      sealRotorEl.style.transform = `rotate(${(chapter3Progress * 180).toFixed(1)}deg)`;
+    }
+    const sealProgressTextEl = document.getElementById("incident-seal-progress-text");
+    if (sealProgressTextEl) {
+      sealProgressTextEl.textContent = `SEAL DRAWN · ${Math.round(chapter3Progress * 100)}%`;
+    }
+    const spineFillEl = document.getElementById("incident-spine-fill");
+    if (spineFillEl) {
+      spineFillEl.style.transform = `scaleY(${chapter3Progress.toFixed(3)})`;
+    }
+    const broadsheetEl = document.getElementById("incident-broadsheet-panel");
+    if (broadsheetEl) {
+      const slideX = ((1 - chapter3Progress) * 20).toFixed(1);
+      const liftY = ((1 - chapter3Progress) * 26).toFixed(1);
+      broadsheetEl.style.transform = `translate3d(${slideX}px, ${liftY}px, 0px)`;
+    }
+
+    // 5. Chapter 4 (#method): Protocol bus line & signal carriage
+    if (methodEl) {
+      methodEl.setAttribute("data-scroll-progress", chapter4Progress.toFixed(3));
+    }
+    const methodBusPctEl = document.getElementById("method-bus-pct");
+    if (methodBusPctEl) {
+      methodBusPctEl.textContent = `PROTOCOL BUS: ${Math.round(chapter4Progress * 100)}% WIRED`;
+    }
+    const methodBusLineEl = document.getElementById("method-bus-line");
+    if (methodBusLineEl) {
+      const methodBusDashoffset = Math.round((1 - chapter4Progress) * 1000);
+      methodBusLineEl.setAttribute("stroke-dashoffset", String(methodBusDashoffset));
+      methodBusLineEl.style.strokeDashoffset = `${methodBusDashoffset}px`;
+    }
+    const methodCarriageEl = document.getElementById("method-signal-carriage");
+    if (methodCarriageEl) {
+      methodCarriageEl.style.transform = `translate3d(${(chapter4Progress * 680).toFixed(1)}px, 0px, 0px)`;
+    }
+    const methodCardsEl = document.getElementById("method-cards-stage");
+    if (methodCardsEl) {
+      methodCardsEl.style.transform = `translate3d(0px, ${((1 - chapter4Progress) * 24).toFixed(1)}px, 0px)`;
+    }
+    const methodNodes = document.querySelectorAll<SVGGElement>("g[data-method-node-idx]");
+    methodNodes.forEach((group) => {
+      const idx = Number(group.getAttribute("data-method-node-idx") ?? "0");
+      const reached = chapter4Progress >= idx / 3 - 0.05;
+      const circle = group.querySelector("circle");
+      const texts = group.querySelectorAll("text");
+      if (circle) {
+        circle.setAttribute("fill", reached ? "#121720" : "#0b0e14");
+        circle.setAttribute("stroke", reached ? "#3fb950" : "#3b475c");
+      }
+      if (texts[0]) texts[0].setAttribute("fill", reached ? "#3fb950" : "#647287");
+      if (texts[1]) texts[1].setAttribute("fill", reached ? "#f0f6fc" : "#647287");
     });
   }, [data]);
 
+  const scheduleScrollChoreography = useCallback(() => {
+    if (rafPendingRef.current != null) return;
+    rafPendingRef.current = window.requestAnimationFrame(() => {
+      rafPendingRef.current = null;
+      applyScrollChoreography();
+    });
+  }, [applyScrollChoreography]);
+
   useEffect(() => {
-    updateScrollChoreography();
-    const onScrollOrResize = () => {
-      updateScrollChoreography();
-    };
-    window.addEventListener("scroll", onScrollOrResize, { passive: true });
-    window.addEventListener("resize", onScrollOrResize, { passive: true });
+    applyScrollChoreography();
+    window.addEventListener("scroll", scheduleScrollChoreography, { passive: true });
+    window.addEventListener("resize", scheduleScrollChoreography, { passive: true });
 
     let observer: IntersectionObserver | null = null;
     if (typeof IntersectionObserver !== "undefined") {
       observer = new IntersectionObserver(
         () => {
-          updateScrollChoreography();
+          scheduleScrollChoreography();
         },
         { threshold: [0, 0.15, 0.35, 0.65, 1] },
       );
@@ -1430,12 +1680,17 @@ export function StatusPage() {
     }
 
     return () => {
-      window.removeEventListener("scroll", onScrollOrResize);
-      window.removeEventListener("resize", onScrollOrResize);
+      window.removeEventListener("scroll", scheduleScrollChoreography);
+      window.removeEventListener("resize", scheduleScrollChoreography);
       observer?.disconnect();
+      if (rafPendingRef.current != null) {
+        window.cancelAnimationFrame(rafPendingRef.current);
+        rafPendingRef.current = null;
+      }
     };
-  }, [updateScrollChoreography, data, selectedProjectFilter]);
+  }, [applyScrollChoreography, scheduleScrollChoreography, data, selectedProjectFilter]);
 
+  const currentScrollState = scrollRef.current;
   const overall = data?.overall ?? "unknown";
   const uptime = data ? overallUptime(data.monitors) : null;
   const activeCount = data?.monitors.filter((monitor) => !monitor.paused).length ?? 0;
@@ -1445,35 +1700,37 @@ export function StatusPage() {
     ? Array.from(new Set(data.monitors.map((monitor) => monitor.project)))
     : [];
 
-  const engagedRowsCount = useMemo(() => {
-    if (!data?.monitors) return 0;
-    return data.monitors.filter((m) => (scrollState.rowProgress[m.id] ?? 0) >= 0.5).length;
-  }, [data, scrollState.rowProgress]);
+  const engagedRowsCount = data?.monitors
+    ? data.monitors.filter((m) => (currentScrollState.rowProgress[m.id] ?? 0) >= 0.5).length
+    : 0;
 
-  const sealDashoffset = Math.round((1 - scrollState.chapter3Progress) * 1000);
-  const sealRotation = (scrollState.chapter3Progress * 180).toFixed(1);
-  const incidentLiftY = ((1 - scrollState.chapter3Progress) * 26).toFixed(1);
-  const incidentSlideX = ((1 - scrollState.chapter3Progress) * 20).toFixed(1);
+  const sealDashoffset = Math.round((1 - currentScrollState.chapter3Progress) * 1000);
+  const sealRotation = (currentScrollState.chapter3Progress * 180).toFixed(1);
+  const incidentLiftY = ((1 - currentScrollState.chapter3Progress) * 26).toFixed(1);
+  const incidentSlideX = ((1 - currentScrollState.chapter3Progress) * 20).toFixed(1);
 
-  const methodBusDashoffset = Math.round((1 - scrollState.chapter4Progress) * 1000);
-  const methodCarriageX = (scrollState.chapter4Progress * 680).toFixed(1);
-  const methodGridLiftY = ((1 - scrollState.chapter4Progress) * 24).toFixed(1);
+  const methodBusDashoffset = Math.round((1 - currentScrollState.chapter4Progress) * 1000);
+  const methodCarriageX = (currentScrollState.chapter4Progress * 680).toFixed(1);
+  const methodGridLiftY = ((1 - currentScrollState.chapter4Progress) * 24).toFixed(1);
 
   return (
     <div
+      ref={shellRef}
       className="public-shell telemetric-world"
+      data-render-count={renderCountRef.current}
+      data-raf-updates={rafUpdateCountRef.current}
       style={
         {
-          "--page-scroll": scrollState.pageProgress.toFixed(3),
-          "--hero-progress": scrollState.heroProgress.toFixed(3),
-          "--chapter-1-progress": scrollState.chapter1Progress.toFixed(3),
-          "--chapter-2-progress": scrollState.chapter2Progress.toFixed(3),
-          "--chapter-3-progress": scrollState.chapter3Progress.toFixed(3),
-          "--chapter-4-progress": scrollState.chapter4Progress.toFixed(3),
+          "--page-scroll": currentScrollState.pageProgress.toFixed(3),
+          "--hero-progress": currentScrollState.heroProgress.toFixed(3),
+          "--chapter-1-progress": currentScrollState.chapter1Progress.toFixed(3),
+          "--chapter-2-progress": currentScrollState.chapter2Progress.toFixed(3),
+          "--chapter-3-progress": currentScrollState.chapter3Progress.toFixed(3),
+          "--chapter-4-progress": currentScrollState.chapter4Progress.toFixed(3),
         } as React.CSSProperties
       }
     >
-      <TelemetryCanvas overallState={overall} scrollY={scrollState.scrollY} />
+      <TelemetryCanvas overallState={overall} />
 
       <a className="skip-link" href="#main">
         Skip to status
@@ -1503,7 +1760,7 @@ export function StatusPage() {
             id="masthead-scroll-fill"
             className="masthead-scroll-fill"
             style={{
-              transform: `scaleX(${scrollState.pageProgress.toFixed(3)})`,
+              transform: `scaleX(${currentScrollState.pageProgress.toFixed(3)})`,
             }}
           />
         </div>
@@ -1515,12 +1772,13 @@ export function StatusPage() {
           id="hero-section"
           className="hero"
           aria-labelledby="status-heading"
-          data-scroll-progress={scrollState.heroProgress.toFixed(3)}
+          data-scroll-progress={currentScrollState.heroProgress.toFixed(3)}
         >
           <div
+            id="hero-copy-plate"
             className="hero-copy"
             style={{
-              transform: `translate3d(0px, ${(-scrollState.heroProgress * 18).toFixed(1)}px, 0px)`,
+              transform: `translate3d(0px, ${(-currentScrollState.heroProgress * 18).toFixed(1)}px, 0px)`,
             }}
           >
             <div className="hero-eyebrow-row">
@@ -1593,7 +1851,7 @@ export function StatusPage() {
             className="hero-figure"
             aria-label="Thirty-day fleet ledger summary"
             style={{
-              transform: `translate3d(0px, ${(scrollState.heroProgress * 20).toFixed(1)}px, 0px)`,
+              transform: `translate3d(0px, ${(currentScrollState.heroProgress * 20).toFixed(1)}px, 0px)`,
             }}
           >
             <div className="figure-top">
@@ -1633,7 +1891,7 @@ export function StatusPage() {
             {data ? (
               <HeroFleetSeismograph
                 monitors={data.monitors}
-                heroProgress={scrollState.heroProgress}
+                heroProgress={currentScrollState.heroProgress}
               />
             ) : null}
 
@@ -1703,7 +1961,7 @@ export function StatusPage() {
               id="services"
               className="section"
               aria-labelledby="services-heading"
-              data-scroll-progress={scrollState.chapter1Progress.toFixed(3)}
+              data-scroll-progress={currentScrollState.chapter1Progress.toFixed(3)}
             >
               <div className="section-head">
                 <div>
@@ -1729,7 +1987,7 @@ export function StatusPage() {
                     className="spool-wheel-svg"
                     viewBox="0 0 36 36"
                     style={{
-                      transform: `rotate(${(scrollState.chapter1Progress * 180).toFixed(1)}deg)`,
+                      transform: `rotate(${(currentScrollState.chapter1Progress * 180).toFixed(1)}deg)`,
                     }}
                   >
                     <circle
@@ -1754,7 +2012,7 @@ export function StatusPage() {
                       id="services-spool-fill"
                       className="spool-track-fill"
                       style={{
-                        transform: `scaleX(${scrollState.chapter1Progress.toFixed(3)})`,
+                        transform: `scaleX(${currentScrollState.chapter1Progress.toFixed(3)})`,
                       }}
                     />
                   </div>
@@ -1768,9 +2026,11 @@ export function StatusPage() {
                 </div>
 
                 <div id="services-spool-readout" className="spool-readout mono">
-                  <span>FEED: {Math.round(scrollState.chapter1Progress * 100)}%</span>
+                  <span id="services-spool-pct">
+                    FEED: {Math.round(currentScrollState.chapter1Progress * 100)}%
+                  </span>
                   <span>·</span>
-                  <span>
+                  <span id="services-spool-engaged">
                     {engagedRowsCount}/{data.monitors.length} STRIPS UNSPOOLED
                   </span>
                 </div>
@@ -1852,7 +2112,7 @@ export function StatusPage() {
                               key={monitor.id}
                               monitor={monitor}
                               timeoutMs={data.meta.timeoutMs}
-                              rowProgress={scrollState.rowProgress[monitor.id] ?? 0.2}
+                              rowProgress={currentScrollState.rowProgress[monitor.id] ?? 0.2}
                             />
                           ))}
                         </div>
@@ -1868,7 +2128,8 @@ export function StatusPage() {
               <InteractiveProbeSandbox
                 monitors={data.monitors}
                 timeoutMs={data.meta.timeoutMs}
-                chapterProgress={scrollState.chapter2Progress}
+                chapterProgress={currentScrollState.chapter2Progress}
+                onTargetChange={scheduleScrollChoreography}
               />
             </section>
 
@@ -1877,7 +2138,7 @@ export function StatusPage() {
               id="incidents"
               className="section"
               aria-labelledby="incidents-heading"
-              data-scroll-progress={scrollState.chapter3Progress.toFixed(3)}
+              data-scroll-progress={currentScrollState.chapter3Progress.toFixed(3)}
             >
               <div className="section-head">
                 <div>
@@ -1892,7 +2153,7 @@ export function StatusPage() {
               <div
                 id="incident-dossier-stage"
                 className="incident-dossier-stage"
-                data-scroll-progress={scrollState.chapter3Progress.toFixed(3)}
+                data-scroll-progress={currentScrollState.chapter3Progress.toFixed(3)}
               >
                 {/* Left: Scroll-Driven Rotary Verification Seal & Audit Spine */}
                 <aside className="incident-seal-panel" aria-hidden="true">
@@ -1961,6 +2222,7 @@ export function StatusPage() {
                           : `${activeIncidents.length} ACTIVE`}
                       </text>
                       <text
+                        id="incident-seal-progress-text"
                         x="90"
                         y="102"
                         textAnchor="middle"
@@ -1968,7 +2230,7 @@ export function StatusPage() {
                         fontSize="9.5"
                         fontFamily="var(--mono)"
                       >
-                        D1 VERIFIED · {Math.round(scrollState.chapter3Progress * 100)}%
+                        SEAL DRAWN · {Math.round(currentScrollState.chapter3Progress * 100)}%
                       </text>
                     </svg>
                   </div>
@@ -1980,7 +2242,7 @@ export function StatusPage() {
                         id="incident-spine-fill"
                         className="spine-track-fill"
                         style={{
-                          transform: `scaleY(${scrollState.chapter3Progress.toFixed(3)})`,
+                          transform: `scaleY(${currentScrollState.chapter3Progress.toFixed(3)})`,
                         }}
                       />
                     </div>
@@ -2024,15 +2286,15 @@ export function StatusPage() {
               id="method"
               className="section method"
               aria-labelledby="method-heading"
-              data-scroll-progress={scrollState.chapter4Progress.toFixed(3)}
+              data-scroll-progress={currentScrollState.chapter4Progress.toFixed(3)}
             >
               <div className="section-head">
                 <div>
                   <p className="section-kicker">04 / Method &amp; protocol</p>
                   <h2 id="method-heading">How these numbers are made</h2>
                 </div>
-                <p className="section-meta mono">
-                  PROTOCOL BUS: {Math.round(scrollState.chapter4Progress * 100)}% WIRED
+                <p id="method-bus-pct" className="section-meta mono">
+                  PROTOCOL BUS: {Math.round(currentScrollState.chapter4Progress * 100)}% WIRED
                 </p>
               </div>
 
@@ -2074,9 +2336,9 @@ export function StatusPage() {
                     { x: 560, code: "03", title: "ZERO-SAMPLE MATH" },
                     { x: 800, code: "04", title: "6-STATE LEDGER" },
                   ].map((node, idx) => {
-                    const reached = scrollState.chapter4Progress >= idx / 3 - 0.05;
+                    const reached = currentScrollState.chapter4Progress >= idx / 3 - 0.05;
                     return (
-                      <g key={node.code}>
+                      <g key={node.code} data-method-node-idx={idx}>
                         <circle
                           cx={node.x}
                           cy="38"
@@ -2312,9 +2574,7 @@ function ServiceRow({
         </div>
         <p className="strip-caption">
           <span>30 days ago</span>
-          <span className="mono">
-            {formatUptime(monitor.uptime.d30)} uptime · SPOOL {Math.round(clamped * 100)}%
-          </span>
+          <span className="mono">{formatUptime(monitor.uptime.d30)} uptime</span>
           <span>Today</span>
         </p>
       </div>

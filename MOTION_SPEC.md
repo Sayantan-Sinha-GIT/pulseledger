@@ -88,7 +88,7 @@ Actual live screenshots captured at 1440×900:
 ---
 
 ## 6. Deterministic Scroll Choreography Engine & Four Scroll-Driven Chapters
-In addition to the continuous ambient stylus waveform, `StatusPage.tsx` runs a deterministic scroll choreography engine (`updateScrollChoreography`) attached to `window` `scroll` and `resize` events plus an `IntersectionObserver` across `#services`, `#probe`, `#incidents`, and `#method`. Every chapter transforms visibly as a direct mathematical function of scroll position:
+In addition to the continuous ambient stylus waveform, `StatusPage.tsx` runs a deterministic scroll choreography engine (`scheduleScrollChoreography` -> `applyScrollChoreography`) attached to `window` `scroll` and `resize` events plus an `IntersectionObserver` across `#services`, `#probe`, `#incidents`, and `#method`. Raw scroll events are coalesced to at most **one `requestAnimationFrame` update per frame** and applied directly to DOM nodes (`style.transform`, `style.clipPath`, `stroke-dashoffset`, and CSS custom properties) using a `useRef` state store—producing **zero whole-page React rerenders** on scroll (`data-render-count` remains constant across full-page scroll on desktop and phone). Every chapter transforms visibly as a direct mathematical function of scroll position:
 
 1. **Chapter 1: Fleet Matrix & Physical Ledger Strip Unspooling (`#services`)**:
    - **Chapter Spool Apparatus (`#chapter-1-spool-bar`)**: Tracks `chapter1Progress` (`data-scroll-progress` on `#services`).
@@ -115,6 +115,7 @@ In addition to the continuous ambient stylus waveform, `StatusPage.tsx` runs a d
    - **Rotary Verification Seal (`#incident-seal-svg`)**:
      - `#incident-seal-ring`: Circular verification perimeter (`pathLength="1000"`) draws continuously with scroll (`strokeDashoffset: ${(1 - chapter3Progress) * 1000}px`).
      - `#incident-seal-rotor`: Inner calibration crosshair rotor turns 180 degrees across the chapter scroll (`transform: rotate(${chapter3Progress * 180}deg)`).
+     - `#incident-seal-progress-text`: Displays `SEAL DRAWN · ${Math.round(chapter3Progress * 100)}%` so presentation progress is never conflated with data verification metrics, while keeping real incident counts (`SEAL: CLEAN` / `${activeIncidents.length} ACTIVE` and `${incidents.length} RECORD(S)`) separate.
      - `#incident-spine-fill`: Vertical 30-day audit horizon spine fills downward (`transform: scaleY(${chapter3Progress})`).
    - **Forensic Broadsheet Panel (`#incident-broadsheet-panel`)**:
      - Unfolds diagonally into the reading register via `transform: translate3d(${(1 - chapter3Progress) * 20}px, ${(1 - chapter3Progress) * 26}px, 0px)`.

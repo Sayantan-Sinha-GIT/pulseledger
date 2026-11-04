@@ -163,9 +163,10 @@ Previous iterations relied only on ambient time-based canvas waveforms without s
 5. **Round 17 (Mobile 390×844 Scroll Choreography & Overflow Verification)**:
    - Verified all 4 chapters and Hero carriage at 390×844 (`docs/motion-review/chapter{1..4}-mobile-390-{before|after}.png`).
    - Confirmed `innerWidth = 390`, `clientWidth = 390`, `scrollWidth = 390` (zero horizontal overflow) and verified all anchor offsets (`#services`, `#probe`, `#incidents`, `#method`, `#project-0`) clear the sticky masthead by $>33\text{px}$.
-6. **Round 18 (Reduced-Motion & Automated Playwright Scroll-Delta Gate)**:
-   - Verified `prefers-reduced-motion: reduce` (`docs/motion-review/round5-reduced-motion-desktop.png`): `updateScrollChoreography` sets all chapter and row progresses to `1`, rendering unclipped strips and complete SVG traces with zero animation loops.
-   - Added automated Playwright test `"scroll choreography visibly transforms all chapters across scroll positions"` in `e2e/public.spec.ts` that fails if any chapter fails to produce a meaningful computed delta across two scroll positions on desktop (1440×900) or mobile (390×844).
+6. **Round 18 (Reduced-Motion, Provenance Label & Zero-Rerender rAF Gate)**:
+   - Verified `prefers-reduced-motion: reduce` (`docs/motion-review/round5-reduced-motion-desktop.png`): `applyScrollChoreography` sets all chapter and row progresses to `1`, rendering unclipped strips and complete SVG traces with zero animation loops.
+   - Renamed the incident rotary seal progress label (`#incident-seal-progress-text`) from `D1 VERIFIED · XX%` to `SEAL DRAWN · XX%` (and removed `SPOOL XX%` from the per-row `.strip-caption` uptime line) so scroll presentation progress is never conflated with data verification metrics while real incident counts (`SEAL: CLEAN` / `N ACTIVE` and `N RECORD(S)`) remain separate.
+   - Replaced React `useState` scroll updates with a single-per-frame `requestAnimationFrame` coalescer (`scheduleScrollChoreography` -> `applyScrollChoreography`) that mutates DOM styles/attributes directly. Verified in Playwright (`e2e/public.spec.ts`) that bursting 10 raw `scroll` events triggers exactly `1` rAF update and `0` React rerenders, and scrolling from `0px` to `maxScroll` across all 4 chapters on both desktop (1440×900) and mobile (390×844) produces `0` whole-page React rerenders (`data-render-count` delta = `0`).
 
 ### Measured Two-Position Scroll-Delta Evidence (`docs/motion-review/scroll-measurements.json`)
 
