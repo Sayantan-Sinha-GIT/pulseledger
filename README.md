@@ -159,10 +159,13 @@ owner sign-in/out, protected reload behavior, monitor create/check/edit/
 pause/resume/remove with confirmation, and an incident opened → updated → resolved flow
 that is then read back on the public page.
 
-Current results: typecheck clean, 70/70 Vitest tests passing, production build succeeds,
+Current combined-branch results: typecheck clean, 73/73 Vitest tests passing, local D1
+migration checks passing, production build succeeds,
 10/10 desktop Playwright tests passing, 8/8 mobile Playwright tests passing (2 destructive
 mobile flows intentionally skipped), `npm audit` reports 0 vulnerabilities, and the
-secret scan passes on every tracked file.
+secret scan passes on every tracked file. The D1 read-budget migration and redesigned
+public site are committed, but live deployment awaits the Cloudflare D1 daily quota
+reset; see `docs/D1_READ_BUDGET.md` for the deployment gate and read-cost estimate.
 
 Live verification on 2026-11-01: the deployed cron fired in the 08:15 UTC slot and both
 seeded monitors recorded `scheduled` checks with HTTP 200 (59 ms and 61 ms). The live
