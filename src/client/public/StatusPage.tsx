@@ -72,13 +72,14 @@ function overallUptime(monitors: MonitorView[]) {
 }
 
 /**
- * Living background canvas rendering a telemetric pulse matrix:
- * coordinate grid, horizontal signal busbars, floating packet vectors,
- * and periodic sonar radar sweeps emanating from the hero origin.
+ * Living background canvas rendering a continuous seismic / print operations journal:
+ * Continuous millimetric ledger chart paper rulings, dual-channel analog stylus needle ink traces
+ * (fleet harmonic baseline and cron epoch heartbeat pulse), driven by live fleet operational health.
+ * When a service degrades or fails, the ink trace exhibits shock tremors and amplified jitter.
  * Automatically throttles on mobile, pauses when offscreen or hidden,
  * and halts when prefers-reduced-motion is active.
  */
-function TelemetryCanvas() {
+function TelemetryCanvas({ overallState = "operational" }: { overallState?: OverallState }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
@@ -91,20 +92,10 @@ function TelemetryCanvas() {
     let lastTime = performance.now();
     let width = 0;
     let height = 0;
+    let phaseA = 0;
+    let phaseB = 0;
+    let pulseX = -100;
     const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Bus lines and signal packets
-    interface Packet {
-      x: number;
-      y: number;
-      speed: number;
-      len: number;
-      hue: number;
-      busY: number;
-    }
-
-    let packets: Packet[] = [];
-    const busYs: number[] = [];
 
     const resize = () => {
       if (!canvas) return;
@@ -116,54 +107,64 @@ function TelemetryCanvas() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // Recompute buslines
-      busYs.length = 0;
-      const spacing = 120;
-      for (let y = 60; y < height; y += spacing) {
-        busYs.push(y);
-      }
-
-      // Generate packet budget
-      const packetCount = width < 768 ? 10 : 22;
-      packets = Array.from({ length: packetCount }, () => ({
-        x: Math.random() * width,
-        y: 0,
-        busY: busYs[Math.floor(Math.random() * busYs.length)] ?? 100,
-        speed: 40 + Math.random() * 80,
-        len: 20 + Math.random() * 40,
-        hue: Math.random() > 0.3 ? 155 : 190, // Emerald or Cyan
-      }));
     };
 
     resize();
     window.addEventListener("resize", resize);
 
     if (isReduced) {
-      // Draw static telemetry grid frame once
-      ctx.fillStyle = "#070a0f";
+      // Draw static high-resolution printed chart paper sheet once
+      ctx.fillStyle = "#0b0e14";
       ctx.fillRect(0, 0, width, height);
 
-      ctx.strokeStyle = "rgba(148, 163, 184, 0.05)";
+      // Horizontal millimetric chart rules
+      ctx.strokeStyle = "rgba(40, 50, 67, 0.45)";
       ctx.lineWidth = 1;
-      for (let x = 0; x < width; x += 60) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.stroke();
-      }
-      for (const y of busYs) {
+      for (let y = 28; y < height; y += 28) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
         ctx.stroke();
       }
+
+      // Major register bands
+      ctx.strokeStyle = "rgba(56, 70, 92, 0.65)";
+      ctx.lineWidth = 1.2;
+      for (let y = 140; y < height; y += 140) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Static Channel 1 baseline (calm harmonic wave)
+      const base1 = height * 0.38;
+      ctx.strokeStyle = "rgba(56, 139, 253, 0.75)";
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      for (let x = 0; x < width; x += 4) {
+        const y = base1 + Math.sin(x * 0.008) * 12 + Math.sin(x * 0.02) * 5;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Static Channel 2 baseline (cron cadence)
+      const base2 = height * 0.72;
+      ctx.strokeStyle = "rgba(46, 160, 67, 0.7)";
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      for (let x = 0; x < width; x += 4) {
+        const y = base2 + Math.cos(x * 0.006) * 8;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
       return () => {
         window.removeEventListener("resize", resize);
       };
     }
-
-    let radarPhase = 0;
 
     const render = (now: number) => {
       if (document.hidden) {
@@ -172,70 +173,145 @@ function TelemetryCanvas() {
       }
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
-      radarPhase = (radarPhase + dt * 0.35) % 1;
+
+      // Advance wave phases
+      const isDegradedOrDown =
+        overallState === "degraded" || overallState === "down" || overallState === "incident";
+      const speedMultiplier = isDegradedOrDown ? 1.8 : 1.0;
+      phaseA += dt * 1.35 * speedMultiplier;
+      phaseB += dt * 0.95 * speedMultiplier;
+
+      // Pulse traveling deflection
+      pulseX += dt * (width < 768 ? 90 : 150);
+      if (pulseX > width + 100) pulseX = -100;
 
       ctx.clearRect(0, 0, width, height);
 
-      // Draw faint coordinate grid
-      ctx.strokeStyle = "rgba(148, 163, 184, 0.04)";
+      // Background chart paper tone
+      ctx.fillStyle = "#0b0e14";
+      ctx.fillRect(0, 0, width, height);
+
+      // 1. Draw horizontal continuous millimetric ledger lines
+      ctx.strokeStyle = "rgba(40, 50, 67, 0.32)";
       ctx.lineWidth = 1;
-      for (let x = 0; x < width; x += 60) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, height);
-        ctx.stroke();
-      }
-      for (const y of busYs) {
+      const stepY = 28;
+      for (let y = stepY; y < height; y += stepY) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
         ctx.stroke();
       }
 
-      // Draw subtle radar sonar rings from top-center
-      const originX = width * 0.5;
-      const originY = 180;
-      const maxRadius = Math.max(width, height) * 0.75;
-
-      for (let i = 0; i < 3; i++) {
-        const ringProgress = (radarPhase + i * 0.33) % 1;
-        const radius = ringProgress * maxRadius;
-        const alpha = Math.sin(ringProgress * Math.PI) * 0.08;
-        if (alpha > 0) {
-          ctx.strokeStyle = `rgba(0, 229, 153, ${alpha})`;
-          ctx.lineWidth = 1.2;
-          ctx.beginPath();
-          ctx.arc(originX, originY, radius, 0, Math.PI * 2);
-          ctx.stroke();
-        }
+      // Major ledger register bands every 140px
+      ctx.strokeStyle = "rgba(56, 70, 92, 0.52)";
+      ctx.lineWidth = 1.2;
+      for (let y = 140; y < height; y += 140) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
       }
 
-      // Draw traveling telemetry packets
-      for (const pkt of packets) {
-        pkt.x += pkt.speed * dt;
-        if (pkt.x > width + 50) {
-          pkt.x = -50;
-          pkt.busY = busYs[Math.floor(Math.random() * busYs.length)] ?? 100;
+      // Vertical timecode division graduation marks along margins
+      ctx.strokeStyle = "rgba(56, 70, 92, 0.35)";
+      ctx.lineWidth = 1;
+      const stepX = width < 768 ? 80 : 120;
+      for (let x = 0; x < width; x += stepX) {
+        // Top tick
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 8);
+        ctx.stroke();
+        // Bottom tick
+        ctx.beginPath();
+        ctx.moveTo(x, height - 8);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+
+      // 2. Channel 1: Fleet Baseline & Operational Inkwash (Drafting Cobalt / Cyan)
+      const base1 = height * 0.38;
+      const amp1 = isDegradedOrDown ? 24 : 12;
+
+      ctx.save();
+      ctx.strokeStyle = isDegradedOrDown ? "rgba(248, 81, 73, 0.85)" : "rgba(56, 139, 253, 0.8)";
+      ctx.lineWidth = 2.2;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.shadowColor = isDegradedOrDown ? "rgba(248, 81, 73, 0.5)" : "rgba(56, 139, 253, 0.35)";
+      ctx.shadowBlur = 6;
+
+      ctx.beginPath();
+      const xStep = width < 768 ? 4 : 2;
+      for (let x = 0; x <= width; x += xStep) {
+        let deflection =
+          Math.sin(x * 0.009 + phaseA) * amp1 +
+          Math.sin(x * 0.021 - phaseA * 0.8) * (amp1 * 0.45);
+
+        // Status-driven turbulence
+        if (isDegradedOrDown) {
+          deflection +=
+            Math.sin(x * 0.08 + phaseA * 3.5) * 8 + Math.cos(x * 0.14) * 4;
         }
 
-        const grad = ctx.createLinearGradient(pkt.x - pkt.len, pkt.busY, pkt.x, pkt.busY);
-        grad.addColorStop(0, `hsla(${pkt.hue}, 90%, 55%, 0)`);
-        grad.addColorStop(0.7, `hsla(${pkt.hue}, 90%, 55%, 0.4)`);
-        grad.addColorStop(1, `hsla(${pkt.hue}, 90%, 65%, 0.9)`);
+        const y = base1 + deflection;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
 
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(pkt.x - pkt.len, pkt.busY);
-        ctx.lineTo(pkt.x, pkt.busY);
-        ctx.stroke();
+      // Mechanical stylus cursor on Channel 1 (at trailing or current coordinate)
+      const cursorX1 = (width * 0.85 + Math.sin(phaseA) * 60) % width;
+      const cursorY1 =
+        base1 +
+        Math.sin(cursorX1 * 0.009 + phaseA) * amp1 +
+        Math.sin(cursorX1 * 0.021 - phaseA * 0.8) * (amp1 * 0.45);
 
-        // Packet head pulse dot
-        ctx.fillStyle = `hsl(${pkt.hue}, 95%, 75%)`;
+      ctx.fillStyle = isDegradedOrDown ? "#f85149" : "#58a6ff";
+      ctx.beginPath();
+      ctx.arc(cursorX1, cursorY1, 3.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 3. Channel 2: Cron Cadence & Epoch Heartbeat (Register Emerald)
+      const base2 = height * 0.72;
+      ctx.save();
+      ctx.strokeStyle = "rgba(46, 160, 67, 0.75)";
+      ctx.lineWidth = 2.0;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.shadowColor = "rgba(46, 160, 67, 0.4)";
+      ctx.shadowBlur = 5;
+
+      ctx.beginPath();
+      for (let x = 0; x <= width; x += xStep) {
+        let deflection = Math.cos(x * 0.006 + phaseB) * 6;
+
+        // Impulsive heartbeat deflection traveling across the drum
+        const dist = Math.abs(x - pulseX);
+        if (dist < 44) {
+          const envelope = Math.cos((dist / 44) * (Math.PI / 2));
+          deflection -= Math.sin((dist / 44) * Math.PI * 2) * 26 * envelope;
+        }
+
+        const y = base2 + deflection;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Mechanical needle stylus on Channel 2
+      const cursorY2 =
+        base2 +
+        Math.cos(pulseX * 0.006 + phaseB) * 6 -
+        26; // at peak
+      if (pulseX >= 0 && pulseX <= width) {
+        ctx.fillStyle = "#3fb950";
         ctx.beginPath();
-        ctx.arc(pkt.x, pkt.busY, 2, 0, Math.PI * 2);
+        ctx.arc(pulseX, cursorY2, 3, 0, Math.PI * 2);
         ctx.fill();
       }
+      ctx.restore();
 
       animId = requestAnimationFrame(render);
     };
@@ -246,7 +322,7 @@ function TelemetryCanvas() {
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [overallState]);
 
   return <canvas ref={canvasRef} className="telemetry-canvas" aria-hidden="true" />;
 }
@@ -288,7 +364,7 @@ function InteractiveProbeSandbox({
     [monitors, selectedMonitorId],
   );
 
-  // Oscilloscope canvas animation
+  // Oscilloscope canvas animation (Laboratory Drum Oscillograph)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -302,8 +378,12 @@ function InteractiveProbeSandbox({
       const height = canvas.height;
       ctx.clearRect(0, 0, width, height);
 
-      // Oscilloscope background grid
-      ctx.strokeStyle = "rgba(0, 229, 153, 0.08)";
+      // 1. Dark graphite drafting instrument background
+      ctx.fillStyle = "#0c1017";
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. Physical millimetric chart paper gridlines
+      ctx.strokeStyle = "rgba(40, 50, 67, 0.45)";
       ctx.lineWidth = 1;
       const gridStep = 24;
       for (let x = 0; x < width; x += gridStep) {
@@ -319,8 +399,18 @@ function InteractiveProbeSandbox({
         ctx.stroke();
       }
 
-      // Center crosshair
-      ctx.strokeStyle = "rgba(0, 229, 153, 0.18)";
+      // Vertical graduated scale ticks along the left border (0 to 400ms)
+      ctx.strokeStyle = "rgba(56, 139, 253, 0.4)";
+      ctx.lineWidth = 1.2;
+      for (let y = 12; y < height; y += 36) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(6, y);
+        ctx.stroke();
+      }
+
+      // Center datum reference baseline
+      ctx.strokeStyle = "rgba(56, 139, 253, 0.28)";
       ctx.beginPath();
       ctx.moveTo(0, height / 2);
       ctx.lineTo(width, height / 2);
@@ -328,7 +418,7 @@ function InteractiveProbeSandbox({
       ctx.lineTo(width / 2, height);
       ctx.stroke();
 
-      // Signal wave
+      // 3. Analog stylus signal wave with dual-trace persistence
       if (!isReduced) {
         wavePhaseRef.current += probeStatus === "probing" ? 0.22 : 0.04;
       }
@@ -338,10 +428,29 @@ function InteractiveProbeSandbox({
         probeStatus === "probing" ? 34 : probeLatency ? Math.min(26, probeLatency / 8) : 16;
       const freq = probeStatus === "probing" ? 0.045 : 0.025;
 
-      ctx.strokeStyle = probeStatus === "probing" ? "#00d4ff" : "#00e599";
-      ctx.lineWidth = 2.5;
-      ctx.shadowColor = probeStatus === "probing" ? "rgba(0, 212, 255, 0.8)" : "rgba(0, 229, 153, 0.8)";
-      ctx.shadowBlur = 8;
+      // Ghost / persistence trace
+      ctx.strokeStyle =
+        probeStatus === "probing" ? "rgba(88, 166, 255, 0.2)" : "rgba(46, 160, 67, 0.18)";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      for (let x = 0; x < width; x++) {
+        let y = midY;
+        if (waveformType === "sine") {
+          y = midY + Math.sin(x * freq + phase - 0.2) * (amplitude * 0.9);
+        } else {
+          const cycle = (x * 0.03 + (phase - 0.2) * 0.5) % 3;
+          y = midY + (cycle > 2.5 ? -amplitude : cycle > 1.2 && cycle < 1.4 ? amplitude : 0);
+        }
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Primary stylus ink trace
+      ctx.strokeStyle = probeStatus === "probing" ? "#58a6ff" : "#3fb950";
+      ctx.lineWidth = 2.4;
+      ctx.shadowColor = probeStatus === "probing" ? "rgba(88, 166, 255, 0.7)" : "rgba(46, 160, 67, 0.6)";
+      ctx.shadowBlur = 6;
 
       ctx.beginPath();
       for (let x = 0; x < width; x++) {
@@ -349,7 +458,6 @@ function InteractiveProbeSandbox({
         if (waveformType === "sine") {
           y = midY + Math.sin(x * freq + phase) * amplitude;
         } else {
-          // Packet pulse wave
           const cycle = (x * 0.03 + phase * 0.5) % 3;
           y = midY + (cycle > 2.5 ? -amplitude : cycle > 1.2 && cycle < 1.4 ? amplitude : 0);
         }
@@ -358,6 +466,17 @@ function InteractiveProbeSandbox({
       }
       ctx.stroke();
       ctx.shadowBlur = 0; // reset
+
+      // Active mechanical stylus point at center
+      const currentNeedleY =
+        midY +
+        (waveformType === "sine"
+          ? Math.sin((width / 2) * freq + phase) * amplitude
+          : 0);
+      ctx.fillStyle = probeStatus === "probing" ? "#58a6ff" : "#3fb950";
+      ctx.beginPath();
+      ctx.arc(width / 2, currentNeedleY, 3, 0, Math.PI * 2);
+      ctx.fill();
 
       if (!isReduced) {
         animRef.current = requestAnimationFrame(render);
@@ -422,7 +541,7 @@ function InteractiveProbeSandbox({
     <div className="probe-sandbox" id="probe" aria-labelledby="probe-heading">
       <div className="section-head">
         <div>
-          <p className="section-kicker">Interactive Demonstration</p>
+          <p className="section-kicker">02 / Laboratory Instrument</p>
           <h2 id="probe-heading">Live Telemetry & Signal Probe</h2>
         </div>
         <p className="section-meta">
@@ -533,7 +652,7 @@ function InteractiveProbeSandbox({
         {/* Right: Oscilloscope & Telemetry HUD */}
         <div className="probe-screen-panel">
           <div className="oscilloscope-header">
-            <span className="oscilloscope-tag mono">OSCILLOSCOPE // REAL-TIME EDGE TELEMETRY</span>
+            <span className="oscilloscope-tag mono">INSTRUMENT // DUAL-TRACE STRIP RECORDER</span>
             <span className="oscilloscope-pop mono">{edgePop}</span>
           </div>
           <div className="oscilloscope-viewport">
@@ -640,7 +759,7 @@ export function StatusPage() {
 
   return (
     <div className="public-shell telemetric-world">
-      <TelemetryCanvas />
+      <TelemetryCanvas overallState={overall} />
 
       <a className="skip-link" href="#main">
         Skip to status
@@ -653,7 +772,7 @@ export function StatusPage() {
             Pulse<span>Ledger</span>
           </Link>
           <span className="telemetry-badge mono" aria-label="Edge location">
-            EDGE: APAC · D1
+            JOURNAL: APAC · D1
           </span>
         </div>
         <nav className="masthead-nav" aria-label="Primary">
@@ -674,7 +793,7 @@ export function StatusPage() {
             <div className="hero-eyebrow-row">
               <span className="telemetry-pulse-dot" />
               <p className="eyebrow">
-                Live Operations Desk
+                Live Operations Journal
                 {data ? ` · ${formatTimestamp(data.generatedAt)}` : ""}
               </p>
             </div>
@@ -874,7 +993,7 @@ export function StatusPage() {
             <section id="incidents" className="section" aria-labelledby="incidents-heading">
               <div className="section-head">
                 <div>
-                  <p className="section-kicker">02 / Incident log</p>
+                  <p className="section-kicker">03 / Incident journal</p>
                   <h2 id="incidents-heading">What happened, in plain language</h2>
                 </div>
                 <p className="section-meta">
@@ -904,7 +1023,7 @@ export function StatusPage() {
             <section id="method" className="section method" aria-labelledby="method-heading">
               <div className="section-head">
                 <div>
-                  <p className="section-kicker">03 / Method</p>
+                  <p className="section-kicker">04 / Method & protocol</p>
                   <h2 id="method-heading">How these numbers are made</h2>
                 </div>
               </div>

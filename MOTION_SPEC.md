@@ -1,96 +1,122 @@
-# MOTION_SPEC.md — PulseLedger Telemetric Signal World
+# MOTION_SPEC.md — PulseLedger Continuous Seismic & Print Operations Journal
 
 ## 1. Product Metaphor & Visual Thesis
-PulseLedger is an independent uptime and incident operations desk. Its visual metaphor is the **Telemetric Pulse Matrix**: a living edge observatory that continuously listens to the heartbeat of distributed services (Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu, Dispatch). It avoids consumer SaaS tropes (floating generic blobs, cartoon illustrations, rainbow cards) in favor of **tactile aerospace telemetry**: luminous oscilloscope waveforms, packet propagation vectors, edge coordinate lines, and atomic clock precision.
+PulseLedger is an independent uptime and incident operations desk. Following the owner's feedback to eliminate visual resemblance to CodeSense's cosmic coordinate grid and Pathfolio's centered porcelain dossier, PulseLedger adopts a completely original, product-specific metaphor: **The Continuous Seismic & Print Operations Journal with Layered Ink**.
 
-## 2. Color Palette & Material Architecture
-- **Deep Slate Void (Chassis)**: `#070a0f` base background, with subtle layered radial gradients of deep obsidian `#0b1018` and navy slate `#101726`.
-- **Surface Elevation**: Cards and drawers use `#0d131f` (sunken), `#121a2b` (raised), and `#172136` (hover/active), framed with hairline telemetry borders (`1px solid rgba(148, 163, 184, 0.12)`).
-- **Signal Status Luminance**:
-  - `Operational`: Vibrant emerald `#00e599` (core), `#059669` (border), `rgba(0, 229, 153, 0.15)` (ambient glow aura).
-  - `Degraded`: Alert amber `#fbbf24` (core), `#d97706` (border), `rgba(251, 191, 36, 0.15)` (glow).
-  - `Down`: Disruption crimson `#f43f5e` (core), `#e11d48` (border), `rgba(244, 63, 94, 0.2)` (glow).
-  - `Incident`: Telemetry violet `#a855f7` (core), `#9333ea` (border), `rgba(168, 85, 247, 0.18)` (glow).
-  - `Paused`: Telemetric slate `#64748b` (core), `#475569` (border).
-  - `Unknown`: Neutral zinc `#71717a`.
-- **Signal Accents**: Cyan `#00d4ff` (ping trace and active beam), Ice White `#f8fafc` (primary typography), Muted Phosphor `#94a3b8` (secondary telemetry tags).
+It is modeled after an automated physical drum recorder and precision editorial ledger:
+- **Continuous Ruled Ledger Chart Bands**: Continuous horizontal millimetric chart paper rulings (`#283243`), major register bands (`#3b475c`), and margin time-epoch ticks (`#647287`).
+- **Dual-Channel Analog Stylus Needles**: Two continuous living analog ink traces gliding smoothly from right to left across the screen:
+  - **Channel 1 (Fleet Baseline Harmonic Inkwash)**: Smooth compound harmonic waveform in drafting cobalt/cyan (`#388bfd` / `#58a6ff`). When all systems are nominal, it maintains steady harmonic oscillations; if degraded or down, it dynamically exhibits acute shock tremors and high-frequency jitter.
+  - **Channel 2 (Cron Cadence & Epoch Heartbeat)**: A continuous register emerald (`#2ea043`) ink line featuring rhythmic traveling cardiac impulses corresponding to the Cloudflare Worker 15-minute cron check cycle.
+- **Physical Embossed Ink Stamps & Seals**: In place of glowing neon sci-fi halos, status states use crisp double-bordered ink stamps (`.state-operational`, `.state-degraded`, `.state-down`) with tactile breathing outlines.
+- **Precision Laboratory Drum Oscillograph**: In place of generic radar rings, the interactive signal probe is housed in a matte graphite instrument chassis with graduated physical scale ticks (0 to 500ms), dual-trace persistence, and a stepped 5-stage mechanical verification pipeline.
+- **Zero Cosmic Trope / Zero Porcelain Trope**:
+  - NO pitch-black void `#08090c`, no orbital rings, no celestial planet nodes, no neon orange/cyan halos, no floating star particles (CodeSense).
+  - NO porcelain cream `#f8f7f2`, no centered dossier single-column cards, no brass/stone ornaments, no book serif headlines (Pathfolio).
+
+---
+
+## 2. Benchmark Comparison at Equal Width (1440px Desktop)
+
+Actual live screenshots captured at 1440×900:
+- **CodeSense**: `docs/screenshots/comparison-codesense-1440.png` (`https://pr-reviewer-omega-liard.vercel.app/`)
+- **Pathfolio**: `docs/screenshots/comparison-pathfolio-1440.png` (`https://pathfolio.pages.dev/`)
+- **PulseLedger**: `docs/screenshots/comparison-pulseledger-1440.png` (`https://pulseledger.srimantasutapa123.workers.dev/`)
+
+| Visual Dimension | CodeSense (PR Reviewer) | Pathfolio (Executive Portfolio) | PulseLedger (Operations Journal) |
+| :--- | :--- | :--- | :--- |
+| **Metaphor** | Orbital planetary cosmos & celestial gravity well | Centered executive career dossier / archival folio | Continuous drum recorder & print operations journal |
+| **Canvas Background** | Pure cosmic pitch black (`#08090c`) with orbiting satellite nodes & floating stardust particles | Static porcelain warm cream (`#f8f7f2`) with faint vertical pinstripes | Deep carbon graphite slate (`#0b0e14`) with continuous horizontal millimetric chart paper rules |
+| **Living Background Motion** | Planetary nodes orbiting concentric circular tracks with radial glowing orange halos | Static parchment surface (zero canvas animation) | Dual-channel analog stylus needle ink traces gliding right-to-left with status-driven shock tremors |
+| **Color System** | Deep black, glowing solar orange (`#f97316`), neon cyan, cosmic violet | Warm cream, charcoal, brass, natural stone | Deep carbon slate (`#0b0e14`), ink surface (`#121720`), register emerald (`#2ea043`), drafting cobalt (`#388bfd`), seismograph vermilion (`#f85149`) |
+| **Typography** | Editorial serif display headlines + geometric sans | High-contrast classical serif headlines + sans body | **Space Grotesk** (engineered sans) + **JetBrains Mono** (calibrated tabular figures) — 100% self-hosted OFL 1.1 |
+| **Status Indicators** | Glowing floating orb badges with neon blur filters | Subdued monochrome status pills | Embossed physical ink-stamp badges with double-rule borders and subtle mechanical stroke breathing |
+| **Hero Focal Component** | Giant central planetary orbit ring with orbiting glowing nodes | Centered single-column executive dossier card | Continuous 30-day Fleet Uptime Band on physical drum tape reading plate with UTC epoch ticker |
+| **Service Presentation** | Glassmorphic floating cards with multi-color gradient borders | Centered vertical career milestones | High-density **Continuous Ledger Bands** with inline 30-day seismograph day-ticks and collapsible check log |
+| **Interactive Tool** | Interactive cosmic code graph | N/A (Static presentation) | **Precision Laboratory Drum Oscillograph** with calibrated voltage/latency scale and 5-stage edge pipeline |
+
+---
+
+## 3. Color Palette & Material Architecture
+- **Deep Carbon Slate Base (Chassis)**: `#0b0e14`
+- **Surface Elevation**:
+  - Ledger Band Surface: `#121720` (dense carbon ink-wash)
+  - Raised Instrument Plate: `#1a202c` (matte graphite plate)
+  - Sunken Oscillograph Screen: `#080a0f`
+- **Ink Rulings & Dividers**:
+  - Hairline Ledger Rules: `#283243` (spaced at 28px on canvas and card borders)
+  - Strong Register Rules: `#3b475c`
+- **Calibrated Analog Pigments**:
+  - `Operational`: Register emerald `#2ea043` / `#3fb950`, soft wash `rgba(46, 160, 67, 0.15)`
+  - `Degraded`: Cadmium amber `#d29922` / `#e3b341`, soft wash `rgba(210, 153, 34, 0.15)`
+  - `Down`: Seismograph vermilion `#f85149` / `#ff7b72`, soft wash `rgba(248, 81, 73, 0.15)`
+  - `Incident`: Disruption coral `#f85149` / `#ff7b72`
+  - `Signal Probe / Trace`: Drafting cobalt `#388bfd` / `#58a6ff`, soft wash `rgba(56, 139, 253, 0.15)`
+  - `Paused`: Neutral index slate `#647287`
 - **Typography & Brand Identity**:
-  - Display, Headings, and Interface: **Space Grotesk** (self-hosted WOFF2 variable font, SIL Open Font License 1.1). Precision engineered geometric character.
-  - Telemetry Data, Numbers, Code, and Timestamps: **JetBrains Mono** (self-hosted WOFF2 variable font, SIL Open Font License 1.1). Monospace clarity with clear 0/O distinction and tabular figures.
-  - Zero generic system type (`Segoe UI`, `Iowan Old Style` serif removed across both public and private areas).
-- **Unified Surface Architecture**:
-  - The entire site—public status (`/`), private owner sign-in (`/admin`), and authenticated operations desk (Overview, Monitors, Incidents, Activity)—is unified around the dark telemetric chassis. Admin tasks maintain restrained operational density, low eye strain, and rapid keyboard/touch response.
+  - Headings, Wordmark, and Labels: **Space Grotesk** (self-hosted WOFF2 variable font, SIL Open Font License 1.1).
+  - Telemetry Figures, Epoch Timestamps, Code, and Logs: **JetBrains Mono** (self-hosted WOFF2 variable font, SIL Open Font License 1.1).
+  - Universal font pair loaded across public status (`/`) and private admin views (`/admin`, `/admin/monitors`, `/admin/incidents`, `/admin/audit`).
 
-## 3. Layered Living Environment (Above & Below Fold)
-- **Layer 1: Edge Ambient Gradient Field**:
-  - Subtle drifting radial aura (`radial-gradient`) tied to fleet health. Reflects operational state: soft emerald breathing pulse when all services are green; amber undertone if degraded.
-- **Layer 2: Orthogonal Telemetry Grid**:
-  - SVG/CSS micro-grid with coordinate markers (`32px` intervals, hairline opacity `0.05`), crosshair reticles at intersections, and edge datum coordinates (`CF-EDGE.APAC`, `LAT: 22.57°N`, `LONG: 88.36°E`).
-- **Layer 3: Living Signal Canvas (`<canvas class="telemetry-canvas">`)**:
-  - Continuous 60fps lightweight particle & signal packet bus.
-  - Horizontal and vertical signal busbars with discrete data packets gliding at controlled velocities.
-  - Pulse sonar rings gently emanating from the hero origin every 4.2 seconds.
-  - Pauses execution automatically via `IntersectionObserver` when offscreen, or when tab is backgrounded (`visibilitychange`).
-- **Layer 4: High-Contrast Frosted Telemetry Panels**:
-  - Content containers with `backdrop-filter: blur(12px)` and subtle hairline edge lighting. Numbers, tables, and buttons maintain WCAG AAA contrast ratios (minimum 7:1 for text, 4.5:1 for UI components).
+---
 
-## 4. Hero Timeline & Choreography
-- **T = 0.0s**: Background grid and coordinate markings appear instantly (zero layout jump; fully readable immediately).
-- **T = 0.2s**: Ambient radar pulse expands outward in concentric rings.
-- **T = 0.4s**: Primary status badge and headline reveal with subtle vertical spring (`translateY(16px)` -> `0px`, `opacity: 0` -> `1`).
-- **T = 0.6s**: Hero telemetry figures (30-day uptime, monitored services, edge check interval) count up / settle into place.
-- **T = 0.8s**: The Live Heartbeat Ring synchronizes: a gentle 4-second sinusoidal breathing glow (`box-shadow: 0 0 24px rgba(0, 229, 153, 0.4)`).
-- **T = 1.0s**: Quick-jump navigation and manual refresh controls illuminate.
+## 4. Layered Living Environment
+- **Layer 1: Carbon Foundation**: Flat deep graphite canvas `#0b0e14`.
+- **Layer 2: Millimetric Paper Rulings**:
+  - Horizontal rules every 28px (`rgba(40, 50, 67, 0.32)`).
+  - Major register bands every 140px (`rgba(56, 70, 92, 0.52)`).
+  - Vertical timecode division graduation marks along margins every 120px (80px on mobile).
+- **Layer 3: Continuous Dual Stylus Needle Traces (`<canvas class="telemetry-canvas">`)**:
+  - **Channel 1 (Fleet Harmonic Baseline)**: Continuous drafting cobalt ink trace (`#388bfd`) gliding across $y = 0.38 \times \text{height}$. Smooth multi-frequency sine/perlin waves in nominal state; sharp erratic tremors when degraded.
+  - **Channel 2 (Cron Cadence)**: Register emerald ink trace (`#2ea043`) gliding across $y = 0.72 \times \text{height}$ with moving rhythmic cardiac impulse deflections.
+  - Active mechanical stylus points at current trace coordinates with soft ink bleeds.
+  - Tab visibility observer: cancels RAF when tab is hidden (`document.hidden`).
+- **Layer 4: Continuous Ledger Panels & Plates**:
+  - High-contrast matte surfaces (`#121720`) with hairline borders (`#283243`), zero layout shift, WCAG AAA text contrast.
 
-## 5. Four Scroll Chapters & Staged Dashboard Narrative
-1. **Chapter 1: The Fleet Matrix & Live Mesh (`#services`)**:
-   - Filter chips allow instant sorting by project: `All (11)`, `Haan (2)`, `StyleShopZ (2)`, `CodeSense (2)`, `Grepless (2)`, `ArthaSetu (2)`, `Dispatch (1)`.
-   - Each service card features:
-     - Real-time pulse indicator matching the monitor state.
-     - Interactive 30-day uptime strip with day-by-day telemetry tooltips.
-     - SVG response-time trend sparkline with gradient fill.
-     - Expandable deep diagnostic drawer with recent check history table and HTTP status codes.
-2. **Chapter 2: Interactive Signal Probe & Telemetry Sandbox (`#probe`)**:
-   - A real, working interactive diagnostic tool for visitors.
-   - Allows selecting any of the 11 monitored endpoints (e.g. `Haan website`, `CodeSense review service`, `Dispatch`) or running a synthetic edge probe.
-   - Clicking **"Fire Edge Probe"** simulates the Cloudflare Worker 5-stage edge check:
-     1. DNS Resolution (Cloudflare 1.1.1.1)
-     2. TLS 1.3 Handshake (ECDHE-ECDSA)
-     3. Edge HTTP Handshake (`redirect: manual`, strict 10s timeout)
-     4. Response Validation (2xx/3xx assertion)
-     5. D1 Ledger Commit (cryptographic hash & slot deduplication)
-   - Real-time animated SVG/canvas Oscilloscope visualizing response waveform, packet jitter, and latency thresholds.
-   - Real-time metric readouts: Total Latency (ms), Time to First Byte (TTFB), DNS time, Status Code (`HTTP 200 OK`), and Edge Node ID (`CCU/BOM/SIN`).
-3. **Chapter 3: Forensic Incident Stream (`#incidents`)**:
-   - Chronological incident ledger.
-   - Highlights active incidents with amber/crimson priority banners and timestamped updates.
-   - If zero incidents are open, displays the cryptographic zero-disruption ledger seal: confirming all recorded checks are genuine with zero invented history.
-4. **Chapter 4: Operational Protocol & Zero-Sample Truth (`#method`)**:
-   - Four interactive protocol cards detailing edge cron execution, SSRF validation, mathematical state thresholds, and PBKDF2 cryptographic session security.
+---
 
-## 6. Response, Continuity & Micro-Interactions
-- **Button Feedback**: Micro-scale transition (`transform: scale(0.98)` on active) with high-intensity border highlight.
-- **Day Strip Hover**: Hovering over a day block in the 30-day strip illuminates the corresponding day check summary and highlights the sparkline coordinate.
-- **Scroll Sync**: As the user scrolls, chapter indicator dots update in the sticky masthead, maintaining orientation through the telemetric journey.
+## 5. Hero Timeline & Choreography
+- **T = 0.0s**: Background chart rulings and margin ticks appear immediately. Primary headline and uptime figures are 100% legible.
+- **T = 0.2s**: Dual stylus needles begin continuous trace deposition across the paper band.
+- **T = 0.4s**: Hero lede, status stamp, and drum tape uptime reading settle into place (`translateY(16px)` -> `0px`).
+- **T = 0.8s**: Live UTC epoch ticker synchronizes with mechanical status pip.
+- **T = 1.0s**: Interactive CTAs ("Launch Signal Probe" and "Refresh now") are active and responsive.
 
-## 7. Mobile Adaptation (Viewport: 390px × 844px)
-- Telemetry canvas automatically reduces packet count by 65% on screens under 768px to preserve battery and 60fps frame rates.
-- Project filter pills convert to a touch-optimized horizontally swipeable ribbon with fading scroll edges.
-- Interactive Signal Probe displays a compact mobile telemetry HUD with stacked oscilloscope and single-touch probe trigger.
-- Service cards stack stats neatly in a 2x2 grid, maintaining 48px minimum touch targets for all buttons and links.
-- Zero horizontal overflow guaranteed via rigid container clamping and `overflow-x: hidden` guardrails.
+---
 
-## 8. Reduced-Motion Mode (`prefers-reduced-motion: reduce`)
-- Canvas animation loop is paused; a single static telemetry coordinate frame is rendered.
-- CSS transitions and animations are replaced with immediate visibility or short opacity changes (`duration: 0.01ms`).
-- Heartbeat glow becomes a stable, high-contrast glow indicator.
-- Interactive probe instantly displays probe results without waiting for simulated packet sweeps.
-- All content, interactive features, tables, and buttons remain 100% accessible.
+## 6. Four Scroll Chapters & Staged Narrative
+1. **Chapter 1: Fleet Matrix & Continuous Ledger Bands (`#services`)**:
+   - Filter chips for instant sorting by project: `All (11)`, `Haan (2)`, `StyleShopZ (2)`, `CodeSense (2)`, `Grepless (2)`, `ArthaSetu (2)`, `Dispatch (1)`.
+   - Continuous horizontal ledger bands with hairline dividers and left status register notch.
+   - Inline 30-day seismograph day-ticks (`.uptime-strip .day`).
+   - Collapsible diagnostic drawer with drafting cyan sparkline and raw check history table.
+2. **Chapter 2: Precision Laboratory Drum Oscillograph (`#probe`)**:
+   - Heavy matte graphite housing with calibrated vertical latency scale (0 to 500ms).
+   - Dual-trace persistence canvas with analog phosphor bleed.
+   - Waveform mode switcher ("Continuous Sweep" vs "Impulse Trace").
+   - 5-stage mechanical verification pipeline:
+     `1/5 DNS Resolution -> 2/5 TLS Handshake -> 3/5 HTTP/2 GET -> 4/5 Assertion -> 5/5 D1 Ledger Commit`.
+   - Telemetry HUD with RTT latency, outcome badge, and cryptographic commit hash.
+3. **Chapter 3: Chronological Incident Journal (`#incidents`)**:
+   - Clean state: Embossed inspection seal (`0 DISRUPTIONS ACTIVE // ALL MONITORED ENDPOINTS IN CALM REGISTER`).
+   - Active state: Timestamped dispatch ledger cards with priority ribbons.
+4. **Chapter 4: Operational Broadsheet (`#method`)**:
+   - 4-column engineering ledger detailing Edge Checks, Strict Success, Zero-Sample Uptime, and State Engine.
 
-## 9. Performance Budget & Guardrails
-- **FPS Target**: Steady 60fps on modern mobile and desktop browsers.
-- **GPU Acceleration**: Animations restricted to `transform` and `opacity`. No layout thrashing or `getComputedStyle` in scroll/render loops.
-- **Offscreen Throttling**: Particle/radar canvas pauses rendering when not in viewport (`IntersectionObserver`).
-- **Tab Background Throttling**: Animation loops cancel when document is hidden (`document.visibilityState === "hidden"`).
-- **Bundle Size**: Pure vanilla TypeScript/React + SVG + HTML5 Canvas. Zero heavy 3D or bloated third-party animation libraries added.
+---
 
+## 7. Reduced-Motion Mode (`prefers-reduced-motion: reduce`)
+- Background canvas halts RAF loop entirely.
+- Renders a crisp, static, high-definition printed chart paper sheet once (horizontal rules, margin graduation ticks, frozen dual baseline curves).
+- Oscillograph renders static reference crosshairs without continuous wave cycling.
+- All transitions collapse to immediate display (`duration: 0.01ms`).
+- 100% of interactive controls, selectors, and tables remain fully functional.
+
+---
+
+## 8. Mobile Adaptation (390px Viewport)
+- Canvas reduces horizontal division density by 35% to conserve mobile battery.
+- Sticky masthead configured with `scroll-margin-top: 180px` on mobile, ensuring `#probe`, `#services`, and project anchors clear the sticky header by > 30px.
+- Filter pills adapt into a smooth touch-swipeable ribbon.
+- Zero horizontal overflow (`document.documentElement.scrollWidth <= document.documentElement.clientWidth` verified).

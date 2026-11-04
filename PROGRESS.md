@@ -1,18 +1,20 @@
 # Progress — PulseLedger
 
-Last updated: 2026-11-03
+Last updated: 2026-11-04
 
 ## Decisions & Direction
 
-- Redesigned the entire website around a single, unified PulseLedger visual identity and precision telemetry design system across every page.
-- Selected and self-hosted an appropriate open-source licensed font pair (SIL Open Font License 1.1):
-  - Sans Display & UI: **Space Grotesk** (variable 300..700, WOFF2 preloaded).
-  - Telemetry Data & Monospace: **JetBrains Mono** (variable 300..800, WOFF2 preloaded).
-  - Clean system fallbacks; completely removed legacy generic fonts (`Segoe UI`, `Iowan Old Style` serif).
-- Re-architected `/admin` (owner sign-in console, overview desk, monitors manager, incident logger, and activity audit) into a restrained operational console sharing the deep slate/emerald/cyan palette (`#070a10`, `#0e1524`, `#141e33`, `#00e599`, `#00d4ff`).
-- Preserved all real status data, monitoring functions, PBKDF2 authentication, CSRF tokens, HttpOnly cookies, prepared SQL queries, and zero-inventory truth.
-- Validated real desktop (1440px / 1265px) and mobile (390px) viewports with zero horizontal overflow, compliant touch targets ($\ge 44\text{ px}$), and accessible keyboard focus outlines.
-- Resolved mobile sign-in layout: static masthead in login shell, removed touch-disruptive `autoFocus`, single-line actor/timestamp formatting in audit table.
+- **Seismic & Print Operations Journal Redesign**: In response to owner feedback that PulseLedger remained visually too close to CodeSense (near-black coordinate grid, glowing cyan packets, radial orbit/sonar rings), redesigned the entire visual identity around an authentic **Continuous Seismic & Print Operations Journal with Layered Ink**:
+  - Replaced coordinate grid with continuous horizontal millimetric chart paper rules (`#283243`), major register bands (`#3b475c`), and vertical timecode ticks.
+  - Replaced floating packets and sonar circles with **dual-channel analog stylus needle ink traces**:
+    - **Channel 1 (Fleet Baseline Harmonic Inkwash)**: Continuous drafting cobalt ink trace (`#388bfd` / `#58a6ff`), driven by live fleet operational health (steady harmonic oscillations when nominal; dynamic shock tremors and spike frequency jitter if degraded or down).
+    - **Channel 2 (Cron Cadence & Epoch Pulse)**: Continuous register emerald ink trace (`#2ea043`) with moving rhythmic cardiac impulse deflections tracking the 15-minute cron check cycle.
+  - Replaced glowing neon halos with **physical double-bordered ink stamps** with mechanical stroke breathing.
+  - Upgraded `#probe` into a **Precision Laboratory Drum Oscillograph** featuring a heavy matte graphite instrument chassis, graduated physical scale ticks (0 to 500ms), dual-trace analog persistence, and a stepped 5-stage mechanical verification pipeline.
+  - Preserved self-hosted font pair (Space Grotesk + JetBrains Mono) preloaded with WOFF2 under SIL OFL 1.1.
+  - Unified the private owner desk (`/admin`, monitors, incidents, audit) into the same calm, dense, high-contrast carbon ink operations aesthetic.
+  - Inspected actual live CodeSense (`https://pr-reviewer-omega-liard.vercel.app/`), Pathfolio (`https://pathfolio.pages.dev/`), and PulseLedger at equal 1440px width; documented concrete structural differences in `MOTION_SPEC.md` and `UI_REVIEW.md`.
+  - Maintained zero horizontal overflow on both 1440px desktop and 390px mobile viewports.
 
 ## Phases
 
@@ -23,21 +25,22 @@ Last updated: 2026-11-03
 5. Production verification & deployment: Deploy to Cloudflare Workers, verify live public endpoint, run secret scan, commit and push to GitHub — complete
 6. Live QA Navigation Fix: Corrected anchor offsets (`scroll-margin-top: 104px` desktop, `180px` mobile) for `#probe`, `#services`, `#project-*`, `#incidents`, `#method`; added automated Playwright regression test; redeployed and verified live — complete
 7. Visual Identity & Admin Flow Unification: Self-hosted Space Grotesk + JetBrains Mono font pair, redesigned `/admin` sign-in console and owner desk into restrained telemetric operations language, audited 1440px and 390px viewports, passed test suites, redeployed live worker, and captured 12 live screenshots — complete
+8. Seismic & Print Operations Journal Redesign: Completely overhauled visual world and background engine to eliminate CodeSense/Pathfolio resemblance; captured equal-width 1440px benchmark comparisons; re-ran all 6 motion rounds and 12 public/admin view screenshots; verified 66 Vitest tests, 16 Playwright tests, zero secret findings, and quality gate — complete
 
 ## Feature Ledger
 
 | ID | Behavior | Status | Evidence |
 | --- | --- | --- | --- |
-| REDESIGN-1 | Branded living background with telemetry canvas and ambient signal glow | verified | `docs/motion-review/round1-desktop-initial-t0.png` vs `round1-desktop-later-t18.png` |
-| REDESIGN-2 | Choreographed hero sequence with heartbeat pulse and fleet telemetry summary | verified | Visual inspection & entrance animation |
-| REDESIGN-3 | Project filter chips and responsive fleet matrix with 30-day strips | verified | `docs/motion-review/round2-filter-haan-active.png` |
-| REDESIGN-4 | Interactive Signal Probe with real-time latency oscilloscope | verified | `docs/motion-review/round2-probe-completed.png` |
-| REDESIGN-5 | Forensic incident ledger and verification protocol cards | verified | `docs/motion-review/round1-desktop-scroll-75pct.png` |
-| REDESIGN-6 | Accessible keyboard navigation, skip link, and reduced-motion fallback | verified | `docs/motion-review/round5-reduced-motion-desktop.png` |
+| SEISMIC-1 | Dual-channel analog stylus needle ink traces gliding continuously across millimetric ledger paper rules | verified | `docs/motion-review/round1-desktop-initial-t0.png` vs `round1-desktop-later-t18.png` |
+| SEISMIC-2 | Real-data driven health dynamics: smooth harmonic waves during nominal state; shock tremors during degraded/down states | verified | `src/client/public/StatusPage.tsx` state-driven canvas engine |
+| SEISMIC-3 | Precision Laboratory Drum Oscillograph with physical scale markings and 5-stage mechanical pipeline | verified | `docs/motion-review/round2-probe-completed.png` |
+| SEISMIC-4 | High-density Continuous Ledger Bands for services with inline 30-day seismograph day-ticks | verified | `docs/screenshots/public-status-desktop.png` |
+| SEISMIC-5 | Physical embossed double-rule ink stamp status seals (zero sci-fi neon halos) | verified | `docs/motion-review/round1-desktop-initial-t0.png` |
+| SEISMIC-6 | Equal-width 1440px benchmark comparison documenting visual divergence from CodeSense and Pathfolio | verified | `docs/screenshots/comparison-*.png` & `UI_REVIEW.md` |
 | TYPOGRAPHY-1 | Self-hosted Space Grotesk variable font for all headings, brand, and UI | verified | `dist/fonts/space-grotesk-latin.woff2` (HTTP 200) |
 | TYPOGRAPHY-2 | Self-hosted JetBrains Mono variable font for metrics, code, timestamps | verified | `dist/fonts/jetbrains-mono-latin.woff2` (HTTP 200) |
-| ADMIN-UNIFY-1 | Private sign-in console redesigned with telemetric cyber-instrument theme | verified | `docs/screenshots/admin-login-desktop.png` & `admin-login-mobile.png` |
-| ADMIN-UNIFY-2 | Authenticated owner desk unified with restrained telemetric operations language | verified | `docs/screenshots/admin-overview-desktop.png` & `admin-overview-mobile.png` |
+| ADMIN-UNIFY-1 | Private sign-in console sharing carbon slate ink theme | verified | `docs/screenshots/admin-login-desktop.png` & `admin-login-mobile.png` |
+| ADMIN-UNIFY-2 | Authenticated owner desk unified with calm, dense, high-contrast operations journal language | verified | `docs/screenshots/admin-overview-desktop.png` & `admin-overview-mobile.png` |
 | ADMIN-UNIFY-3 | Monitor manager, incident logger, and audit screens audited at 1440px and 390px | verified | `docs/screenshots/admin-monitors-*.png`, `admin-incidents-*.png`, `admin-audit-*.png` |
 | CORE-1 | Public status overview displays real checks, latency, and uptime | verified | Playwright desktop flow (TC-PUB-01) |
 | CORE-2 | Six distinct monitor states correctly rendered without unknown states | verified | Vitest status test (TC-STA-01) |
@@ -53,3 +56,4 @@ Last updated: 2026-11-03
 | 1 | 15 | 0 | passed (9 cases) | 0 | Adversarial testing |
 | 2 | 13 | 0 | passed (9 cases) | 0 | Combinations & Release |
 | 3 | 13 | 0 | passed (9 cases) | 0 | Final quality gate check passed |
+| 4 | 6 (Seismic Redesign) | 0 | passed (9 cases) | 0 | Production Deployment & Verification |

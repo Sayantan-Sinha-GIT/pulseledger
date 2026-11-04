@@ -72,3 +72,22 @@ The page journey unfolds across four distinct chapters rather than uniform card 
   - Audited 1440px desktop and 390px mobile viewports; verified zero horizontal overflow, compliant touch targets, and fixed mobile sticky masthead and autofocus behavior.
 - **Verification Result**: PASS. Unified design language across 100% of the site.
 
+## 8. Continuous Seismic & Print Operations Journal Redesign (Round 8)
+- **Problem Addressed**: Independent QA feedback identified that PulseLedger was still visually too close to CodeSense (near-black coordinate grid, glowing teal/cyan packets, radial orbit/sonar rings).
+- **Core Visual Metaphor Shift**:
+  - Removed orthogonal coordinate grid, floating busbar packets, and concentric radial sonar sweeps.
+  - Implemented the **Continuous Seismic & Print Operations Journal with Layered Ink**:
+    - **Continuous Millimetric Ledger Rules**: Horizontal paper rules (`#283243`) spaced at 28px, major register bands (`#3b475c`) at 140px, and vertical timecode margin ticks (`#647287`).
+    - **Dual-Channel Analog Stylus Traces**:
+      - *Channel 1 (Fleet Baseline Harmonic Inkwash)*: Drafting cobalt ink trace (`#388bfd` / `#58a6ff`) gliding continuously across $y = 0.38 \times \text{height}$. Driven by real fleet health (steady harmonic sine/perlin waves when nominal; dynamic shock tremors and high-frequency spike jitter if degraded/down).
+      - *Channel 2 (Cron Cadence & Epoch Heartbeat)*: Register emerald ink trace (`#2ea043`) gliding across $y = 0.72 \times \text{height}$ with moving rhythmic cardiac impulse deflections mimicking Cloudflare cron checks.
+    - **Physical Embossed Ink Stamps & Seals**: In place of glowing neon halos, status badges use crisp double-rule ink stamps with mechanical outline breathing.
+    - **Precision Laboratory Drum Oscillograph**: In place of generic oscilloscope rings, `#probe` features a heavy matte graphite instrument chassis with calibrated vertical scale (0 to 500ms), dual-trace persistence, and a stepped 5-stage mechanical verification pipeline.
+- **Observed Continuous Motion Proof ($t = 0.0\text{s}$ vs $t = 1.8\text{s}$)**:
+  - Initial frame ($t=0\text{s}$): `docs/motion-review/round1-desktop-initial-t0.png` captures the initial waveform phase and stylus needle positions.
+  - Later frame ($t=1.8\text{s}$): `docs/motion-review/round1-desktop-later-t18.png` captures smooth pixel displacement: Channel 1 harmonic wave has progressed across the drum; Channel 2 heartbeat impulse has traveled across the canvas; mechanical stylus points deposit continuous analog ink with zero dropped frames.
+- **Equal-Width Benchmark Verification (1440px)**:
+  - Documented side-by-side comparison with CodeSense (`docs/screenshots/comparison-codesense-1440.png`) and Pathfolio (`docs/screenshots/comparison-pathfolio-1440.png`). PulseLedger is completely original: distinct palette (deep carbon graphite `#0b0e14`, not cosmic black `#08090c` or porcelain `#f8f7f2`), distinct continuous drum recorder metaphor, distinct typography, and zero borrowed sci-fi or dossier tropes.
+- **Verification Result**: PASS. 100% original visual identity, fully verified across desktop, mobile, and reduced-motion states.
+
+

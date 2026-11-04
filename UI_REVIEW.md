@@ -1,5 +1,28 @@
 # UI_REVIEW.md — PulseLedger Visual & UX Review
 
+## 1. Visual Benchmark & Metaphor Comparison (1440px Desktop)
+
+Actual live screenshots captured at 1440×900:
+- **CodeSense**: `docs/screenshots/comparison-codesense-1440.png` (`https://pr-reviewer-omega-liard.vercel.app/`)
+- **Pathfolio**: `docs/screenshots/comparison-pathfolio-1440.png` (`https://pathfolio.pages.dev/`)
+- **PulseLedger**: `docs/screenshots/comparison-pulseledger-1440.png` (`https://pulseledger.srimantasutapa123.workers.dev/`)
+
+| Visual Dimension | CodeSense (PR Reviewer) | Pathfolio (Executive Portfolio) | PulseLedger (Operations Journal) |
+| :--- | :--- | :--- | :--- |
+| **Metaphor** | Orbital planetary cosmos & celestial gravity well | Centered executive career dossier / archival folio | Continuous drum recorder & print operations journal |
+| **Canvas Background** | Pure cosmic pitch black (`#08090c`) with orbiting satellite nodes & floating stardust particles | Static porcelain warm cream (`#f8f7f2`) with faint vertical pinstripes | Deep carbon graphite slate (`#0b0e14`) with continuous horizontal millimetric chart paper rules |
+| **Living Background Motion** | Planetary nodes orbiting concentric circular tracks with radial glowing orange halos | Static parchment surface (zero canvas animation) | Dual-channel analog stylus needle ink traces gliding right-to-left with status-driven shock tremors |
+| **Color System** | Deep black, glowing solar orange (`#f97316`), neon cyan, cosmic violet | Warm cream, charcoal, brass, natural stone | Deep carbon slate (`#0b0e14`), ink surface (`#121720`), register emerald (`#2ea043`), drafting cobalt (`#388bfd`), seismograph vermilion (`#f85149`) |
+| **Typography** | Editorial serif display headlines + geometric sans | High-contrast classical serif headlines + sans body | **Space Grotesk** (engineered sans) + **JetBrains Mono** (calibrated tabular figures) — 100% self-hosted OFL 1.1 |
+| **Status Indicators** | Glowing floating orb badges with neon blur filters | Subdued monochrome status pills | Embossed physical ink-stamp badges with double-rule borders and subtle mechanical stroke breathing |
+| **Hero Focal Component** | Giant central planetary orbit ring with orbiting glowing nodes | Centered single-column executive dossier card | Continuous 30-day Fleet Uptime Band on physical drum tape reading plate with UTC epoch ticker |
+| **Service Presentation** | Glassmorphic floating cards with multi-color gradient borders | Centered vertical career milestones | High-density **Continuous Ledger Bands** with inline 30-day seismograph day-ticks and collapsible check log |
+| **Interactive Tool** | Interactive cosmic code graph | N/A (Static presentation) | **Precision Laboratory Drum Oscillograph** with calibrated voltage/latency scale and 5-stage edge pipeline |
+
+---
+
+## 2. Review Rounds & Defect History
+
 | Iteration | Surface / Screens / States / Viewports | Evidence | Defects | Fixes | Repeated Anchor Check | Remaining |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 — COMPOSITION | Desktop 1440×900 & Mobile 390×844: Hero overview, typography hierarchy, telemetry chassis, first-viewport clarity | `docs/motion-review/round1-desktop-initial-t0.png`, `round1-desktop-later-t18.png`, `round4-mobile-initial-t0.png` | Hero figure card on mobile was wrapping numbers tightly; contrast between dark slate background and card border needed precise luminosity | Adjusted `--tele-border` to `rgba(148, 163, 184, 0.14)` with subtle inner glow; tightened figure padding on mobile | Hero header, status badge, uptime figure, and primary CTA immediately legible at both 1440px and 390px | None |
@@ -10,4 +33,4 @@
 | 6 — FINAL VISUAL COMPARISON | Full end-to-end site review comparing live target against MOTION_SPEC.md and reference craft level | `docs/screenshots/public-status-desktop.png`, `docs/screenshots/public-status-mobile.png` | Method cards were text-heavy without visual structural anchors | Added numbered telemetric badges (`01`, `02`, `03`, `04`) and structured cards; verified cryptographic zero-incident seal | Living background, choreographed opening, 4 scroll chapters, and interactive probe demonstration fully meet PRD and motion spec | None |
 | POST-RELEASE QA FIX | Desktop 1265px & Mobile 390px: Anchor offsets for #probe, #services, #project-0, #incidents, #method | `scripts/test-anchor-arrival.mjs` live verification run | Clicking #probe, #services, #project-0 scrolled target underneath sticky masthead (78px desktop, 146.5px mobile) covering kicker and heading | Configured `scroll-margin-top: 104px` on desktop and `180px` on mobile for `.section`, `#probe`, `.probe-sandbox`, `.project-group`, and `[id]` | Verified on live deployment: #probe clear by 26.3px on desktop, 33.2px on mobile; kicker & heading fully visible | None |
 | 7 — DESIGN UNIFICATION | Desktop 1440px & Mobile 390px across all views: Public status, `/admin` sign-in console, overview desk, monitors manager, incident logger, audit trail | `docs/screenshots/admin-login-*.png`, `admin-overview-*.png`, `admin-monitors-*.png`, `admin-incidents-*.png`, `admin-audit-*.png` | Visual split between public dark telemetry and admin beige paper serif; generic system fonts (Segoe UI / Iowan serif); mobile sign-in had sticky masthead overlap caused by touch autofocus | Selected & self-hosted licensed Space Grotesk (sans) + JetBrains Mono (mono) with WOFF2 preloading; re-architected entire `/admin` shell into restrained telemetric console; made login masthead static and removed touch autofocus; formatted audit table with `white-space: nowrap` for clean horizontal scroll | Entire application (public + all 5 admin views) shares single precision-instrument visual identity; 0 horizontal overflow; 100% test pass on live Cloudflare Workers | None |
-
+| 8 — SEISMIC & PRINT OPERATIONS JOURNAL REDESIGN | Desktop 1440px & Mobile 390px across all public & admin routes | `docs/screenshots/comparison-*.png`, `docs/motion-review/round*-*.png`, `docs/screenshots/public-*.png`, `docs/screenshots/admin-*.png` | Review noted previous design remained visually too close to CodeSense (near-black coordinate grid, glowing teal/cyan packets, radial orbit/sonar rings) | Complete visual overhaul to Continuous Seismic & Print Operations Journal: replaced coordinate grid with continuous millimetric ledger paper rules; replaced packets and sonar circles with dual-channel analog stylus needle ink traces driven by live health; replaced neon glow halos with physical double-bordered ink stamps; upgraded probe into Precision Laboratory Drum Oscillograph with physical scale ticks; unified admin flows into calm carbon slate ink aesthetic | Side-by-side comparison with CodeSense and Pathfolio at 1440px demonstrates 100% original identity; all 66 Vitest tests, 16 Playwright tests, anchor checks, and secret scans pass | None |

@@ -39,44 +39,47 @@
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
-/* PulseLedger — Unified Telemetric Signal Design System
-   Universal dark telemetry palette, engineered Space Grotesk display type,
-   JetBrains Mono data figures, hairline precision rules. */
+/* PulseLedger — Continuous Seismic & Print Operations Journal Design System
+   Universal deep carbon graphite palette (#0b0e14), continuous ruled ledger bands (#283243),
+   engineered Space Grotesk display type, JetBrains Mono data figures, calibrated analog measurement pigments. */
 
 :root {
   color-scheme: dark;
-  --bg: #070a10;
-  --surface: #0e1524;
-  --surface-raised: #141e33;
-  --surface-sunken: #090e17;
-  --surface-overlay: rgba(14, 21, 36, 0.88);
+  --bg: #0b0e14;
+  --surface: #121720;
+  --surface-raised: #1a202c;
+  --surface-sunken: #080a0f;
+  --surface-overlay: rgba(18, 23, 32, 0.92);
   --paper: var(--bg);
   --paper-raised: var(--surface);
   --paper-sunken: var(--surface-sunken);
-  --ink: #f1f5f9;
-  --ink-soft: #cbd5e1;
-  --ink-faint: #94a3b8;
-  --rule: rgba(148, 163, 184, 0.16);
-  --rule-strong: rgba(148, 163, 184, 0.28);
-  --teal: #00e599;
-  --teal-bright: #00e599;
-  --teal-soft: rgba(0, 229, 153, 0.12);
-  --teal-line: rgba(0, 229, 153, 0.35);
-  --cyan: #00d4ff;
-  --cyan-soft: rgba(0, 212, 255, 0.12);
-  --cyan-line: rgba(0, 212, 255, 0.35);
-  --amber: #f59e0b;
-  --amber-soft: rgba(245, 158, 11, 0.14);
-  --amber-line: rgba(245, 158, 11, 0.35);
-  --red: #f43f5e;
-  --red-soft: rgba(244, 63, 94, 0.14);
-  --red-line: rgba(244, 63, 94, 0.35);
-  --slate: #64748b;
-  --slate-soft: rgba(100, 116, 139, 0.16);
+  --ink: #f0f3f6;
+  --ink-soft: #9ba7b7;
+  --ink-faint: #647287;
+  --rule: #283243;
+  --rule-strong: #3b475c;
+  --teal: #2ea043;
+  --teal-bright: #3fb950;
+  --teal-soft: rgba(46, 160, 67, 0.15);
+  --teal-line: rgba(46, 160, 67, 0.45);
+  --cyan: #388bfd;
+  --cyan-bright: #58a6ff;
+  --cyan-soft: rgba(56, 139, 253, 0.15);
+  --cyan-line: rgba(56, 139, 253, 0.45);
+  --amber: #d29922;
+  --amber-bright: #e3b341;
+  --amber-soft: rgba(210, 153, 34, 0.15);
+  --amber-line: rgba(210, 153, 34, 0.45);
+  --red: #f85149;
+  --red-bright: #ff7b72;
+  --red-soft: rgba(248, 81, 73, 0.15);
+  --red-line: rgba(248, 81, 73, 0.45);
+  --slate: #647287;
+  --slate-soft: rgba(100, 114, 135, 0.15);
   --sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   --serif: var(--sans);
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   --max: 1180px;
 }
 
@@ -102,12 +105,12 @@ body {
 }
 
 body:has(.telemetric-world) {
-  background: #070a10;
-  color: #f8fafc;
+  background: #0b0e14;
+  color: #f0f3f6;
 }
 
 ::selection {
-  background: rgba(0, 229, 153, 0.3);
+  background: rgba(56, 139, 253, 0.35);
   color: #ffffff;
 }
 
@@ -468,9 +471,9 @@ li {
   gap: 8px;
   min-height: 42px;
   padding: 9px 18px;
-  border: 1px solid var(--rule-strong);
+  border: 1px solid var(--rule);
   border-radius: 4px;
-  background: rgba(14, 21, 36, 0.7);
+  background: var(--surface);
   color: var(--ink);
   font-family: var(--sans);
   font-size: 0.84rem;
@@ -482,10 +485,9 @@ li {
 }
 
 .button:hover:not(:disabled) {
-  border-color: var(--teal);
-  background: rgba(0, 229, 153, 0.1);
+  border-color: var(--cyan);
+  background: rgba(56, 139, 253, 0.1);
   color: #fff;
-  box-shadow: 0 0 12px rgba(0, 229, 153, 0.2);
 }
 
 .button:disabled {
@@ -494,16 +496,16 @@ li {
 }
 
 .button-primary {
-  background: linear-gradient(135deg, rgba(0, 229, 153, 0.22), rgba(0, 212, 255, 0.25));
-  border-color: var(--cyan);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--cyan), var(--teal));
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #0b0e14;
+  font-weight: 700;
 }
 
 .button-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(0, 229, 153, 0.38), rgba(0, 212, 255, 0.42));
-  border-color: var(--teal);
-  box-shadow: 0 0 18px rgba(0, 229, 153, 0.35);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--cyan-bright), var(--teal-bright));
+  box-shadow: 0 4px 16px rgba(56, 139, 253, 0.4);
+  color: #0b0e14;
 }
 
 .button-quiet {
@@ -1454,35 +1456,42 @@ li {
 }
 
 /* ==========================================================================
-   TELEMETRIC SIGNAL WORLD (Public Operations Desk Redesign)
+   SEISMIC & PRINT OPERATIONS JOURNAL (Public Operations Desk Redesign)
+   Authentic continuous drum recorder & ink-ruled operations journal:
+   Deep carbon slate (#0b0e14), continuous ledger bands, precision drafting
+   ruling (#283243), physical ink-stamp seals, zero cosmic particles or sci-fi neon halos.
    ========================================================================== */
 
 .telemetric-world {
-  --tele-bg: #070a10;
-  --tele-surface: rgba(14, 21, 36, 0.72);
-  --tele-surface-solid: #0e1524;
-  --tele-surface-sunken: #090e17;
-  --tele-surface-raised: #141e33;
-  --tele-border: rgba(148, 163, 184, 0.14);
-  --tele-border-glow: rgba(0, 229, 153, 0.35);
-  --tele-emerald: #00e599;
-  --tele-emerald-glow: rgba(0, 229, 153, 0.4);
-  --tele-cyan: #00d4ff;
-  --tele-cyan-glow: rgba(0, 212, 255, 0.4);
-  --tele-amber: #fbbf24;
-  --tele-amber-glow: rgba(251, 191, 36, 0.4);
-  --tele-rose: #f43f5e;
-  --tele-rose-glow: rgba(244, 63, 94, 0.4);
-  --tele-text: #f8fafc;
-  --tele-text-soft: #94a3b8;
-  --tele-text-faint: #64748b;
+  --tele-bg: #0b0e14;
+  --tele-surface: rgba(18, 23, 32, 0.88);
+  --tele-surface-solid: #121720;
+  --tele-surface-sunken: #080a0f;
+  --tele-surface-raised: #1a202c;
+  --tele-border: #283243;
+  --tele-border-strong: #3b475c;
+  --tele-emerald: #2ea043;
+  --tele-emerald-bright: #3fb950;
+  --tele-emerald-soft: rgba(46, 160, 67, 0.15);
+  --tele-cyan: #58a6ff;
+  --tele-cyan-draft: #388bfd;
+  --tele-cyan-soft: rgba(56, 139, 253, 0.15);
+  --tele-amber: #d29922;
+  --tele-amber-bright: #e3b341;
+  --tele-amber-soft: rgba(210, 153, 34, 0.15);
+  --tele-rose: #f85149;
+  --tele-rose-bright: #ff7b72;
+  --tele-rose-soft: rgba(248, 81, 73, 0.15);
+  --tele-text: #f0f3f6;
+  --tele-text-soft: #9ba7b7;
+  --tele-text-faint: #647287;
   position: relative;
   z-index: 1;
   color: var(--tele-text);
   min-height: 100vh;
 }
 
-/* Background canvas */
+/* Background canvas: Continuous Drum Recorder / Seismograph Paper */
 .telemetry-canvas {
   position: fixed;
   top: 0;
@@ -1497,9 +1506,9 @@ li {
 .telemetric-world .masthead {
   border-bottom: 1px solid var(--tele-border);
   padding: 16px 0;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: rgba(7, 10, 16, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  background: rgba(11, 14, 20, 0.88);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -1517,7 +1526,8 @@ li {
   height: 8px;
   border-radius: 50%;
   background: var(--tele-emerald);
-  box-shadow: 0 0 10px var(--tele-emerald);
+  border: 1px solid var(--tele-emerald-bright);
+  box-shadow: 0 0 6px rgba(46, 160, 67, 0.5);
   animation: pulseDot 2.4s infinite ease-in-out;
 }
 
@@ -1529,7 +1539,7 @@ li {
 }
 
 .telemetric-world .wordmark span {
-  color: var(--tele-emerald);
+  color: var(--tele-emerald-bright);
   font-style: normal;
   font-weight: 700;
 }
@@ -1539,8 +1549,8 @@ li {
   letter-spacing: 0.08em;
   padding: 3px 8px;
   border-radius: 4px;
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: #121720;
+  border: 1px solid var(--tele-border);
   color: var(--tele-text-soft);
 }
 
@@ -1555,20 +1565,20 @@ li {
 }
 
 .telemetric-world .masthead-nav .owner-link {
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  border: 1px solid var(--tele-border);
   color: var(--tele-text);
   border-radius: 4px;
+  background: #121720;
   transition: all 180ms ease;
 }
 
 .telemetric-world .masthead-nav .owner-link:hover {
-  border-color: var(--tele-cyan);
-  background: rgba(0, 212, 255, 0.1);
+  border-color: var(--tele-cyan-draft);
+  background: rgba(56, 139, 253, 0.1);
   color: var(--tele-cyan);
-  box-shadow: 0 0 14px rgba(0, 212, 255, 0.25);
 }
 
-/* Choreographed Hero Section */
+/* Choreographed Hero Section — Live Operations Journal Masthead */
 .telemetric-world .hero {
   border-bottom: 1px solid var(--tele-border);
   padding: clamp(48px, 8vw, 84px) 0 clamp(36px, 6vw, 60px);
@@ -1587,7 +1597,7 @@ li {
   height: 7px;
   border-radius: 50%;
   background: var(--tele-emerald);
-  box-shadow: 0 0 8px var(--tele-emerald);
+  box-shadow: 0 0 6px rgba(46, 160, 67, 0.6);
   animation: pulseDot 2s infinite ease-in-out;
 }
 
@@ -1615,6 +1625,7 @@ li {
   display: inline-flex;
 }
 
+/* Physical Embossed Stamp Ring (replaces sci-fi glow halos) */
 .telemetric-world .status-halo {
   position: absolute;
   inset: -4px;
@@ -1623,30 +1634,35 @@ li {
 }
 
 .telemetric-world .halo-operational {
-  box-shadow: 0 0 20px var(--tele-emerald-glow);
-  animation: haloBreathe 3.5s infinite ease-in-out;
+  border: 1px solid var(--tele-emerald);
+  outline: 1px solid rgba(46, 160, 67, 0.35);
+  outline-offset: 2px;
+  animation: stampBreathe 3.5s infinite ease-in-out;
 }
 
 .telemetric-world .halo-degraded {
-  box-shadow: 0 0 20px var(--tele-amber-glow);
-  animation: haloBreathe 3s infinite ease-in-out;
+  border: 1px solid var(--tele-amber);
+  outline: 1px solid rgba(210, 153, 34, 0.35);
+  outline-offset: 2px;
+  animation: stampBreathe 3s infinite ease-in-out;
 }
 
 .telemetric-world .halo-down,
 .telemetric-world .halo-incident {
-  box-shadow: 0 0 20px var(--tele-rose-glow);
-  animation: haloBreathe 2s infinite ease-in-out;
+  border: 1px solid var(--tele-rose);
+  outline: 1px solid rgba(248, 81, 73, 0.35);
+  outline-offset: 2px;
+  animation: stampBreathe 2s infinite ease-in-out;
 }
 
+/* Hero Figure: Continuous Drum Recorder Reading Plate */
 .telemetric-world .hero-figure {
   border-left: 0;
-  background: rgba(14, 21, 36, 0.65);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--tele-surface-solid);
   border: 1px solid var(--tele-border);
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   position: relative;
   overflow: hidden;
 }
@@ -1676,9 +1692,9 @@ li {
   letter-spacing: 0.08em;
   padding: 2px 7px;
   border-radius: 4px;
-  background: rgba(0, 229, 153, 0.12);
-  border: 1px solid rgba(0, 229, 153, 0.3);
-  color: var(--tele-emerald);
+  background: var(--tele-emerald-soft);
+  border: 1px solid rgba(46, 160, 67, 0.35);
+  color: var(--tele-emerald-bright);
 }
 
 .telemetric-world .figure-value {
@@ -1686,7 +1702,6 @@ li {
   font-family: var(--mono);
   font-weight: 700;
   letter-spacing: -0.04em;
-  text-shadow: 0 0 24px rgba(0, 229, 153, 0.25);
   margin: 12px 0 10px;
 }
 
@@ -1728,24 +1743,24 @@ li {
 }
 
 .telemetric-world .button-quiet {
-  background: rgba(148, 163, 184, 0.08);
+  background: var(--tele-surface-solid);
   border: 1px solid var(--tele-border);
   color: var(--tele-text);
 }
 
 .telemetric-world .button-quiet:hover:not(:disabled) {
-  border-color: var(--tele-cyan);
-  background: rgba(0, 212, 255, 0.1);
+  border-color: var(--tele-cyan-draft);
+  background: rgba(56, 139, 253, 0.1);
   color: var(--tele-cyan);
 }
 
 .telemetric-world .button-accent {
-  background: linear-gradient(135deg, var(--tele-emerald), #00b4d8);
-  border: 0;
-  color: #05080e;
+  background: linear-gradient(135deg, var(--tele-cyan-draft), var(--tele-emerald));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #0b0e14;
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 0 18px rgba(0, 229, 153, 0.35);
+  box-shadow: 0 2px 12px rgba(56, 139, 253, 0.3);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1757,7 +1772,7 @@ li {
 
 .telemetric-world .button-accent:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 26px rgba(0, 229, 153, 0.55);
+  box-shadow: 0 4px 18px rgba(56, 139, 253, 0.45);
 }
 
 /* Sections & Navigation Anchor Offsets (Accounting for Sticky Masthead) */
@@ -1788,7 +1803,7 @@ li {
   color: var(--tele-text-soft);
 }
 
-/* Project Filter Bar */
+/* Project Filter Ribbon */
 .telemetric-world .project-filter-bar {
   display: flex;
   align-items: center;
@@ -1804,9 +1819,9 @@ li {
 }
 
 .telemetric-world .filter-pill {
-  background: rgba(14, 21, 36, 0.65);
+  background: var(--tele-surface-solid);
   border: 1px solid var(--tele-border);
-  border-radius: 999px;
+  border-radius: 4px;
   padding: 7px 16px;
   font-family: var(--mono);
   font-size: 0.72rem;
@@ -1818,16 +1833,15 @@ li {
 }
 
 .telemetric-world .filter-pill:hover {
-  border-color: var(--tele-emerald);
+  border-color: var(--tele-cyan-draft);
   color: var(--tele-text);
-  background: rgba(0, 229, 153, 0.08);
+  background: rgba(56, 139, 253, 0.08);
 }
 
 .telemetric-world .filter-pill.active {
-  background: rgba(0, 229, 153, 0.14);
+  background: var(--tele-emerald-soft);
   border-color: var(--tele-emerald);
-  color: var(--tele-emerald);
-  box-shadow: 0 0 14px rgba(0, 229, 153, 0.25);
+  color: var(--tele-emerald-bright);
   font-weight: 600;
 }
 
@@ -1835,15 +1849,13 @@ li {
   display: none !important;
 }
 
-/* Project Groups & Services */
+/* Chapter 1: Continuous Ledger Bands */
 .telemetric-world .project-group {
-  background: rgba(14, 21, 36, 0.55);
+  background: var(--tele-surface-solid);
   border: 1px solid var(--tele-border);
-  border-radius: 10px;
+  border-radius: 8px;
   padding: clamp(20px, 3vw, 28px);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .telemetric-world .project-group + .project-group {
@@ -1865,8 +1877,8 @@ li {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--tele-cyan);
-  box-shadow: 0 0 8px var(--tele-cyan);
+  background: var(--tele-cyan-draft);
+  box-shadow: 0 0 6px rgba(56, 139, 253, 0.6);
 }
 
 .telemetric-world .project-heading h3 {
@@ -1879,8 +1891,8 @@ li {
 .telemetric-world .project-count-badge {
   font-size: 0.68rem;
   color: var(--tele-text-soft);
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: var(--tele-bg);
+  border: 1px solid var(--tele-border);
   padding: 3px 8px;
   border-radius: 4px;
 }
@@ -1890,20 +1902,19 @@ li {
 }
 
 .telemetric-world .service {
-  background: rgba(10, 16, 28, 0.65);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  border-radius: 8px;
+  background: #0d1219;
+  border: 1px solid var(--tele-border);
+  border-radius: 6px;
   padding: 20px;
   margin-top: 16px;
-  transition: all 200ms ease;
+  transition: all 180ms ease;
   position: relative;
   overflow: hidden;
 }
 
 .telemetric-world .service:hover {
-  border-color: rgba(0, 229, 153, 0.3);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  border-color: var(--tele-cyan-draft);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .telemetric-world .service-state-down,
@@ -1932,7 +1943,6 @@ li {
 
 .telemetric-world .service-url:hover {
   text-decoration: underline;
-  text-shadow: 0 0 10px var(--tele-cyan-glow);
 }
 
 .telemetric-world .service-stats dt {
@@ -1960,22 +1970,22 @@ li {
 
 .telemetric-world .uptime-strip .day-up {
   background: var(--tele-emerald);
-  box-shadow: 0 0 6px rgba(0, 229, 153, 0.45);
+  box-shadow: 0 0 4px rgba(46, 160, 67, 0.4);
 }
 
 .telemetric-world .uptime-strip .day-down {
   background: var(--tele-rose);
-  box-shadow: 0 0 6px rgba(244, 63, 94, 0.45);
+  box-shadow: 0 0 4px rgba(248, 81, 73, 0.4);
 }
 
 .telemetric-world .uptime-strip .day-mixed {
   background: var(--tele-amber);
-  box-shadow: 0 0 6px rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 4px rgba(210, 153, 34, 0.4);
 }
 
 .telemetric-world .uptime-strip .day-empty {
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: #161b24;
+  border: 1px solid var(--tele-border);
 }
 
 .telemetric-world .strip-caption {
@@ -1990,14 +2000,13 @@ li {
 
 .telemetric-world .sparkline svg {
   border-bottom: 1px solid var(--tele-border);
-  background: rgba(7, 10, 16, 0.4);
+  background: #090d14;
   border-radius: 4px;
 }
 
 .telemetric-world .spark-line {
-  stroke: var(--tele-emerald);
+  stroke: var(--tele-cyan);
   stroke-width: 2;
-  filter: drop-shadow(0 0 4px var(--tele-emerald));
 }
 
 .telemetric-world .spark-down {
@@ -2011,68 +2020,70 @@ li {
 }
 
 .telemetric-world .data-table td {
-  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  border-bottom: 1px solid rgba(40, 50, 67, 0.5);
   color: var(--tele-text);
 }
 
 .telemetric-world .result-up {
-  color: var(--tele-emerald);
+  color: var(--tele-emerald-bright);
   border-color: var(--tele-emerald);
-  background: rgba(0, 229, 153, 0.1);
+  background: var(--tele-emerald-soft);
 }
 
 .telemetric-world .result-down {
-  color: var(--tele-rose);
+  color: var(--tele-rose-bright);
   border-color: var(--tele-rose);
-  background: rgba(244, 63, 94, 0.1);
+  background: var(--tele-rose-soft);
 }
 
-/* State badges */
+/* State badges — Tactile Physical Ink Stamp */
 .telemetric-world .state {
-  border-radius: 999px;
-  padding: 5px 11px;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-family: var(--mono);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .telemetric-world .state-operational {
-  color: var(--tele-emerald);
-  border-color: rgba(0, 229, 153, 0.4);
-  background: rgba(0, 229, 153, 0.12);
+  color: var(--tele-emerald-bright);
+  border-color: var(--tele-emerald);
+  background: var(--tele-emerald-soft);
 }
 
 .telemetric-world .state-degraded {
-  color: var(--tele-amber);
-  border-color: rgba(251, 191, 36, 0.4);
-  background: rgba(251, 191, 36, 0.12);
+  color: var(--tele-amber-bright);
+  border-color: var(--tele-amber);
+  background: var(--tele-amber-soft);
 }
 
 .telemetric-world .state-down,
 .telemetric-world .state-incident {
-  color: var(--tele-rose);
-  border-color: rgba(244, 63, 94, 0.4);
-  background: rgba(244, 63, 94, 0.12);
+  color: var(--tele-rose-bright);
+  border-color: var(--tele-rose);
+  background: var(--tele-rose-soft);
 }
 
 .telemetric-world .state-paused {
   color: var(--tele-text-soft);
-  border-color: rgba(148, 163, 184, 0.3);
-  background: rgba(148, 163, 184, 0.08);
+  border-color: var(--tele-border-strong);
+  background: rgba(100, 114, 135, 0.12);
 }
 
 .telemetric-world .state-unknown {
   color: var(--tele-text-faint);
-  border-color: rgba(148, 163, 184, 0.2);
+  border-color: var(--tele-border);
   background: transparent;
 }
 
-/* Interactive Probe Sandbox */
+/* Chapter 2: Laboratory Drum Oscillograph (#probe) */
 .telemetric-world .probe-sandbox {
-  background: rgba(14, 21, 36, 0.65);
-  border: 1px solid rgba(0, 229, 153, 0.28);
-  border-radius: 12px;
+  background: var(--tele-surface-solid);
+  border: 1px solid var(--tele-border);
+  border-radius: 8px;
   padding: clamp(20px, 3.5vw, 36px);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.35);
   position: relative;
   overflow: hidden;
 }
@@ -2084,7 +2095,7 @@ li {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--tele-cyan), var(--tele-emerald), transparent);
+  background: linear-gradient(90deg, transparent, var(--tele-cyan-draft), var(--tele-emerald), transparent);
 }
 
 .telemetric-world .probe-grid {
@@ -2116,9 +2127,9 @@ li {
 }
 
 .telemetric-world .probe-select {
-  background: rgba(7, 10, 16, 0.85);
+  background: var(--tele-bg);
   border: 1px solid var(--tele-border);
-  border-radius: 6px;
+  border-radius: 4px;
   color: var(--tele-text);
   padding: 10px 14px;
   font-size: 0.88rem;
@@ -2127,17 +2138,17 @@ li {
 }
 
 .telemetric-world .probe-select:focus {
-  outline: 2px solid var(--tele-emerald);
-  border-color: var(--tele-emerald);
+  outline: 2px solid var(--tele-cyan-draft);
+  border-color: var(--tele-cyan-draft);
 }
 
 .telemetric-world .probe-details-strip {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  background: rgba(7, 10, 16, 0.6);
+  background: #090d14;
   padding: 12px 14px;
-  border-radius: 6px;
+  border-radius: 4px;
   border: 1px solid var(--tele-border);
 }
 
@@ -2174,7 +2185,7 @@ li {
 .telemetric-world .probe-radar-icon {
   width: 14px;
   height: 14px;
-  border: 2px solid #070a10;
+  border: 2px solid #0b0e14;
   border-top-color: transparent;
   border-radius: 50%;
   display: inline-block;
@@ -2190,7 +2201,7 @@ li {
 }
 
 .telemetric-world .button-chip {
-  background: rgba(148, 163, 184, 0.08);
+  background: #161b24;
   border: 1px solid var(--tele-border);
   border-radius: 4px;
   color: var(--tele-text-soft);
@@ -2203,19 +2214,18 @@ li {
 }
 
 .telemetric-world .button-chip.active {
-  background: rgba(0, 212, 255, 0.15);
-  border-color: var(--tele-cyan);
+  background: rgba(56, 139, 253, 0.15);
+  border-color: var(--tele-cyan-draft);
   color: var(--tele-cyan);
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.25);
 }
 
 .telemetric-world .probe-pipeline-status {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(7, 10, 16, 0.65);
+  background: #090d14;
   padding: 11px 16px;
-  border-radius: 6px;
+  border-radius: 4px;
   border-left: 3px solid var(--tele-emerald);
 }
 
@@ -2224,12 +2234,10 @@ li {
   height: 8px;
   border-radius: 50%;
   background: var(--tele-emerald);
-  box-shadow: 0 0 8px var(--tele-emerald);
 }
 
 .telemetric-world .pipeline-indicator.probing {
   background: var(--tele-cyan);
-  box-shadow: 0 0 12px var(--tele-cyan);
   animation: pulseDot 0.6s infinite ease-in-out;
 }
 
@@ -2245,9 +2253,9 @@ li {
 }
 
 .telemetric-world .breakdown-card {
-  background: rgba(7, 10, 16, 0.5);
+  background: #090d14;
   border: 1px solid var(--tele-border);
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 8px 10px;
   text-align: center;
 }
@@ -2262,17 +2270,16 @@ li {
 .telemetric-world .breakdown-val {
   display: block;
   font-size: 0.82rem;
-  color: var(--tele-emerald);
+  color: var(--tele-emerald-bright);
   margin-top: 3px;
   font-weight: 600;
 }
 
 .telemetric-world .probe-screen-panel {
-  background: #04070d;
-  border: 1px solid rgba(0, 229, 153, 0.25);
-  border-radius: 8px;
+  background: #080b10;
+  border: 1px solid var(--tele-border);
+  border-radius: 6px;
   padding: 18px;
-  box-shadow: inset 0 0 30px rgba(0, 229, 153, 0.04);
 }
 
 .telemetric-world .oscilloscope-header {
@@ -2280,16 +2287,16 @@ li {
   justify-content: space-between;
   align-items: center;
   font-size: 0.66rem;
-  color: var(--tele-emerald);
+  color: var(--tele-cyan);
   margin-bottom: 12px;
 }
 
 .telemetric-world .oscilloscope-viewport {
   position: relative;
   overflow: hidden;
-  border-radius: 6px;
-  background: #020407;
-  border: 1px solid rgba(0, 229, 153, 0.15);
+  border-radius: 4px;
+  background: #090d14;
+  border: 1px solid var(--tele-border);
 }
 
 .telemetric-world .oscilloscope-canvas {
@@ -2305,7 +2312,7 @@ li {
   gap: 12px;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  border-top: 1px solid var(--tele-border);
 }
 
 .telemetric-world .hud-label {
@@ -2324,7 +2331,7 @@ li {
 }
 
 .telemetric-world .highlight-green {
-  color: var(--tele-emerald) !important;
+  color: var(--tele-emerald-bright) !important;
   font-weight: 700;
 }
 
@@ -2336,31 +2343,31 @@ li {
   color: var(--tele-cyan);
 }
 
-/* Incident section */
+/* Chapter 3: Chronological Incident Journal */
 .telemetric-world .incident-clean-seal {
   text-align: center;
   padding: 40px 24px;
-  background: rgba(14, 21, 36, 0.5);
-  border: 1px solid rgba(0, 229, 153, 0.22);
-  border-radius: 10px;
+  background: var(--tele-surface-solid);
+  border: 1px solid var(--tele-border);
+  border-radius: 8px;
 }
 
 .telemetric-world .seal-badge {
   display: inline-block;
   font-size: 0.68rem;
-  color: var(--tele-emerald);
-  background: rgba(0, 229, 153, 0.12);
-  border: 1px solid rgba(0, 229, 153, 0.35);
-  border-radius: 999px;
+  color: var(--tele-emerald-bright);
+  background: var(--tele-emerald-soft);
+  border: 1px solid rgba(46, 160, 67, 0.4);
+  border-radius: 4px;
   padding: 5px 14px;
   margin-bottom: 14px;
   letter-spacing: 0.12em;
 }
 
 .telemetric-world .incident {
-  background: rgba(14, 21, 36, 0.65);
+  background: var(--tele-surface-solid);
   border: 1px solid var(--tele-border);
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .telemetric-world .incident h3 {
@@ -2371,7 +2378,7 @@ li {
   color: var(--tele-text-soft);
 }
 
-/* Method section */
+/* Chapter 4: Operational Broadsheet (#method) */
 .telemetric-world .method-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2379,12 +2386,10 @@ li {
 }
 
 .telemetric-world .method-card {
-  background: rgba(14, 21, 36, 0.55);
+  background: var(--tele-surface-solid);
   border: 1px solid var(--tele-border);
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 24px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
 }
 
 .telemetric-world .method-card-header {
@@ -2396,11 +2401,11 @@ li {
 
 .telemetric-world .card-num {
   font-size: 0.72rem;
-  color: var(--tele-emerald);
+  color: var(--tele-emerald-bright);
   padding: 2px 7px;
   border-radius: 4px;
-  background: rgba(0, 229, 153, 0.12);
-  border: 1px solid rgba(0, 229, 153, 0.3);
+  background: var(--tele-emerald-soft);
+  border: 1px solid rgba(46, 160, 67, 0.35);
 }
 
 .telemetric-world .method-card h3 {
@@ -2431,7 +2436,7 @@ li {
 }
 
 .telemetric-world .footer-wordmark span {
-  color: var(--tele-emerald);
+  color: var(--tele-emerald-bright);
 }
 
 .telemetric-world .footer-links a {
@@ -2445,23 +2450,21 @@ li {
 /* Keyframe Animations */
 @keyframes pulseDot {
   0%, 100% {
-    opacity: 0.5;
-    transform: scale(0.9);
+    opacity: 0.6;
+    transform: scale(0.92);
   }
   50% {
     opacity: 1;
-    transform: scale(1.15);
+    transform: scale(1.1);
   }
 }
 
-@keyframes haloBreathe {
+@keyframes stampBreathe {
   0%, 100% {
-    opacity: 0.35;
-    transform: scale(0.97);
+    opacity: 0.4;
   }
   50% {
-    opacity: 0.75;
-    transform: scale(1.03);
+    opacity: 0.85;
   }
 }
 
@@ -2474,7 +2477,7 @@ li {
 @keyframes heroEntrance {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(16px);
   }
   100% {
     opacity: 1;
@@ -2533,7 +2536,7 @@ li {
 }
 
 .admin-header {
-  background: rgba(7, 10, 16, 0.92);
+  background: rgba(11, 14, 20, 0.92);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--rule);

@@ -11,10 +11,11 @@ Workers · React 19 + Vite · D1
 
 ## What it does
 
+- **Continuous Seismic & Print Operations Journal**: An original visual world modeled after an automated physical drum recorder and precision editorial ledger. Deep carbon slate (`#0b0e14`), continuous ruled ledger chart bands (`#283243`), physical double-bordered ink stamps, and zero borrowed sci-fi or dossier tropes.
+- **Dual-Channel Analog Stylus Needles**: Living background canvas rendering continuous analog needle ink traces across millimetric chart paper rules: Channel 1 tracks fleet health with smooth harmonic oscillations (exhibiting dynamic shock tremors if degraded/down), while Channel 2 tracks Cloudflare cron epoch pulses.
+- **Precision Laboratory Drum Oscillograph**: In `#probe`, an interactive diagnostic instrument with calibrated vertical scale (0 to 500ms), dual-trace analog persistence, and a 5-stage mechanical verification pipeline (`DNS -> TLS -> HTTP/2 -> Assertion -> D1 Commit`).
 - **Unified Visual Identity**: Self-hosted **Space Grotesk** (display & UI) and **JetBrains Mono** (telemetry numbers, code, timestamps) under SIL Open Font License 1.1 with WOFF2 preloading, replacing all generic system fonts across the entire application.
-- **Consistent Design System**: Public status page (`/`), private owner sign-in (`/admin`), and authenticated operations desk (Overview, Monitors, Incidents, Activity) share a single precision dark telemetry chassis (`#070a10` base, `#0e1524` surfaces, `#00e599` emerald, `#00d4ff` signal cyan).
-- **Living Signal World**: Background telemetry canvas, choreographed hero sequence with live status heartbeat aura, and four distinct scroll chapters.
-- **Interactive Signal Probe**: Real-time edge check simulation (DNS, TLS, HTTP, validation, D1 commit) with live oscilloscope waveform visualization.
+- **Cohesive Operations Desk**: Public status page (`/`), private owner sign-in (`/admin`), and authenticated desk (Overview, Monitors, Incidents, Activity) share a single calm, dense, highly legible design system.
 - **Real Edge Checks**: Checks 11 endpoints across Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch every 15 minutes with real HTTPS requests.
 - **Zero-Inventory Truth**: Computes uptime and latency exclusively from stored Cloudflare D1 checks—zero synthetic backfills, zero invented statistics.
 - **Private Owner Desk**: Restrained operational console for monitor CRUD, pause/resume, manual checks, check logs, incident updates, and activity audit trail.
