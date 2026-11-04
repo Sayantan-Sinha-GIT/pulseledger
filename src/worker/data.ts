@@ -1,11 +1,11 @@
 import {
   RETENTION_DAYS,
+  SUFFICIENT_SAMPLES,
   dailyBucketsFromCounts,
   deriveMonitorState,
   latencySummary,
-  summarizeUptime,
+  round1,
   toTrend,
-  uptimeWindow,
 } from "../shared/status";
 import type {
   AdminMonitorView,
@@ -16,18 +16,9 @@ import type {
   MonitorView,
   PublicIncident,
   UptimeSummary,
+  UptimeWindow,
 } from "../shared/types";
 import type { Env } from "./env";
-
-interface AggregateRow {
-  monitor_id: string;
-  up24: number;
-  down24: number;
-  up7: number;
-  down7: number;
-  up30: number;
-  down30: number;
-}
 
 interface DailyRow {
   monitor_id: string;
@@ -35,6 +26,8 @@ interface DailyRow {
   up: number;
   down: number;
 }
+
+interface BoundaryRow extends DailyRow {}
 
 interface IncidentWithMonitor extends IncidentRow {
   monitor_name: string | null;
@@ -58,78 +51,63 @@ export async function loadMonitorViews(
   const cutoff24 = new Date(now.getTime() - 86_400_000).toISOString();
   const cutoff7 = new Date(now.getTime() - 7 * 86_400_000).toISOString();
 
-  const [monitorsResult, checksResult, aggregateResult, dailyResult, incidentList] =
-    await Promise.all([
-      env.DB.prepare("SELECT * FROM monitors ORDER BY created_at ASC").all<MonitorRow>(),
-      env.DB.prepare(
-        `SELECT * FROM (
-           SELECT c.*, ROW_NUMBER() OVER (
-             PARTITION BY c.monitor_id ORDER BY c.checked_at DESC, c.id DESC
-           ) AS rn
-           FROM checks c WHERE c.checked_at >= ?
-         ) WHERE rn <= ? ORDER BY checked_at DESC`,
-      )
-        .bind(cutoff30, recentLimit)
-        .all<CheckRow & { rn: number }>(),
-      env.DB.prepare(
-        `SELECT monitor_id,
-           SUM(CASE WHEN checked_at >= ? AND outcome = 'up' THEN 1 ELSE 0 END) AS up24,
-           SUM(CASE WHEN checked_at >= ? AND outcome = 'down' THEN 1 ELSE 0 END) AS down24,
-           SUM(CASE WHEN checked_at >= ? AND outcome = 'up' THEN 1 ELSE 0 END) AS up7,
-           SUM(CASE WHEN checked_at >= ? AND outcome = 'down' THEN 1 ELSE 0 END) AS down7,
-           SUM(CASE WHEN checked_at >= ? AND outcome = 'up' THEN 1 ELSE 0 END) AS up30,
-           SUM(CASE WHEN checked_at >= ? AND outcome = 'down' THEN 1 ELSE 0 END) AS down30
-         FROM checks WHERE checked_at >= ?
-         GROUP BY monitor_id`,
-      )
-        .bind(cutoff24, cutoff24, cutoff7, cutoff7, cutoff30, cutoff30, cutoff30)
-        .all<AggregateRow>(),
-      env.DB.prepare(
-        `SELECT monitor_id, substr(checked_at, 1, 10) AS day,
-           SUM(CASE WHEN outcome = 'up' THEN 1 ELSE 0 END) AS up,
-           SUM(CASE WHEN outcome = 'down' THEN 1 ELSE 0 END) AS down
-         FROM checks WHERE checked_at >= ?
-         GROUP BY monitor_id, day`,
-      )
-        .bind(cutoff30)
-        .all<DailyRow>(),
-      options.incidents ??
-        loadIncidents(env, {
-          now,
-          includeResolvedDays: RETENTION_DAYS,
-          limit: 30,
-        }),
-    ]);
+  const cutoffs = [cutoff24, cutoff7, cutoff30];
+  const nextDays = cutoffs.map((cutoff) =>
+    new Date(Date.parse(`${cutoff.slice(0, 10)}T00:00:00.000Z`) + 86_400_000).toISOString(),
+  );
+  const [monitorsResult, dailyResult, boundaryResult, incidentList] = await Promise.all([
+    env.DB.prepare("SELECT * FROM monitors ORDER BY created_at ASC").all<MonitorRow>(),
+    env.DB.prepare(
+      "SELECT monitor_id, day, up, down FROM daily_check_counts WHERE day >= ?",
+    ).bind(cutoff30.slice(0, 10)).all<DailyRow>(),
+    // Only the three partial UTC days need raw checks. All complete days use
+    // the write-through daily summary instead of rescanning 30 days of rows.
+    env.DB.prepare(
+      `SELECT monitor_id, substr(checked_at, 1, 10) AS day,
+         SUM(CASE WHEN outcome = 'up' THEN 1 ELSE 0 END) AS up,
+         SUM(CASE WHEN outcome = 'down' THEN 1 ELSE 0 END) AS down
+       FROM checks WHERE (checked_at >= ? AND checked_at < ?)
+         OR (checked_at >= ? AND checked_at < ?)
+         OR (checked_at >= ? AND checked_at < ?)
+       GROUP BY monitor_id, day`,
+    ).bind(cutoff24, nextDays[0], cutoff7, nextDays[1], cutoff30, nextDays[2]).all<BoundaryRow>(),
+    options.incidents ?? loadIncidents(env, {
+      now, includeResolvedDays: RETENTION_DAYS, limit: 30,
+    }),
+  ]);
   const incidents = incidentList;
 
   const checksByMonitor = new Map<string, CheckRow[]>();
-  for (const row of checksResult.results) {
-    const { rn: _rn, ...check } = row;
-    const list = checksByMonitor.get(check.monitor_id) ?? [];
-    list.push(check);
-    checksByMonitor.set(check.monitor_id, list);
-  }
+  await Promise.all(monitorsResult.results.map(async (monitor) => {
+    const { results } = await env.DB.prepare(
+      `SELECT * FROM checks WHERE monitor_id = ? AND checked_at >= ?
+       ORDER BY checked_at DESC, id DESC LIMIT ?`,
+    ).bind(monitor.id, cutoff30, recentLimit).all<CheckRow>();
+    checksByMonitor.set(monitor.id, results);
+  }));
 
-  const aggregates = new Map(aggregateResult.results.map((row) => [row.monitor_id, row]));
   const dailyByMonitor = new Map<string, DailyRow[]>();
   for (const row of dailyResult.results) {
     const list = dailyByMonitor.get(row.monitor_id) ?? [];
     list.push(row);
     dailyByMonitor.set(row.monitor_id, list);
   }
+  const boundaryByMonitor = new Map<string, BoundaryRow[]>();
+  for (const row of boundaryResult.results) {
+    const list = boundaryByMonitor.get(row.monitor_id) ?? [];
+    list.push(row);
+    boundaryByMonitor.set(row.monitor_id, list);
+  }
 
   return monitorsResult.results.map((monitor) => {
     const checks = checksByMonitor.get(monitor.id) ?? [];
-    const aggregate = aggregates.get(monitor.id);
-    const uptime: UptimeSummary = aggregate
-      ? {
-          h24: uptimeWindow(countsToChecks(aggregate.up24, aggregate.down24)),
-          d7: uptimeWindow(countsToChecks(aggregate.up7, aggregate.down7)),
-          d30: uptimeWindow(countsToChecks(aggregate.up30, aggregate.down30)),
-        }
-      : summarizeUptime(checks, now);
-
     const dailyRows = dailyByMonitor.get(monitor.id) ?? [];
+    const boundaryRows = boundaryByMonitor.get(monitor.id) ?? [];
+    const uptime: UptimeSummary = {
+      h24: countWindow(dailyRows, boundaryRows, cutoffs[0]),
+      d7: countWindow(dailyRows, boundaryRows, cutoffs[1]),
+      d30: countWindow(dailyRows, boundaryRows, cutoffs[2]),
+    };
     const daily = dailyBucketsFromCounts(
       dailyRows.map((row) => ({ date: row.day, up: Number(row.up), down: Number(row.down) })),
       RETENTION_DAYS,
@@ -191,11 +169,20 @@ export async function loadAdminMonitorViews(
   });
 }
 
-function countsToChecks(up: number, down: number) {
-  return [
-    ...Array.from({ length: Number(up ?? 0) }, () => ({ outcome: "up" as const })),
-    ...Array.from({ length: Number(down ?? 0) }, () => ({ outcome: "down" as const })),
-  ];
+function countWindow(daily: DailyRow[], boundaries: BoundaryRow[], cutoff: string): UptimeWindow {
+  const cutoffDay = cutoff.slice(0, 10);
+  const fullDays = daily.filter((row) => row.day > cutoffDay);
+  const firstDay = boundaries.filter((row) => row.day === cutoffDay);
+  const up = [...fullDays, ...firstDay].reduce((total, row) => total + Number(row.up), 0);
+  const down = [...fullDays, ...firstDay].reduce((total, row) => total + Number(row.down), 0);
+  const total = up + down;
+  return {
+    percent: total === 0 ? null : round1((up / total) * 100),
+    up,
+    down,
+    total,
+    sufficient: total >= SUFFICIENT_SAMPLES,
+  };
 }
 
 export async function loadIncidents(

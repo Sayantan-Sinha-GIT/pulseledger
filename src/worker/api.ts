@@ -1,18 +1,9 @@
-import {
-  CHECK_INTERVAL_MINUTES,
-  CHECK_TIMEOUT_MS,
-  MAX_MONITORS,
-  PUBLIC_REFRESH_SECONDS,
-  RETENTION_DAYS,
-  deriveOverallState,
-  overallHeadline,
-} from "../shared/status";
+import { MAX_MONITORS } from "../shared/status";
 import type {
   AuditRow,
   IncidentRow,
   IncidentUpdateRow,
   MonitorRow,
-  StatusResponse,
 } from "../shared/types";
 import {
   checkLoginRateLimit,
@@ -28,8 +19,9 @@ import {
   verifyPassword,
 } from "./auth";
 import { runCheck } from "./checks";
-import { loadAdminMonitorViews, loadIncidents, loadMonitorViews, writeAudit } from "./data";
+import { loadAdminMonitorViews, loadIncidents, writeAudit } from "./data";
 import type { Env } from "./env";
+import { readPublicStatus, refreshPublicStatus } from "./publicStatus";
 import {
   fail,
   handleError,
@@ -53,6 +45,16 @@ function isUniqueViolation(error: unknown): boolean {
   );
 }
 
+async function refreshSnapshotAfterOwnerWrite(env: Env): Promise<void> {
+  try {
+    await refreshPublicStatus(env);
+  } catch (error) {
+    // The owner write already committed. Cron will retry the public snapshot;
+    // never tell the owner a successful mutation was rolled back.
+    console.error("Public status snapshot refresh failed", error);
+  }
+}
+
 export async function handleApi(request: Request, env: Env): Promise<Response> {
   try {
     const url = new URL(request.url);
@@ -70,7 +72,7 @@ export async function handleApi(request: Request, env: Env): Promise<Response> {
     }
 
     if (path === "/api/status" && method === "GET") {
-      return await publicStatus(env);
+      return ok(await readPublicStatus(env), { cacheControl: "no-store" });
     }
 
     if (path === "/api/admin/login" && method === "POST") {
@@ -179,38 +181,6 @@ export async function handleApi(request: Request, env: Env): Promise<Response> {
   } catch (error) {
     return handleError(error);
   }
-}
-
-async function publicStatus(env: Env): Promise<Response> {
-  const now = new Date();
-  const incidents = await loadIncidents(env, {
-    now,
-    includeResolvedDays: RETENTION_DAYS,
-    limit: 20,
-  });
-  const monitors = await loadMonitorViews(env, {
-    now,
-    checksInResponse: 8,
-    incidents,
-  });
-  const overall = deriveOverallState(monitors.map((monitor) => monitor.state));
-  const body: StatusResponse = {
-    generatedAt: now.toISOString(),
-    overall,
-    headline: overallHeadline(overall),
-    monitors,
-    incidents,
-    meta: {
-      retentionDays: RETENTION_DAYS,
-      maxMonitors: MAX_MONITORS,
-      refreshSeconds: PUBLIC_REFRESH_SECONDS,
-      checkIntervalMinutes: CHECK_INTERVAL_MINUTES,
-      timeoutMs: CHECK_TIMEOUT_MS,
-    },
-  };
-  return ok(body, {
-    cacheControl: "public, max-age=15, stale-while-revalidate=30",
-  });
 }
 
 async function login(request: Request, env: Env): Promise<Response> {
@@ -339,6 +309,7 @@ async function createMonitor(
   const monitor = await env.DB.prepare("SELECT * FROM monitors WHERE id = ?")
     .bind(id)
     .first<MonitorRow>();
+  await refreshSnapshotAfterOwnerWrite(env);
   return ok({ monitor }, { status: 201 });
 }
 
@@ -413,6 +384,7 @@ async function updateMonitor(
   const monitor = await env.DB.prepare("SELECT * FROM monitors WHERE id = ?")
     .bind(id)
     .first<MonitorRow>();
+  await refreshSnapshotAfterOwnerWrite(env);
   return ok({ monitor });
 }
 
@@ -430,6 +402,7 @@ async function deleteMonitor(env: Env, id: string, actor: string): Promise<Respo
     targetId: id,
     detail: { name: existing.name, url: existing.url },
   });
+  await refreshSnapshotAfterOwnerWrite(env);
   return ok({ deleted: id });
 }
 
@@ -451,6 +424,7 @@ async function manualCheck(env: Env, id: string, actor: string): Promise<Respons
       durationMs: result.check.duration_ms,
     },
   });
+  await refreshSnapshotAfterOwnerWrite(env);
   return ok({ check: result.check, inserted: result.inserted });
 }
 
@@ -519,6 +493,7 @@ async function createIncident(
   )
     .bind(updateId)
     .first<IncidentUpdateRow>();
+  await refreshSnapshotAfterOwnerWrite(env);
   return ok({ incident, updates: update ? [update] : [] }, { status: 201 });
 }
 
@@ -574,5 +549,6 @@ async function addIncidentUpdate(
   )
     .bind(updateId)
     .first<IncidentUpdateRow>();
+  await refreshSnapshotAfterOwnerWrite(env);
   return ok({ incident: updated, update });
 }

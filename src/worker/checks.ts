@@ -13,6 +13,7 @@ import type {
   MonitorRow,
 } from "../shared/types";
 import type { Env } from "./env";
+import { refreshPublicStatus } from "./publicStatus";
 
 const USER_AGENT =
   "PulseLedger/1.0 (uptime monitor; https://github.com/Sayantan-Sinha-GIT/pulseledger)";
@@ -202,6 +203,9 @@ export async function runScheduledChecks(
     .run();
 
   await pruneOldData(env);
+  if (checked > 0 || monitors.length === 0) {
+    await refreshPublicStatus(env);
+  }
 
   return { slot, monitors: monitors.length, checked, skipped, failures };
 }

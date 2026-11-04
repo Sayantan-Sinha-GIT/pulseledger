@@ -801,6 +801,8 @@ export function StatusPage() {
   const [announcement, setAnnouncement] = useState("");
   const [selectedProjectFilter, setSelectedProjectFilter] = useState<string>("all");
   const abortRef = useRef<AbortController | null>(null);
+  const lastFetchAtRef = useRef(0);
+  const newestGeneratedAtRef = useRef(0);
 
   const load = useCallback(async (mode: "initial" | "manual" | "auto") => {
     abortRef.current?.abort();
@@ -809,11 +811,16 @@ export function StatusPage() {
     if (mode !== "initial") setRefreshing(true);
     try {
       const next = await api.status(controller.signal);
-      setData(next);
+      const generatedAt = Date.parse(next.generatedAt);
+      if (generatedAt >= newestGeneratedAtRef.current) {
+        newestGeneratedAtRef.current = generatedAt;
+        setData(next);
+        setLastUpdated(Date.now());
+      }
       setError(null);
-      setLastUpdated(Date.now());
+      lastFetchAtRef.current = Date.now();
       if (mode === "manual") {
-        setAnnouncement(`Status updated at ${formatShortTime(next.generatedAt)}.`);
+        setAnnouncement(`Latest available snapshot checked at ${formatShortTime(next.generatedAt)}.`);
       }
     } catch (caught) {
       if (caught instanceof DOMException && caught.name === "AbortError") return;
@@ -835,10 +842,12 @@ export function StatusPage() {
     void load("initial");
     const refreshTimer = window.setInterval(() => {
       if (!document.hidden) void load("auto");
-    }, 60_000);
+    }, 300_000);
     const tickTimer = window.setInterval(() => setNow(Date.now()), 10_000);
     const onVisibility = () => {
-      if (!document.hidden) void load("auto");
+      if (!document.hidden && Date.now() - lastFetchAtRef.current >= 300_000) {
+        void load("auto");
+      }
     };
     document.addEventListener("visibilitychange", onVisibility);
     return () => {

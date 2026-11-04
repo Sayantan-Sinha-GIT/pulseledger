@@ -30,6 +30,7 @@ Monitor the publicly reachable websites and available health/version endpoints f
 - Separate states for operational, degraded, down, paused, unknown, and incident-active. A new monitor is unknown until its first completed check.
 - Show current incident details and updates, not merely a color badge.
 - Auto-refresh with an accessible manual refresh and visible last-updated time. Handle API failure and empty data honestly.
+- Any interactive diagnostic must identify whether it replays a stored check or makes a new request. Display only measured or persisted status, latency, source, timestamps, and errors. An illustrative waveform may interpolate real samples if labelled as illustrative; do not present random timing stages, locations, or hashes as observations.
 - Accessible keyboard use, text contrast, small screens, reduced motion, semantic HTML, and no horizontal overflow.
 
 ### Monitoring
@@ -59,6 +60,7 @@ An editorial operations desk: precise, calm, human-readable, and trustworthy. Gi
 - Server-side input validation, prepared SQL, restrictive CORS (same origin), CSP and other appropriate security headers. No personal visitor data tracking or analytics required.
 - Health endpoint for the PulseLedger Worker itself that does not expose secrets.
 - D1 migrations with reproducible local and remote apply steps. Database indexes for queries used by the dashboard.
+- Keep the free-tier D1 row-read budget viable as 30-day history grows: bound recent-history queries, maintain compact aggregates for uptime, use matching indexes, and serve public status from one persisted snapshot refreshed after scheduled checks and owner changes. Public polling must not repeatedly scan all checks. Verify query plans and provider usage after deployment.
 - GitHub Actions CI for typecheck, tests, build, and dependency audit. Do not add a deployment job that needs a missing secret.
 - README with architecture diagram, screenshots, live URL, setup, deployment and limitations. Add license and sensible gitignore.
 
