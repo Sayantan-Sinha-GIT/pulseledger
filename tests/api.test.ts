@@ -89,7 +89,7 @@ describe("public status API", () => {
     expect(text).not.toContain(env.ADMIN_PASSWORD_HASH);
   });
 
-  it("does not let a query parameter bypass the public read cache", async () => {
+  it("keeps the normal cache policy when a fresh query parameter is supplied", async () => {
     const response = await SELF.fetch(`${BASE}/api/status?fresh=1`);
     expect(response.status).toBe(200);
     expect(response.headers.get("cache-control")).toBe("public, max-age=300");
