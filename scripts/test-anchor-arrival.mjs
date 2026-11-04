@@ -15,8 +15,8 @@ async function testAnchorArrival(viewportName, width, height) {
   console.log(`Masthead height: ${mastheadHeight.toFixed(1)}px`);
 
   const anchors = [
-    { name: "SIGNAL PROBE link -> #probe", trigger: ".masthead-nav a[href='#probe']", target: "#probe", kicker: "#probe .section-kicker", heading: "#probe-heading" },
-    { name: "Launch Signal Probe CTA -> #probe", trigger: ".jump-probe-btn", target: "#probe", kicker: "#probe .section-kicker", heading: "#probe-heading" },
+    { name: "Recorded Checks link -> #probe", trigger: ".masthead-nav a[href='#probe']", target: "#probe", kicker: "#probe .section-kicker", heading: "#probe-heading" },
+    { name: "Inspect Recorded Checks CTA -> #probe", trigger: ".jump-probe-btn", target: "#probe", kicker: "#probe .section-kicker", heading: "#probe-heading" },
     { name: "Services link -> #services", trigger: ".masthead-nav a[href='#services']", target: "#services", kicker: "#services .section-kicker", heading: "#services-heading" },
     { name: "Project-0 link -> #project-0", trigger: "nav[aria-label='Jump to project'] a[href='#project-0']", target: "#project-0", kicker: null, heading: "#project-0 .project-heading h3" },
     { name: "Incidents link -> #incidents", trigger: ".masthead-nav a[href='#incidents']", target: "#incidents", kicker: "#incidents .section-kicker", heading: "#incidents-heading" },

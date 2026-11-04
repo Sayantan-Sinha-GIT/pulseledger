@@ -9,7 +9,7 @@ It is modeled after an automated physical drum recorder and precision editorial 
   - **Channel 1 (Fleet Baseline Harmonic Inkwash)**: Smooth compound harmonic waveform in drafting cobalt/cyan (`#388bfd` / `#58a6ff`). When all systems are nominal, it maintains steady harmonic oscillations; if degraded or down, it dynamically exhibits acute shock tremors and high-frequency jitter.
   - **Channel 2 (Cron Cadence & Epoch Heartbeat)**: A continuous register emerald (`#2ea043`) ink line featuring rhythmic traveling cardiac impulses corresponding to the Cloudflare Worker 15-minute cron check cycle.
 - **Physical Embossed Ink Stamps & Seals**: In place of glowing neon sci-fi halos, status states use crisp double-bordered ink stamps (`.state-operational`, `.state-degraded`, `.state-down`) with tactile breathing outlines.
-- **Precision Laboratory Drum Oscillograph**: In place of generic radar rings, the interactive signal probe is housed in a matte graphite instrument chassis with graduated physical scale ticks (0 to 500ms), dual-trace persistence, and a stepped 5-stage mechanical verification pipeline.
+- **Precision Laboratory Drum Oscillograph**: In place of generic radar rings, the interactive recorded check inspector is housed in a matte graphite instrument chassis with graduated physical scale ticks (0 to 400ms), dual-trace persistence, and direct selectable inspection of genuine Cloudflare D1 check records.
 - **Zero Cosmic Trope / Zero Porcelain Trope**:
   - NO pitch-black void `#08090c`, no orbital rings, no celestial planet nodes, no neon orange/cyan halos, no floating star particles (CodeSense).
   - NO porcelain cream `#f8f7f2`, no centered dossier single-column cards, no brass/stone ornaments, no book serif headlines (Pathfolio).
@@ -27,13 +27,13 @@ Actual live screenshots captured at 1440×900:
 | :--- | :--- | :--- | :--- |
 | **Metaphor** | Orbital planetary cosmos & celestial gravity well | Centered executive career dossier / archival folio | Continuous drum recorder & print operations journal |
 | **Canvas Background** | Pure cosmic pitch black (`#08090c`) with orbiting satellite nodes & floating stardust particles | Static porcelain warm cream (`#f8f7f2`) with faint vertical pinstripes | Deep carbon graphite slate (`#0b0e14`) with continuous horizontal millimetric chart paper rules |
-| **Living Background Motion** | Planetary nodes orbiting concentric circular tracks with radial glowing orange halos | Static parchment surface (zero canvas animation) | Dual-channel analog stylus needle ink traces gliding right-to-left with status-driven shock tremors |
+| **Living Background Motion** | Planetary nodes orbiting concentric circular tracks with radial glowing orange halos | Warm editorial parchment with subtle tactile document styling and card layout | Dual-channel analog stylus needle ink traces gliding right-to-left with status-driven shock tremors |
 | **Color System** | Deep black, glowing solar orange (`#f97316`), neon cyan, cosmic violet | Warm cream, charcoal, brass, natural stone | Deep carbon slate (`#0b0e14`), ink surface (`#121720`), register emerald (`#2ea043`), drafting cobalt (`#388bfd`), seismograph vermilion (`#f85149`) |
 | **Typography** | Editorial serif display headlines + geometric sans | High-contrast classical serif headlines + sans body | **Space Grotesk** (engineered sans) + **JetBrains Mono** (calibrated tabular figures) — 100% self-hosted OFL 1.1 |
 | **Status Indicators** | Glowing floating orb badges with neon blur filters | Subdued monochrome status pills | Embossed physical ink-stamp badges with double-rule borders and subtle mechanical stroke breathing |
 | **Hero Focal Component** | Giant central planetary orbit ring with orbiting glowing nodes | Centered single-column executive dossier card | Continuous 30-day Fleet Uptime Band on physical drum tape reading plate with UTC epoch ticker |
 | **Service Presentation** | Glassmorphic floating cards with multi-color gradient borders | Centered vertical career milestones | High-density **Continuous Ledger Bands** with inline 30-day seismograph day-ticks and collapsible check log |
-| **Interactive Tool** | Interactive cosmic code graph | N/A (Static presentation) | **Precision Laboratory Drum Oscillograph** with calibrated voltage/latency scale and 5-stage edge pipeline |
+| **Interactive Tool** | Interactive cosmic code graph | N/A (Static presentation) | **Authentic D1 Recorded Check Explorer** with dual-channel analog waveform replay, selectable check history, and honest unavailable state |
 
 ---
 
@@ -95,9 +95,8 @@ Actual live screenshots captured at 1440×900:
    - Heavy matte graphite housing with calibrated vertical latency scale (0 to 400ms).
    - Dual-trace persistence canvas displaying illustrative response waveforms calibrated to real check latency.
    - Waveform mode switcher ("Sine Wave" vs "Pulse Stream").
-   - 4-stage recorded check inspection pipeline:
-     `1/4 D1 Ledger Access -> 2/4 Slot & Trigger Inspection -> 3/4 Outcome Evaluation -> 4/4 Illustrative Waveform Replay`.
-   - Telemetry HUD with measured RTT latency, recorded status outcome, and authentic Cloudflare D1 check record ID (`D1-REC:#ID`). Honest provenance: zero fabricated stages, zero fake DNS/TLS breakdown, zero invented edge PoPs.
+   - Selectable check record explorer (`<select id="probe-check-select">`) linked to real `recentChecks` stored in Cloudflare D1.
+   - Telemetry HUD with measured RTT latency, recorded status outcome, and authentic Cloudflare D1 check record ID (`D1-REC:#ID`). Honest provenance: zero fabricated stages, zero fake DNS/TLS breakdown, zero invented edge PoPs, and honest unavailable zero-state when no records exist.
 3. **Chapter 3: Chronological Incident Journal (`#incidents`)**:
    - Clean state: Embossed inspection seal (`0 DISRUPTIONS ACTIVE // ALL MONITORED ENDPOINTS IN CALM REGISTER`).
    - Active state: Timestamped dispatch ledger cards with priority ribbons.

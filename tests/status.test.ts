@@ -216,3 +216,43 @@ describe("daily buckets", () => {
     expect(buckets[1]).toEqual({ date: "2026-11-01", up: 4, down: 1, total: 5 });
   });
 });
+
+describe("real-data and no-data branches", () => {
+  it("never invents uptime when total checks is zero", () => {
+    expect(uptimePercent([])).toBeNull();
+    const window = uptimeWindow([]);
+    expect(window.percent).toBeNull();
+    expect(window.total).toBe(0);
+    expect(formatUptime(window)).toBe("No data");
+  });
+
+  it("handles empty and zero-check latency measurements honestly without fabricated metrics", () => {
+    const summary = latencySummary([]);
+    expect(summary.samples).toBe(0);
+    expect(summary.average).toBeNull();
+    expect(summary.p95).toBeNull();
+    expect(percentile([], 50)).toBeNull();
+    expect(percentile([], 95)).toBeNull();
+  });
+
+  it("preserves authentic failure outcomes for checks without HTTP response", () => {
+    const state = deriveMonitorState({
+      paused: false,
+      hasActiveIncident: false,
+      checks: [
+        {
+          outcome: "down",
+          duration_ms: 10_000,
+          checked_at: NOW.toISOString(),
+        },
+      ],
+    });
+    expect(state).toBe("down");
+  });
+
+  it("distinguishes active checks from honest zero-fill empty state across multiple days", () => {
+    const buckets = buildDailyBuckets([], 7, NOW);
+    expect(buckets).toHaveLength(7);
+    expect(buckets.every((b) => b.total === 0 && b.up === 0 && b.down === 0)).toBe(true);
+  });
+});

@@ -55,7 +55,7 @@ function heroLede(state: OverallState): string {
   }
 }
 
-function overallUptime(monitors: MonitorView[]) {
+export function overallUptime(monitors: MonitorView[]) {
   const totals = monitors.reduce(
     (accumulator, monitor) => {
       accumulator.up += monitor.uptime.d30.up;
@@ -328,10 +328,10 @@ function TelemetryCanvas({ overallState = "operational" }: { overallState?: Over
 }
 
 /**
- * Interactive Recorded Check Telemetry Inspector & Replay.
- * Replays and inspects genuine HTTPS checks recorded in Cloudflare D1.
+ * Selectable Explorer of actual recentChecks records.
+ * Queries genuine check records from Cloudflare D1 via the status API.
  * Features an interactive oscilloscope displaying illustrative response waveforms
- * calibrated against real check latency.
+ * calibrated to the selected check's measured latency.
  */
 function InteractiveProbeSandbox({
   monitors,
@@ -343,17 +343,8 @@ function InteractiveProbeSandbox({
   const [selectedMonitorId, setSelectedMonitorId] = useState<string>(
     monitors[0]?.id ?? "mon_haan_web",
   );
-  const [probeStatus, setProbeStatus] = useState<"idle" | "probing" | "complete">("idle");
-  const [probeStage, setProbeStage] = useState<string>("Ready to inspect recorded checks");
-  const [probeLatency, setProbeLatency] = useState<number | null>(null);
-  const [stageBreakdown, setStageBreakdown] = useState<{
-    timestamp: string;
-    status: string;
-    latency: string;
-    trigger: string;
-  } | null>(null);
-  const [hashSignature, setHashSignature] = useState<string>("");
-  const [edgePop, setEdgePop] = useState<string>("CF-D1 LEDGER ARCHIVE");
+  const [selectedCheckId, setSelectedCheckId] = useState<number | null>(null);
+  const [isReplaying, setIsReplaying] = useState(false);
   const [waveformType, setWaveformType] = useState<"sine" | "pulse">("sine");
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -364,6 +355,30 @@ function InteractiveProbeSandbox({
     () => monitors.find((m) => m.id === selectedMonitorId) ?? monitors[0],
     [monitors, selectedMonitorId],
   );
+
+  // Available real checks for the selected monitor
+  const checks = useMemo(() => {
+    if (!selectedMonitor) return [];
+    if (selectedMonitor.recentChecks && selectedMonitor.recentChecks.length > 0) {
+      return selectedMonitor.recentChecks;
+    }
+    if (selectedMonitor.lastCheck) {
+      return [selectedMonitor.lastCheck];
+    }
+    return [];
+  }, [selectedMonitor]);
+
+  const hasChecks = checks.length > 0;
+
+  // Active check selected by user or latest available
+  const activeCheck = useMemo(() => {
+    if (!hasChecks) return null;
+    if (selectedCheckId != null) {
+      const found = checks.find((c) => c.id === selectedCheckId);
+      if (found) return found;
+    }
+    return checks[0] ?? null;
+  }, [checks, hasChecks, selectedCheckId]);
 
   // Oscilloscope canvas animation (Laboratory Drum Oscillograph)
   useEffect(() => {
@@ -419,67 +434,91 @@ function InteractiveProbeSandbox({
       ctx.lineTo(width / 2, height);
       ctx.stroke();
 
-      // 3. Illustrative analog stylus signal wave with dual-trace persistence
+      // 3. Illustrative analog stylus signal wave
       if (!isReduced) {
-        wavePhaseRef.current += probeStatus === "probing" ? 0.22 : 0.04;
+        wavePhaseRef.current += isReplaying ? 0.22 : 0.04;
       }
       const phase = wavePhaseRef.current;
       const midY = height / 2;
-      const measuredMs =
-        probeLatency ??
-        selectedMonitor?.lastCheck?.duration_ms ??
-        selectedMonitor?.latency.p95 ??
-        45;
-      const amplitude =
-        probeStatus === "probing" ? 32 : Math.min(26, Math.max(8, measuredMs / 8));
-      const freq = probeStatus === "probing" ? 0.045 : 0.025;
 
-      // Ghost / persistence trace
-      ctx.strokeStyle =
-        probeStatus === "probing" ? "rgba(88, 166, 255, 0.2)" : "rgba(46, 160, 67, 0.18)";
-      ctx.lineWidth = 4;
-      ctx.beginPath();
-      for (let x = 0; x < width; x++) {
-        let y = midY;
-        if (waveformType === "sine") {
-          y = midY + Math.sin(x * freq + phase - 0.2) * (amplitude * 0.9);
-        } else {
-          const cycle = (x * 0.03 + (phase - 0.2) * 0.5) % 3;
-          y = midY + (cycle > 2.5 ? -amplitude : cycle > 1.2 && cycle < 1.4 ? amplitude : 0);
+      // When no checks exist or the selected check failed with no latency, amplitude is 0 (flat datum line)
+      const measuredMs = activeCheck?.duration_ms ?? null;
+      const hasResponse = activeCheck?.outcome === "up" && measuredMs != null;
+      const amplitude = hasResponse
+        ? isReplaying
+          ? 32
+          : Math.min(26, Math.max(8, measuredMs / 8))
+        : 0;
+      const freq = isReplaying ? 0.045 : 0.025;
+
+      if (amplitude > 0) {
+        // Ghost / persistence trace
+        ctx.strokeStyle =
+          isReplaying ? "rgba(88, 166, 255, 0.2)" : "rgba(46, 160, 67, 0.18)";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        for (let x = 0; x < width; x++) {
+          let y = midY;
+          if (waveformType === "sine") {
+            y = midY + Math.sin(x * freq + phase - 0.2) * (amplitude * 0.9);
+          } else {
+            const cycle = (x * 0.03 + (phase - 0.2) * 0.5) % 3;
+            y = midY + (cycle > 2.5 ? -amplitude : cycle > 1.2 && cycle < 1.4 ? amplitude : 0);
+          }
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
+        ctx.stroke();
 
-      // Primary stylus ink trace
-      ctx.strokeStyle = probeStatus === "probing" ? "#58a6ff" : "#3fb950";
-      ctx.lineWidth = 2.4;
-      ctx.shadowColor = probeStatus === "probing" ? "rgba(88, 166, 255, 0.7)" : "rgba(46, 160, 67, 0.6)";
-      ctx.shadowBlur = 6;
+        // Primary stylus ink trace
+        ctx.strokeStyle = isReplaying ? "#58a6ff" : "#3fb950";
+        ctx.lineWidth = 2.4;
+        ctx.shadowColor = isReplaying
+          ? "rgba(88, 166, 255, 0.7)"
+          : "rgba(46, 160, 67, 0.6)";
+        ctx.shadowBlur = 6;
 
-      ctx.beginPath();
-      for (let x = 0; x < width; x++) {
-        let y = midY;
-        if (waveformType === "sine") {
-          y = midY + Math.sin(x * freq + phase) * amplitude;
-        } else {
-          const cycle = (x * 0.03 + phase * 0.5) % 3;
-          y = midY + (cycle > 2.5 ? -amplitude : cycle > 1.2 && cycle < 1.4 ? amplitude : 0);
+        ctx.beginPath();
+        for (let x = 0; x < width; x++) {
+          let y = midY;
+          if (waveformType === "sine") {
+            y = midY + Math.sin(x * freq + phase) * amplitude;
+          } else {
+            const cycle = (x * 0.03 + phase * 0.5) % 3;
+            y = midY + (cycle > 2.5 ? -amplitude : cycle > 1.2 && cycle < 1.4 ? amplitude : 0);
+          }
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
         }
-        if (x === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.shadowBlur = 0; // reset
+      } else {
+        // Flat baseline trace for failed or unavailable check
+        ctx.strokeStyle =
+          activeCheck?.outcome === "down"
+            ? "rgba(248, 81, 73, 0.7)"
+            : "rgba(100, 114, 135, 0.4)";
+        ctx.lineWidth = 2.0;
+        ctx.beginPath();
+        ctx.moveTo(0, midY);
+        ctx.lineTo(width, midY);
+        ctx.stroke();
       }
-      ctx.stroke();
-      ctx.shadowBlur = 0; // reset
 
       // Active mechanical stylus point at center
       const currentNeedleY =
         midY +
-        (waveformType === "sine"
+        (amplitude > 0 && waveformType === "sine"
           ? Math.sin((width / 2) * freq + phase) * amplitude
           : 0);
-      ctx.fillStyle = probeStatus === "probing" ? "#58a6ff" : "#3fb950";
+      ctx.fillStyle =
+        amplitude > 0
+          ? isReplaying
+            ? "#58a6ff"
+            : "#3fb950"
+          : activeCheck?.outcome === "down"
+            ? "#f85149"
+            : "#647287";
       ctx.beginPath();
       ctx.arc(width / 2, currentNeedleY, 3, 0, Math.PI * 2);
       ctx.fill();
@@ -494,68 +533,25 @@ function InteractiveProbeSandbox({
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
     };
-  }, [probeStatus, probeLatency, waveformType, selectedMonitor]);
+  }, [isReplaying, activeCheck, waveformType]);
 
-  const runProbe = () => {
-    if (probeStatus === "probing" || !selectedMonitor) return;
-    setProbeStatus("probing");
-    setProbeLatency(null);
-    setStageBreakdown(null);
-
-    const last = selectedMonitor.lastCheck;
-    const checksCount = selectedMonitor.recentChecks?.length ?? 0;
-    const targetHost = hostOf(selectedMonitor.url);
-    const measuredMs =
-      last?.duration_ms ??
-      selectedMonitor.latency.p95 ??
-      selectedMonitor.latency.p50 ??
-      42;
-    const statusCode = last?.status_code ?? 200;
-    const triggerSource = last?.source ?? "cron";
-    const slotStr = last?.slot ?? "cadence";
-    const recordId = last?.id ? `#${last.id}` : "LATEST";
-
-    const stages = [
-      { text: `1/4 Accessing Cloudflare D1 check ledger for ${targetHost}...`, delay: 200 },
-      { text: `2/4 Reading recorded check slot ${slotStr} (${triggerSource} trigger)...`, delay: 500 },
-      { text: `3/4 Evaluating stored outcome: HTTP ${statusCode} in ${measuredMs}ms...`, delay: 850 },
-      { text: `4/4 Replaying illustrative telemetry waveform for check ${recordId}...`, delay: 1200 },
-    ];
-
-    stages.forEach(({ text, delay }) => {
-      setTimeout(() => {
-        setProbeStage(text);
-      }, delay);
-    });
-
+  const triggerReplay = () => {
+    if (!hasChecks || !activeCheck) return;
+    setIsReplaying(true);
     setTimeout(() => {
-      setProbeLatency(measuredMs);
-      setStageBreakdown({
-        timestamp: last?.checked_at ? formatShortTime(last.checked_at) : "Recent check",
-        status: `HTTP ${statusCode}`,
-        latency: `${measuredMs} ms`,
-        trigger: `${triggerSource.toUpperCase()} / Slot ${slotStr}`,
-      });
-      setEdgePop(`APAC · D1 ARCHIVE (${checksCount} checks)`);
-      setHashSignature(`D1-REC:#${last?.id ?? "ARCHIVE"}`);
-      setProbeStage(
-        last
-          ? `Recorded: HTTP ${statusCode} in ${measuredMs}ms (${triggerSource} trigger at ${formatShortTime(last.checked_at)})`
-          : `Recorded: HTTP ${statusCode} in ${measuredMs}ms (ledger aggregate)`,
-      );
-      setProbeStatus("complete");
-    }, 1500);
+      setIsReplaying(false);
+    }, 400);
   };
 
   return (
     <div className="probe-sandbox" id="probe" aria-labelledby="probe-heading">
       <div className="section-head">
         <div>
-          <p className="section-kicker">02 / Telemetry Inspector</p>
+          <p className="section-kicker">02 / Recorded Check Explorer</p>
           <h2 id="probe-heading">Recorded Check Telemetry &amp; Signal Inspector</h2>
         </div>
         <p className="section-meta">
-          Inspect genuine recorded HTTPS check telemetry, latency metrics, and execution triggers stored in Cloudflare D1.
+          Explore genuine recorded HTTPS checks, latency metrics, and execution triggers stored in Cloudflare D1.
         </p>
       </div>
 
@@ -572,10 +568,8 @@ function InteractiveProbeSandbox({
               value={selectedMonitorId}
               onChange={(e) => {
                 setSelectedMonitorId(e.target.value);
-                setProbeStatus("idle");
-                setProbeStage("Target changed. Ready to inspect.");
+                setSelectedCheckId(null);
               }}
-              disabled={probeStatus === "probing"}
             >
               {monitors.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -584,6 +578,30 @@ function InteractiveProbeSandbox({
               ))}
             </select>
           </div>
+
+          {hasChecks ? (
+            <div className="probe-field">
+              <label htmlFor="probe-check-select" className="probe-label">
+                Select Recorded Check ({checks.length} stored in D1)
+              </label>
+              <select
+                id="probe-check-select"
+                className="probe-select"
+                value={activeCheck?.id ?? ""}
+                onChange={(e) => setSelectedCheckId(Number(e.target.value))}
+              >
+                {checks.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    Record #{c.id} · {formatShortTime(c.checked_at)} · {c.status_code ? `HTTP ${c.status_code}` : "No response"} · {c.duration_ms != null ? `${c.duration_ms}ms` : "timeout"} ({c.source})
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <div className="notice notice-quiet" role="status">
+              <p className="mono">No check records stored in Cloudflare D1 for this endpoint yet.</p>
+            </div>
+          )}
 
           <div className="probe-details-strip">
             <div>
@@ -599,8 +617,27 @@ function InteractiveProbeSandbox({
               <span className="probe-meta-value mono">{Math.round(timeoutMs / 1000)}s Strict</span>
             </div>
             <div>
-              <span className="probe-meta-label">Rule</span>
+              <span className="probe-meta-label">Expected Rule</span>
               <span className="probe-meta-value mono">{selectedMonitor?.expectedStatus ?? "2xx_3xx"}</span>
+            </div>
+            <div>
+              <span className="probe-meta-label">Recorded Trend</span>
+              <span className="probe-meta-value mono">
+                {selectedMonitor?.trend?.length
+                  ? `${selectedMonitor.trend.length} samples (${Math.round(
+                      (selectedMonitor.trend.filter((t) => t.outcome === "up").length /
+                        selectedMonitor.trend.length) *
+                        100,
+                    )}% up)`
+                  : "No trend data"}
+              </span>
+            </div>
+            <div>
+              <span className="probe-meta-label">Failure Category</span>
+              <span className="probe-meta-value mono">
+                {activeCheck?.error_category ??
+                  (activeCheck?.outcome === "down" ? "Uncategorized" : "None (Clean)")}
+              </span>
             </div>
           </div>
 
@@ -608,17 +645,22 @@ function InteractiveProbeSandbox({
             <button
               type="button"
               className="button button-accent probe-button"
-              onClick={runProbe}
-              disabled={probeStatus === "probing"}
+              onClick={triggerReplay}
+              disabled={!hasChecks}
             >
-              <span className={`probe-radar-icon ${probeStatus === "probing" ? "spinning" : ""}`} />
-              {probeStatus === "probing" ? "Replaying Telemetry..." : "Inspect Recorded Check Telemetry"}
+              <span className={`probe-radar-icon ${isReplaying ? "spinning" : ""}`} />
+              {hasChecks
+                ? isReplaying
+                  ? "Replaying Telemetry..."
+                  : "Inspect Recorded Check Telemetry"
+                : "Inspection Unavailable (0 Checks)"}
             </button>
             <div className="waveform-toggle" role="group" aria-label="Oscilloscope wave type">
               <button
                 type="button"
                 className={`button-chip ${waveformType === "sine" ? "active" : ""}`}
                 onClick={() => setWaveformType("sine")}
+                disabled={!hasChecks}
               >
                 Sine Wave
               </button>
@@ -626,6 +668,7 @@ function InteractiveProbeSandbox({
                 type="button"
                 className={`button-chip ${waveformType === "pulse" ? "active" : ""}`}
                 onClick={() => setWaveformType("pulse")}
+                disabled={!hasChecks}
               >
                 Pulse Stream
               </button>
@@ -633,37 +676,75 @@ function InteractiveProbeSandbox({
           </div>
 
           <div className="probe-pipeline-status" aria-live="polite">
-            <span className={`pipeline-indicator ${probeStatus}`} />
-            <span className="pipeline-text mono">{probeStage}</span>
+            <span
+              className={`pipeline-indicator ${
+                hasChecks
+                  ? activeCheck?.outcome === "up"
+                    ? "complete"
+                    : "probing"
+                  : "idle"
+              }`}
+            />
+            <span className="pipeline-text mono">
+              {hasChecks && activeCheck
+                ? `D1 Check #${activeCheck.id}: ${
+                    activeCheck.status_code ? `HTTP ${activeCheck.status_code}` : "No HTTP response"
+                  } in ${activeCheck.duration_ms != null ? `${activeCheck.duration_ms}ms` : "N/A"} (${
+                    activeCheck.source
+                  } trigger at ${formatShortTime(activeCheck.checked_at)}).`
+                : "No check records stored in Cloudflare D1 for this endpoint."}
+            </span>
           </div>
 
-          {stageBreakdown && (
-            <div className="stage-telemetry-breakdown">
-              <div className="breakdown-card">
-                <span className="breakdown-title">Check Timestamp</span>
-                <span className="breakdown-val mono">{stageBreakdown.timestamp}</span>
-              </div>
-              <div className="breakdown-card">
-                <span className="breakdown-title">HTTP Status</span>
-                <span className="breakdown-val mono">{stageBreakdown.status}</span>
-              </div>
-              <div className="breakdown-card">
-                <span className="breakdown-title">Measured Latency</span>
-                <span className="breakdown-val mono">{stageBreakdown.latency}</span>
-              </div>
-              <div className="breakdown-card">
-                <span className="breakdown-title">Execution Trigger</span>
-                <span className="breakdown-val mono">{stageBreakdown.trigger}</span>
-              </div>
+          <div className="stage-telemetry-breakdown">
+            <div className="breakdown-card">
+              <span className="breakdown-title">Check Timestamp</span>
+              <span className="breakdown-val mono">
+                {hasChecks && activeCheck
+                  ? formatTimestamp(activeCheck.checked_at)
+                  : "No checks recorded"}
+              </span>
             </div>
-          )}
+            <div className="breakdown-card">
+              <span className="breakdown-title">HTTP Status</span>
+              <span className="breakdown-val mono">
+                {hasChecks && activeCheck
+                  ? activeCheck.status_code != null
+                    ? `HTTP ${activeCheck.status_code}`
+                    : "No HTTP response"
+                  : "Unavailable"}
+              </span>
+            </div>
+            <div className="breakdown-card">
+              <span className="breakdown-title">Measured Latency</span>
+              <span className="breakdown-val mono">
+                {hasChecks && activeCheck && activeCheck.duration_ms != null
+                  ? `${activeCheck.duration_ms} ms`
+                  : "No response"}
+              </span>
+            </div>
+            <div className="breakdown-card">
+              <span className="breakdown-title">Execution Trigger</span>
+              <span className="breakdown-val mono">
+                {hasChecks && activeCheck
+                  ? `${activeCheck.source.toUpperCase()} // Slot: ${activeCheck.slot ?? "manual"}`
+                  : "No D1 slot"}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Right: Oscilloscope & Telemetry HUD */}
         <div className="probe-screen-panel">
           <div className="oscilloscope-header">
-            <span className="oscilloscope-tag mono">CHART RECORDER // ILLUSTRATIVE RESPONSE WAVEFORM</span>
-            <span className="oscilloscope-pop mono">{edgePop}</span>
+            <span className="oscilloscope-tag mono">
+              {hasChecks
+                ? "CHART RECORDER // ILLUSTRATIVE RESPONSE WAVEFORM"
+                : "CHART RECORDER // NO RECORDED SIGNALS"}
+            </span>
+            <span className="oscilloscope-pop mono">
+              {hasChecks && activeCheck ? `D1 RECORD #${activeCheck.id}` : "NO D1 RECORDS"}
+            </span>
           </div>
           <div className="oscilloscope-viewport">
             <canvas
@@ -671,26 +752,36 @@ function InteractiveProbeSandbox({
               width={480}
               height={200}
               className="oscilloscope-canvas"
-              aria-label="Illustrative signal oscilloscope waveform"
+              aria-label={
+                hasChecks
+                  ? "Illustrative signal oscilloscope waveform"
+                  : "Oscilloscope flat baseline (no recorded checks)"
+              }
             />
           </div>
           <div className="oscilloscope-footer">
             <div>
               <span className="hud-label">Measured Latency</span>
               <span className="hud-val mono">
-                {probeLatency ? `${probeLatency} ms` : selectedMonitor?.latency.p95 ? `${selectedMonitor.latency.p95} ms` : "—"}
+                {hasChecks && activeCheck && activeCheck.duration_ms != null
+                  ? `${activeCheck.duration_ms} ms`
+                  : "—"}
               </span>
             </div>
             <div>
               <span className="hud-label">Recorded State</span>
-              <span className="hud-val mono highlight-green">
-                {(selectedMonitor?.lastCheck?.outcome ?? selectedMonitor?.state ?? "OPERATIONAL").toUpperCase()}
+              <span
+                className={`hud-val mono ${
+                  hasChecks && activeCheck?.outcome === "up" ? "highlight-green" : ""
+                }`}
+              >
+                {hasChecks && activeCheck ? activeCheck.outcome.toUpperCase() : "UNAVAILABLE"}
               </span>
             </div>
             <div>
               <span className="hud-label">D1 Ledger Record</span>
               <span className="hud-val mono truncate-hash">
-                {hashSignature || (selectedMonitor?.lastCheck?.id ? `D1-REC:#${selectedMonitor.lastCheck.id}` : "D1-REC:ARCHIVE")}
+                {hasChecks && activeCheck ? `D1-REC:#${activeCheck.id}` : "NONE"}
               </span>
             </div>
           </div>
@@ -782,12 +873,12 @@ export function StatusPage() {
             Pulse<span>Ledger</span>
           </Link>
           <span className="telemetry-badge mono" aria-label="Edge location">
-            JOURNAL: APAC · D1
+            JOURNAL: CLOUDFLARE D1
           </span>
         </div>
         <nav className="masthead-nav" aria-label="Primary">
           <a href="#services">Services</a>
-          <a href="#probe">Signal Probe</a>
+          <a href="#probe">Recorded Checks</a>
           <a href="#incidents">Incidents</a>
           <a href="#method">Method</a>
           <Link className="owner-link button-secondary" href="/admin">
@@ -823,7 +914,7 @@ export function StatusPage() {
                 {refreshing ? "Refreshing…" : "Refresh now"}
               </button>
               <a href="#probe" className="button button-accent jump-probe-btn">
-                Launch Signal Probe
+                Inspect Recorded Checks
               </a>
               <span className="updated-note mono">
                 {lastUpdated
@@ -845,16 +936,16 @@ export function StatusPage() {
             <div className="figure-metric-block">
               <div className="figure-metric-row">
                 <p className="figure-value mono">
-                  {uptime ? formatPercent(uptime.percent) : "—"}
+                  {uptime && uptime.checks > 0 ? formatPercent(uptime.percent) : "—"}
                 </p>
                 <span className="figure-metric-sub mono">FLEET AVAILABILITY</span>
               </div>
               <div className="figure-health-bar" aria-hidden="true">
                 <div
                   className="health-bar-operational"
-                  style={{ width: uptime ? `${Math.min(100, Math.max(0, uptime.percent))}%` : "100%" }}
+                  style={{ width: uptime && uptime.checks > 0 ? `${Math.min(100, Math.max(0, uptime.percent))}%` : "0%" }}
                 />
-                {uptime && uptime.percent < 100 ? (
+                {uptime && uptime.checks > 0 && uptime.percent < 100 ? (
                   <div
                     className="health-bar-impact"
                     style={{ width: `${Math.max(0, 100 - uptime.percent)}%` }}
@@ -1018,7 +1109,7 @@ export function StatusPage() {
               )}
             </section>
 
-            {/* Scroll Chapter 2: Interactive Signal Probe & Live Telemetry Sandbox */}
+            {/* Scroll Chapter 2: Authentic Recorded Check Telemetry & Signal Explorer */}
             <section className="section">
               <InteractiveProbeSandbox
                 monitors={data.monitors}

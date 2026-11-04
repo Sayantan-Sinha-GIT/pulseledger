@@ -26,16 +26,23 @@ The page journey unfolds across four distinct chapters rather than uniform card 
   - Observed behavior: Four numbered protocol cards explaining Cloudflare Workers cron execution, SSRF validation, mathematical state rules, and complete 6-state status legend.
 
 ## 3. Interactive Signal Probe Demonstration (Round 2)
-- **Probe In-Flight**: `docs/motion-review/round2-probe-in-flight.png`. When "Fire Edge Signal Probe" is triggered, the radar icon animates (`radarSpin` at 0.8s/rev), the pipeline indicator pulses cyan, and stage progression advances sequentially through 5 steps:
+
+> [!WARNING] [HISTORICAL RECORD — SUPERSEDED & RETRACTED FOR PROVENANCE INTEGRITY]
+> The early prototype 5-stage simulated probe sequence described below (DNS, TLS, HTTP, Verification, Commit with simulated stage latencies, APAC PoP, and synthetic commit hashes) was an initial motion prototype that has been **formally superseded and retracted**.
+> In accordance with the Antigravity-Kit provenance rule, PulseLedger does not simulate network stages, invent HTTP 200 responses, or claim edge execution that did not occur.
+> In Rounds 10–12, this was completely replaced with the **Authentic Cloudflare D1 Recorded Check Explorer**, which allows the user to inspect real stored check records from the status API (`recentChecks`), displaying actual timestamps, HTTP status or "No HTTP response", measured duration, trigger source, and error category. If no check records exist in Cloudflare D1, it displays an honest unavailable state and disables inspection.
+>
+> - **Historical Prototype Verification Result**: SUPERSEDED (Retracted for provenance integrity; replaced by authentic D1 Recorded Check Explorer in Round 12).
+
+- **Probe In-Flight (Historical Prototype)**: `docs/motion-review/round2-probe-in-flight.png`. When "Fire Edge Signal Probe" was triggered, the radar icon animated (`radarSpin` at 0.8s/rev), the pipeline indicator pulsed cyan, and stage progression advanced sequentially through 5 steps:
   1. `Resolving DNS (Cloudflare 1.1.1.1)...`
   2. `Initializing TLS 1.3 ECDHE-ECDSA session...`
   3. `Dispatching HTTP/2 GET (redirect: manual)...`
   4. `Asserting expected 2xx/3xx response criteria...`
   5. `Committing slot hash to Cloudflare D1 ledger...`
-- **Probe Completed**: `docs/motion-review/round2-probe-completed.png`. Displays verified status `HTTP 200`, exact roundtrip latency breakdown (DNS, TLS, TTFB, Transfer), edge PoP (`CCU (Kolkata Edge)`), and cryptographic ledger commit hash (`CF-D1:HASH`).
+- **Probe Completed (Historical Prototype)**: `docs/motion-review/round2-probe-completed.png`. Displayed status `HTTP 200`, roundtrip latency breakdown, and ledger commit hash.
 - **Waveform Switching**: `docs/motion-review/round2-oscilloscope-pulse-wave.png`. Toggling from "Sine Wave" to "Pulse Stream" switches the oscilloscope canvas renderer to discrete pulse step packets with zero layout shift.
 - **Project Filtering**: `docs/motion-review/round2-filter-haan-active.png`. Clicking "Haan" filters the displayed fleet matrix to Haan's two endpoints (`Haan website` and `Haan API health`) while maintaining DOM node integrity.
-- **Verification Result**: PASS. Real interactive product demonstration proves edge probe architecture.
 
 ## 4. Mobile Responsiveness & Touch Experience (Round 4)
 - **Viewport**: 390px × 844px (Pixel 7 / iPhone standard).
@@ -117,6 +124,19 @@ The page journey unfolds across four distinct chapters rather than uniform card 
   - Oscilloscope explicitly tagged: `<span className="oscilloscope-tag mono">CHART RECORDER // ILLUSTRATIVE RESPONSE WAVEFORM</span>` and shows real integer check primary key ID (`D1-REC:#ID`).
   - Audited UI claims in `StatusPage.tsx`, `AdminApp.tsx`, and `README.md` to ensure zero unsupported "live edge probe" claims.
 - **Verification Result**: PASS. All 66 Vitest tests, 16 Playwright e2e tests, anchor arrival checks, and secret scans pass.
+
+## 10. Authentic Recorded Check Explorer & Provenance Purge (Round 12)
+- **Problem Addressed**: The initial probe prototype retained fallback numbers when `lastCheck` was null (`HTTP 200`, `42ms`, `cron/cadence`, `APAC`, `ARCHIVE` IDs) and animated artificial timed stages. Additionally, the masthead telemetry badge claimed `APAC`, the nav link/CTA was labeled "Signal Probe", and the 30-day uptime bar defaulted to 100% on null uptime.
+- **Authentic Implementation**:
+  - Replaced simulation with selectable `<select id="probe-check-select">` bound directly to `selectedMonitor.recentChecks`.
+  - Displays genuine attributes: check primary key ID (`D1 Record #id`), timestamp, HTTP status code or "No HTTP response", measured duration (`ms`), source trigger (`cron` / `manual`), and failure category.
+  - Oscilloscope renders illustrative response waveform scaled by genuine check latency (`activeCheck.duration_ms`). When 0 checks exist, renders a flat baseline datum trace with tag `CHART RECORDER // NO RECORDED SIGNALS`.
+  - When 0 checks exist, displays `.notice-quiet` ("No check records stored in Cloudflare D1 for this endpoint yet") and disables inspection button ("Inspection Unavailable (0 Checks)").
+  - Masthead telemetry badge updated to `JOURNAL: CLOUDFLARE D1` (removing unsupported APAC claim).
+  - Navigation link renamed to `Recorded Checks` and CTA button to `Inspect Recorded Checks` (preserving `.jump-probe-btn` and `href="#probe"`).
+  - Empty uptime bar rendered at `width: 0%` when uptime is null or `uptime.checks === 0`.
+- **Verification Result**: PASS. Authentic data provenance enforced across all branches; zero fabricated numbers or simulated network stages.
+
 
 
 

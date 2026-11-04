@@ -692,6 +692,12 @@ li {
   background: var(--teal-soft);
 }
 
+.notice-quiet {
+  border-left-color: var(--rule-strong);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+}
+
 .empty-state {
   padding: 30px 24px;
   border: 1px dashed var(--rule-strong);
@@ -2239,6 +2245,16 @@ li {
 .telemetric-world .probe-select:focus {
   outline: 2px solid var(--tele-cyan-draft);
   border-color: var(--tele-cyan-draft);
+}
+
+.telemetric-world .notice-quiet {
+  background: var(--tele-surface-sunken);
+  border: 1px solid var(--tele-border);
+  border-left: 3px solid var(--tele-text-soft);
+  padding: 12px 16px;
+  border-radius: 4px;
+  color: var(--tele-text-soft);
+  margin: 8px 0;
 }
 
 .telemetric-world .probe-details-strip {
