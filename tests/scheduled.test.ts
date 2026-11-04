@@ -44,6 +44,10 @@ describe("scheduled checks", () => {
     expect(rows.results.every((row) => row.outcome === "up")).toBe(true);
     expect(rows.results.every((row) => row.source === "scheduled")).toBe(true);
     expect(rows.results.every((row) => row.slot === "2026-11-01T12:00:00.000Z")).toBe(true);
+    const snapshot = await env.DB.prepare(
+      "SELECT payload FROM public_status_snapshot WHERE id = 1",
+    ).first<{ payload: string }>();
+    expect(JSON.parse(snapshot?.payload ?? "{}").monitors.every((monitor: { lastCheck: { source: string } }) => monitor.lastCheck.source === "scheduled")).toBe(true);
 
     const second = await runScheduledChecks(env, Date.parse("2026-11-01T12:09:00.000Z"));
     expect(second.skipped).toBe(2);

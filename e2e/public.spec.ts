@@ -52,7 +52,7 @@ test.describe("public status page", () => {
 
     await page.getByRole("button", { name: "Refresh now" }).click();
     await expect(page.locator(".sr-only[aria-live='polite']")).toContainText(
-      "Status updated at",
+      "Latest available snapshot checked at",
     );
   });
 

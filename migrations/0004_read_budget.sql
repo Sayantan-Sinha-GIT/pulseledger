@@ -41,3 +41,12 @@ CREATE INDEX idx_checks_slot_lookup ON checks (slot) WHERE slot IS NOT NULL;
 -- the tie-breaker. Otherwise SQLite sorts each monitor's whole history.
 DROP INDEX idx_checks_monitor_time;
 CREATE INDEX idx_checks_monitor_time ON checks (monitor_id, checked_at DESC, id DESC);
+
+-- The public endpoint reads one prepared snapshot instead of re-running
+-- multi-monitor aggregation on every visitor request. Cron and owner writes
+-- rebuild this row after changing source data.
+CREATE TABLE public_status_snapshot (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  generated_at TEXT NOT NULL,
+  payload TEXT NOT NULL
+);

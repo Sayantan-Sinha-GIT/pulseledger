@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { env, SELF } from "cloudflare:test";
 import type { AdminMonitorView, PublicIncident, StatusResponse } from "../src/shared/types";
+import type { Env } from "../src/worker/env";
+import { readPublicStatus, refreshPublicStatus } from "../src/worker/publicStatus";
 import { adminRequest, BASE, getMonitorId, insertCheck, login } from "./helpers";
 
 afterEach(() => {
@@ -89,10 +91,29 @@ describe("public status API", () => {
     expect(text).not.toContain(env.ADMIN_PASSWORD_HASH);
   });
 
-  it("keeps the normal cache policy when a fresh query parameter is supplied", async () => {
+  it("does not allow a query parameter to bypass the public snapshot", async () => {
     const response = await SELF.fetch(`${BASE}/api/status?fresh=1`);
     expect(response.status).toBe(200);
-    expect(response.headers.get("cache-control")).toBe("public, max-age=300");
+    expect(response.headers.get("cache-control")).toBe("no-store");
+  });
+
+  it("serves a single persisted snapshot until source changes rebuild it", async () => {
+    const productionEnv = { ...env, ENVIRONMENT: "production" } as Env;
+    const monitorId = await getMonitorId("Haan website");
+    const first = await readPublicStatus(productionEnv);
+    expect(first.monitors.find((item) => item.id === monitorId)?.uptime.h24.total).toBe(0);
+
+    await insertCheck({ monitorId, outcome: "up", checkedAt: new Date().toISOString() });
+    const unchanged = await readPublicStatus(productionEnv);
+    expect(unchanged.generatedAt).toBe(first.generatedAt);
+    expect(unchanged.monitors.find((item) => item.id === monitorId)?.uptime.h24.total).toBe(0);
+
+    await refreshPublicStatus(productionEnv);
+    const updated = await readPublicStatus(productionEnv);
+    expect(updated.monitors.find((item) => item.id === monitorId)?.uptime.h24.total).toBe(1);
+    const row = await env.DB.prepare("SELECT payload FROM public_status_snapshot WHERE id = 1")
+      .first<{ payload: string }>();
+    expect(row?.payload).toContain(monitorId);
   });
 });
 
@@ -143,6 +164,10 @@ describe("owner monitor API", () => {
     expect(createdBody.data.monitor.paused).toBe(0);
     expect(createdBody.data.monitor.project).toBe("Example");
     expect(createdBody.data.monitor.expected_status).toBe("200");
+    const createdSnapshot = await env.DB.prepare(
+      "SELECT payload FROM public_status_snapshot WHERE id = 1",
+    ).first<{ payload: string }>();
+    expect(JSON.parse(createdSnapshot?.payload ?? "{}").monitors.some((monitor: { id: string }) => monitor.id === id)).toBe(true);
 
     const paused = await adminRequest(`/api/admin/monitors/${id}`, session, {
       method: "PATCH",
@@ -178,6 +203,10 @@ describe("owner monitor API", () => {
       data: { monitors: AdminMonitorView[] };
     };
     expect(afterBody.data.monitors.some((monitor) => monitor.id === id)).toBe(false);
+    const removedSnapshot = await env.DB.prepare(
+      "SELECT payload FROM public_status_snapshot WHERE id = 1",
+    ).first<{ payload: string }>();
+    expect(JSON.parse(removedSnapshot?.payload ?? "{}").monitors.some((monitor: { id: string }) => monitor.id === id)).toBe(false);
   });
 
   it("rejects malformed update payloads", async () => {
@@ -240,6 +269,8 @@ describe("manual checks", () => {
     const monitor = data.monitors.find((item) => item.id === monitorId);
     expect(monitor?.state).toBe("operational");
     expect(monitor?.lastCheck?.source).toBe("manual");
+    const snapshot = await readPublicStatus({ ...env, ENVIRONMENT: "production" } as Env);
+    expect(snapshot.monitors.find((item) => item.id === monitorId)?.lastCheck?.source).toBe("manual");
   });
 
   it("records an HTTP failure as down with a diagnostic", async () => {
