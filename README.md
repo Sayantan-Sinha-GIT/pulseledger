@@ -12,7 +12,8 @@ Workers · React 19 + Vite · D1
 ## What it does
 
 - **Continuous Seismic & Print Operations Journal**: An original visual world modeled after an automated physical drum recorder and precision editorial ledger. Deep carbon slate (`#0b0e14`), continuous ruled ledger chart bands (`#283243`), physical double-bordered ink stamps, and zero borrowed sci-fi or dossier tropes.
-- **Dual-Channel Analog Stylus Needles**: Living background canvas rendering continuous analog needle ink traces across millimetric chart paper rules: Channel 1 tracks fleet health with smooth harmonic oscillations (exhibiting dynamic shock tremors if degraded/down), while Channel 2 tracks Cloudflare cron epoch pulses.
+- **4 Scroll-Driven Operations-Journal Chapters**: Physical scroll choreography driven by `window.scrollY` and `IntersectionObserver`: (1) `#services` mechanical 30-day ledger tape spool apparatus and per-row `.uptime-strip` `clip-path` unspooling with stylus printhead sweeps; (2) `#probe` scroll-drawn SVG live latency chronograph (`stroke-dashoffset` & playhead carriage) paired with the recorded D1 check explorer; (3) `#incidents` scroll-driven rotary verification seal SVG and unfolding forensic incident broadsheet; and (4) `#method` scroll-wired 4-stage operational protocol schematic bus.
+- **Dual-Channel Analog Stylus Needles**: Living background canvas rendering continuous analog needle ink traces across millimetric chart paper rules: Channel 1 tracks fleet health with smooth harmonic oscillations (exhibiting dynamic shock tremors if degraded/down), while Channel 2 tracks Cloudflare cron epoch pulses, sitting inside a dedicated unobstructed lower drum window (`margin-bottom: 140px`).
 - **Precision Laboratory Drum Oscillograph**: In `#probe`, an interactive diagnostic instrument with calibrated vertical scale (0 to 400ms), dual-trace analog persistence, and inspection of genuine recorded check telemetry from Cloudflare D1 (timestamp, HTTP status code, measured latency, execution trigger, and illustrative response waveforms).
 - **Unified Visual Identity**: Self-hosted **Space Grotesk** (display & UI) and **JetBrains Mono** (telemetry numbers, code, timestamps) under SIL Open Font License 1.1 with WOFF2 preloading, replacing all generic system fonts across the entire application.
 - **Cohesive Operations Desk**: Public status page (`/`), private owner sign-in (`/admin`), and authenticated desk (Overview, Monitors, Incidents, Activity) share a single calm, dense, highly legible design system.
@@ -137,7 +138,7 @@ Then reload the public page or call `/api/status` to see the stored checks.
 
 ```bash
 npm run typecheck            # app, worker, tests, and Node configs
-npm test                     # 66 Vitest tests
+npm test                     # 70 Vitest tests
 npm run build                # production bundle
 npm run test:e2e             # Playwright desktop + mobile (needs local server/credentials)
 npm run check:secrets        # scans tracked files and verifies ignores
@@ -147,16 +148,19 @@ npm audit --audit-level=high
 The Vitest suite covers status precedence, uptime windows and insufficient samples,
 latency percentiles, URL/SSRF validation, PBKDF2 verification, sessions, CSRF, origin
 checks, login rate limiting, monitor CRUD validation, manual checks, incident lifecycle,
-cron deduplication and retention, health, and public/admin API shapes.
+cron deduplication and retention, health, public/admin API shapes, and recorded-check /
+no-data telemetry provenance.
 
 The Playwright suite runs at 1440×900 and 390×844. It verifies real rendered checks,
 expandable history, manual refresh, keyboard focus, all six state labels, no horizontal
-overflow, owner sign-in/out, protected reload behavior, monitor create/check/edit/
+overflow, sticky masthead anchor clearance, two-position computed scroll choreography deltas
+across all chapters (`transform`, `clip-path`, SVG `stroke-dashoffset`, and `data-scroll-progress`),
+owner sign-in/out, protected reload behavior, monitor create/check/edit/
 pause/resume/remove with confirmation, and an incident opened → updated → resolved flow
 that is then read back on the public page.
 
-Current results: typecheck clean, 66/66 Vitest tests passing, production build succeeds,
-8/8 desktop Playwright tests passing, 6/6 mobile Playwright tests passing (2 destructive
+Current results: typecheck clean, 70/70 Vitest tests passing, production build succeeds,
+10/10 desktop Playwright tests passing, 8/8 mobile Playwright tests passing (2 destructive
 mobile flows intentionally skipped), `npm audit` reports 0 vulnerabilities, and the
 secret scan passes on every tracked file.
 

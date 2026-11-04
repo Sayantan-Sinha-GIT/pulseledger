@@ -76,40 +76,63 @@ Actual live screenshots captured at 1440×900:
 
 ---
 
-## 5. Hero Timeline & Choreography
-- **T = 0.0s**: Background chart rulings and margin ticks appear immediately. Primary headline and 30-Day Fleet Ledger plate are 100% legible.
-- **T = 0.2s**: Dual stylus needles begin continuous trace deposition across the paper band.
+## 5. Hero Timeline & Scroll Choreography (`#hero-section`)
+- **T = 0.0s**: Background chart rulings and tractor-feed margin sprocket holes appear immediately. Primary headline (`#status-heading`), live 6-project portfolio register strip (`.hero-portfolio-strip`), and 30-Day Fleet Ledger plate (`#hero-figure-plate`) are 100% legible.
+- **T = 0.2s**: Dual stylus needles begin continuous trace deposition across the dedicated lower drum window (`margin-bottom: 140px` below the hero plate).
 - **T = 0.4s**: Hero lede, status stamp, and 30-day fleet availability bar settle into place (`translateY(16px)` -> `0px`). Hero figure spans 100% of hero copy height, completely eliminating empty voids.
-- **T = 0.8s**: Live UTC epoch ticker synchronizes with mechanical status pip.
-- **T = 1.0s**: Interactive CTAs ("Launch Signal Probe" and "Refresh now") are active and responsive.
+- **Scroll-Coupled Hero Drum Seismograph (`HeroFleetSeismograph`)**:
+  - Aggregates real 30-day daily uptime buckets across all monitored endpoints into an SVG drum seismograph (`#hero-seismograph-svg`).
+  - As the visitor scrolls past the hero (`heroProgress = clamp01(scrollY / (vh * 0.55))`), the drum carriage playhead (`#hero-drum-carriage`) sweeps horizontally across the 296px plot (`transform: translate3d(${heroProgress * 296}px, 0px, 0px)`), while `.hero-copy` and `#hero-figure-plate` counter-translate smoothly (`translate3d(0px, ${-heroProgress * 18}px, 0px)` and `translate3d(0px, ${heroProgress * 20}px, 0px)`).
+  - The sticky masthead bottom tape (`#masthead-scroll-fill`) scales continuously with overall document scroll (`transform: scaleX(${pageProgress})`), and the background canvas paper rulings physically feed upward (`data-paper-offset="${Math.round((scrollY * 0.45) % 140)}"`).
 
 ---
 
-## 6. Four Scroll Chapters & Staged Narrative
-1. **Chapter 1: Fleet Matrix & Continuous Ledger Bands (`#services`)**:
-   - Filter chips for instant sorting by project: `All (11)`, `Haan (2)`, `StyleShopZ (2)`, `CodeSense (2)`, `Grepless (2)`, `ArthaSetu (2)`, `Dispatch (1)`.
-   - Continuous horizontal ledger bands with hairline dividers and left status register notch.
-   - Inline 30-day seismograph day-ticks (`.uptime-strip .day`).
-   - Collapsible diagnostic drawer with drafting cyan sparkline and raw check history table.
-2. **Chapter 2: Precision Laboratory Drum Oscillograph (`#probe`)**:
-   - Heavy matte graphite housing with calibrated vertical latency scale (0 to 400ms).
-   - Dual-trace persistence canvas displaying illustrative response waveforms calibrated to real check latency.
-   - Waveform mode switcher ("Sine Wave" vs "Pulse Stream").
-   - Selectable check record explorer (`<select id="probe-check-select">`) linked to real `recentChecks` stored in Cloudflare D1.
-   - Telemetry HUD with measured RTT latency, recorded status outcome, and authentic Cloudflare D1 check record ID (`D1-REC:#ID`). Honest provenance: zero fabricated stages, zero fake DNS/TLS breakdown, zero invented edge PoPs, and honest unavailable zero-state when no records exist.
-3. **Chapter 3: Chronological Incident Journal (`#incidents`)**:
-   - Clean state: Embossed inspection seal (`0 DISRUPTIONS ACTIVE // ALL MONITORED ENDPOINTS IN CALM REGISTER`).
-   - Active state: Timestamped dispatch ledger cards with priority ribbons.
-4. **Chapter 4: Operational Broadsheet (`#method`)**:
-   - 4-column engineering ledger detailing Edge Checks, Strict Success, Zero-Sample Uptime, and State Engine.
+## 6. Deterministic Scroll Choreography Engine & Four Scroll-Driven Chapters
+In addition to the continuous ambient stylus waveform, `StatusPage.tsx` runs a deterministic scroll choreography engine (`scheduleScrollChoreography` -> `applyScrollChoreography`) attached to `window` `scroll` and `resize` events plus an `IntersectionObserver` across `#services`, `#probe`, `#incidents`, and `#method`. Raw scroll events are coalesced to at most **one `requestAnimationFrame` update per frame** and applied directly to DOM nodes (`style.transform`, `style.clipPath`, `stroke-dashoffset`, and CSS custom properties) using a `useRef` state store—producing **zero whole-page React rerenders** on scroll (`data-render-count` remains constant across full-page scroll on desktop and phone). Every chapter transforms visibly as a direct mathematical function of scroll position:
+
+1. **Chapter 1: Fleet Matrix & Physical Ledger Strip Unspooling (`#services`)**:
+   - **Chapter Spool Apparatus (`#chapter-1-spool-bar`)**: Tracks `chapter1Progress` (`data-scroll-progress` on `#services`).
+     - `#services-spool-wheel`: Mechanical SVG tape reel rotates from `0deg` (`matrix(1, 0, 0, 1, 0, 0)`) to `180deg` (`matrix(-1, 0, 0, -1, 0, 0)`).
+     - `#services-spool-fill`: Horizontal tape progress bar unspools via `transform: scaleX(${chapter1Progress})`.
+     - `#services-spool-readout`: Live tabular counter displaying `FEED: ${Math.round(chapter1Progress * 100)}%` and `${engagedRowsCount}/${monitors.length} STRIPS UNSPOOLED`.
+   - **Per-Row Physical 30-Day Ledger Strip Unspooling (`.service[data-monitor-id]`)**:
+     - Each service row computes its own viewport entry progress `rowProgress[id]` (`0.000` before entry -> `1.000` when locked in the reading zone).
+     - `.service`: Slides into register from `translate3d(-12px, 0px, 0px)` to `translate3d(0px, 0px, 0px)`.
+     - `.uptime-strip`: Physically unspools its 30-day history bars from left to right via `clipPath: inset(0px ${(1 - rowProgress) * 88}% 0px 0px)` and `transform: translate3d(${-(1 - rowProgress) * 18}px, 0px, 0px)`.
+     - `.strip-printhead`: Glowing drafting-cobalt printhead stylus sweeps across the leading edge of the unspooling strip (`left: ${12 + rowProgress * 88}%`).
+
+2. **Chapter 2: Scroll-Drawn Live Monitoring Timeline & Recorded Check Explorer (`#probe`)**:
+   - **Scroll-Coupled Telemetry Chronograph (`#monitoring-timeline-stage`, `#monitoring-timeline-svg`)**:
+     - Plots real check latency samples (`selectedMonitor.trend` or aggregated `recentChecks` from Cloudflare D1) across an 800×148 calibrated SVG chronograph.
+     - `#timeline-svg-trace`: Primary latency polyline with `pathLength="1000"` and `strokeDasharray="1000"` that physically draws itself as the user scrolls (`strokeDashoffset: ${(1 - chapter2Progress) * 1000}px`, transitioning from `1000px` to `0px`).
+     - `#timeline-area-group`: Gradient under-fill unmasks left-to-right via `clipPath: inset(0px ${(1 - chapter2Progress) * 100}% 0px 0px)`.
+     - `#timeline-playhead-group`: Vertical green chronograph playhead carriage sweeps across the 720px chart width (`transform: translate3d(${chapter2Progress * 720}px, 0px, 0px)`), updating `#timeline-scroll-readout` with the scrubbed sample's endpoint name, UTC timestamp, and measured latency.
+   - **Instrument Chassis & Authentic D1 Recorded Check Explorer (`#probe-chassis-stage`)**:
+     - Lifts into place via `transform: translate3d(0px, ${(1 - chapter2Progress) * 26}px, 0px)`.
+     - Provides `<select id="probe-target-select">` and `<select id="probe-check-select">` bound to real `recentChecks` stored in Cloudflare D1, displaying actual check IDs (`D1-REC:#ID`), timestamps, HTTP status or "No HTTP response", measured latency, trigger source, and illustrative waveform replay. Honest zero-state when 0 checks exist.
+
+3. **Chapter 3: Forensic Incident Broadsheet & Rotary Verification Seal (`#incidents`)**:
+   - **Rotary Verification Seal (`#incident-seal-svg`)**:
+     - `#incident-seal-ring`: Circular verification perimeter (`pathLength="1000"`) draws continuously with scroll (`strokeDashoffset: ${(1 - chapter3Progress) * 1000}px`).
+     - `#incident-seal-rotor`: Inner calibration crosshair rotor turns 180 degrees across the chapter scroll (`transform: rotate(${chapter3Progress * 180}deg)`).
+     - `#incident-seal-progress-text`: Displays `SEAL DRAWN · ${Math.round(chapter3Progress * 100)}%` so presentation progress is never conflated with data verification metrics, while keeping real incident counts (`SEAL: CLEAN` / `${activeIncidents.length} ACTIVE` and `${incidents.length} RECORD(S)`) separate.
+     - `#incident-spine-fill`: Vertical 30-day audit horizon spine fills downward (`transform: scaleY(${chapter3Progress})`).
+   - **Forensic Broadsheet Panel (`#incident-broadsheet-panel`)**:
+     - Unfolds diagonally into the reading register via `transform: translate3d(${(1 - chapter3Progress) * 20}px, ${(1 - chapter3Progress) * 26}px, 0px)`.
+
+4. **Chapter 4: Scroll-Wired Operational Protocol Schematic (`#method`)**:
+   - **Protocol Signal Bus Schematic (`#method-schematic-stage`, `#method-schematic-svg`)**:
+     - `#method-bus-line`: Horizontal signal bus connecting nodes `01 CRON TRIGGER`, `02 SSRF & TLS GUARD`, `03 ZERO-SAMPLE MATH`, and `04 6-STATE LEDGER` draws left-to-right (`strokeDashoffset: ${(1 - chapter4Progress) * 1000}px`).
+     - `#method-signal-carriage`: Signal pulse carriage travels 680px along the bus (`transform: translate3d(${chapter4Progress * 680}px, 0px, 0px)`), illuminating each protocol node as it passes.
+   - **Protocol Cards Grid (`#method-cards-stage`)**:
+     - Lifts into alignment via `transform: translate3d(0px, ${(1 - chapter4Progress) * 24}px, 0px)`.
 
 ---
 
 ## 7. Reduced-Motion Mode (`prefers-reduced-motion: reduce`)
-- Background canvas halts RAF loop entirely.
-- Renders a crisp, static, high-definition printed chart paper sheet once (horizontal rules, margin graduation ticks, frozen dual baseline curves).
+- Background canvas halts RAF loop entirely and renders a crisp, static printed chart paper sheet once.
+- `updateScrollChoreography` detects `window.matchMedia("(prefers-reduced-motion: reduce)").matches` and immediately sets `heroProgress`, `chapter1Progress..chapter4Progress`, and all `rowProgress[id]` values to `1` so every ledger strip, timeline trace, verification seal, and protocol bus is rendered in its complete, unclipped resting state (`transform: none !important; clip-path: none !important;`).
 - Oscillograph renders static reference crosshairs without continuous wave cycling.
-- All transitions collapse to immediate display (`duration: 0.01ms`).
 - 100% of interactive controls, selectors, and tables remain fully functional.
 
 ---

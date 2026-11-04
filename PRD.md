@@ -54,6 +54,17 @@ Monitor the publicly reachable websites and available health/version endpoints f
 
 An editorial operations desk: precise, calm, human-readable, and trustworthy. Give actual checks and incidents visual prominence. Avoid stock dashboard clichés (a wall of same-sized cards, giant vanity numbers, glowing gradients, emoji icons). Distinct typography, useful data graphics, a restrained color system, and polished responsive behavior. Public page should be worthy of a portfolio screenshot. The admin interface should prioritize speed and clarity.
 
+### Operations-Journal Scroll Choreography (2026-11-04)
+
+- The public status page must deliver Haan-level craft using PulseLedger's product-specific **Continuous Seismic & Print Operations Journal** identity, without copying Haan or CodeSense.
+- In addition to continuous dual-channel analog stylus ink traces (`TelemetryCanvas`) with scroll-coupled paper feed rulings, the page must feature **at least three distinct, visible scroll-driven chapters** whose visual state transforms deterministically based on scroll position (`window.scrollY` and `IntersectionObserver`), not merely elapsed time or generic fade-ups:
+  1. **Hero Operations Journal & 30-Day Drum Seismograph (`#hero-section`)**: Balanced first-viewport composition pairing the headline, live portfolio project register strip, and 30-Day Fleet Ledger Plate with an aggregate 30-day drum seismograph and scroll-driven drum carriage (`#hero-drum-carriage`).
+  2. **Chapter 1 — Fleet Matrix & Physical Ledger Strip Unspooling (`#services`)**: Mechanical 30-day ledger tape spool apparatus (`#chapter-1-spool-bar`, `#services-spool-fill`, `#services-spool-wheel`) and per-row physical 30-day ledger strips (`.uptime-strip`) that physically unspool left-to-right via scroll-driven `clip-path` and a traveling printhead stylus (`.strip-printhead`) as each service row enters the viewport.
+  3. **Chapter 2 — Scroll-Drawn Monitoring Timeline & Recorded Check Explorer (`#probe`)**: Scroll-coupled telemetry chronograph SVG (`#monitoring-timeline-stage`, `#timeline-svg-trace` `stroke-dashoffset`, `#timeline-area-group` `clip-path`, `#timeline-playhead-group` horizontal carriage sweep) plotted from real Cloudflare D1 check records, paired with the selectable `recentChecks` explorer and oscilloscope.
+  4. **Chapter 3 — Forensic Incident Broadsheet & Rotary Verification Seal (`#incidents`)**: Scroll-driven rotary verification seal SVG (`#incident-seal-ring` `stroke-dashoffset`, `#incident-seal-rotor` rotation, `#incident-spine-fill` vertical scale) and unfolding forensic incident broadsheet (`#incident-broadsheet-panel`).
+  5. **Chapter 4 — Scroll-Wired Operational Protocol Schematic (`#method`)**: Scroll-drawn 4-stage protocol signal bus (`#method-bus-line` `stroke-dashoffset`, `#method-signal-carriage` horizontal sweep) and protocol cards stage (`#method-cards-stage`).
+- Phone scroll (390×844) must execute the same deterministic scroll-driven chapter progressions with zero horizontal overflow; `prefers-reduced-motion: reduce` must immediately render all chapters in their complete, legible resting states (`progress = 1`) and halt continuous animation loops.
+
 ## Security and operations
 
 - Never commit secrets, password hashes, tokens, database files, or `.dev.vars`. Provide `.dev.vars.example` and a setup guide that uses chat-friendly steps.

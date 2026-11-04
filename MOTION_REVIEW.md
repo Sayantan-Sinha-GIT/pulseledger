@@ -137,6 +137,88 @@ The page journey unfolds across four distinct chapters rather than uniform card 
   - Empty uptime bar rendered at `width: 0%` when uptime is null or `uptime.checks === 0`.
 - **Verification Result**: PASS. Authentic data provenance enforced across all branches; zero fabricated numbers or simulated network stages.
 
+---
 
+## 11. Operations-Journal Scroll Choreography & Six-Round Verification (Rounds 13–18)
 
+### Problem Addressed
+Previous iterations relied only on ambient time-based canvas waveforms without scroll-driven state (`window.scrollY`, `IntersectionObserver`, or scroll-coupled SVG/clip-path/transform progressions). To bring PulseLedger to Haan-level craft with a PulseLedger-specific operations-journal identity, we engineered a deterministic scroll choreography engine (`updateScrollChoreography`) driving the Hero and four distinct scroll chapters across desktop (1440×900) and mobile (390×844) viewports.
+
+### Six Honest Visual & Motion Review/Fix Rounds Executed
+1. **Round 13 (Scroll Engine & Chapter 1 Physical Ledger Unspooling)**:
+   - Built `updateScrollChoreography` in `src/client/public/StatusPage.tsx` using `window.scrollY`, `resize` listeners, and `IntersectionObserver`.
+   - Added `#chapter-1-spool-bar` (`#services-spool-wheel` rotation, `#services-spool-fill` horizontal scale, `#services-spool-readout` counter) and per-row physical 30-day ledger strip unspooling (`.uptime-strip` `clip-path: inset(0px ${(1 - rowProgress) * 88}% 0px 0px)` and `.strip-printhead` stylus sweep).
+   - *Defect Found & Fixed*: `#services-spool-wheel` initially rotated `360deg` at `progress = 1`, which computed to the identity matrix `matrix(1, 0, 0, 1, 0, 0)` (identical to `0deg` at `progress = 0`). Fixed rotation range to `180deg` (`matrix(-1, 0, 0, -1, 0, 0)` at `progress = 1`).
+2. **Round 14 (Chapter 2 Scroll-Drawn Monitoring Timeline & Chronograph)**:
+   - Added `#monitoring-timeline-stage` and `#monitoring-timeline-svg` above the Recorded Check Explorer in `#probe`, plotting real latency samples from Cloudflare D1 (`selectedMonitor.trend` / `recentChecks`).
+   - Wired `#timeline-svg-trace` (`stroke-dashoffset: 1000px -> 0px`), `#timeline-area-group` (`clip-path: inset(0px 100% 0px 0px) -> inset(0px 0% 0px 0px)`), and `#timeline-playhead-group` horizontal carriage sweep (`translate3d(0px -> 720px)`).
+   - *Defect Found & Fixed*: In `chapter2-desktop-1440-after.png`, `.probe-sandbox .section-meta` wrapped onto a new line with `text-align: right` inside a `40ch` box on the left edge. Fixed `.telemetric-world .probe-sandbox .section-meta` to `text-align: left; max-width: 34ch;`.
+3. **Round 15 (Chapter 3 Rotary Verification Seal & Chapter 4 Protocol Signal Bus)**:
+   - Added `#incident-dossier-stage` with `#incident-seal-svg` (`#incident-seal-ring` `stroke-dashoffset`, `#incident-seal-rotor` rotation, `#incident-spine-fill` vertical scale) and unfolding `#incident-broadsheet-panel`.
+   - Added `#method-schematic-stage` with `#method-bus-line` (`stroke-dashoffset: 1000px -> 0px`) and `#method-signal-carriage` (`translate3d(0px -> 680px)`).
+   - *Defect Found & Fixed*: In initial captures of `chapter3-desktop-1440-after.png` and `chapter4-desktop-1440-after.png`, non-transformed elements (`position: static`) painted behind `.telemetry-canvas` (`position: fixed; z-index: 0`). Fixed by assigning `position: relative; z-index: 2;` to `.telemetric-world > main`, `.telemetric-world > .footer`, and `.telemetric-world .section`.
+4. **Round 16 (Opaque Ledger Backing Plates & Zero Text Collision Audit)**:
+   - *Defect Found & Fixed*: When scrolling `.section-head` or `.footer` across the lower viewport band ($y = \text{height} - 120\text{px}$), the background canvas waveform passed behind transparent text headers, and at `scrollY = 0` `#services .section-head` sat near the lower waveform band.
+   - Added `margin-bottom: 140px` to `.telemetric-world .hero` to reserve an unobstructed Seismograph Drum Window at `scrollY = 0`, and gave `.hero-copy`, `.section > .section-head`, `.project-filter-bar`, `.project-index`, and `.footer` solid opaque carbon-slate backing plates (`#0d1219` with `1px solid var(--tele-border)`), guaranteeing zero waveform-to-text collisions at every scroll position.
+5. **Round 17 (Mobile 390×844 Scroll Choreography & Overflow Verification)**:
+   - Verified all 4 chapters and Hero carriage at 390×844 (`docs/motion-review/chapter{1..4}-mobile-390-{before|after}.png`).
+   - Confirmed `innerWidth = 390`, `clientWidth = 390`, `scrollWidth = 390` (zero horizontal overflow) and verified all anchor offsets (`#services`, `#probe`, `#incidents`, `#method`, `#project-0`) clear the sticky masthead by $>33\text{px}$.
+6. **Round 18 (Reduced-Motion, Provenance Label & Zero-Rerender rAF Gate)**:
+   - Verified `prefers-reduced-motion: reduce` (`docs/motion-review/round5-reduced-motion-desktop.png`): `applyScrollChoreography` sets all chapter and row progresses to `1`, rendering unclipped strips and complete SVG traces with zero animation loops.
+   - Renamed the incident rotary seal progress label (`#incident-seal-progress-text`) from `D1 VERIFIED · XX%` to `SEAL DRAWN · XX%` (and removed `SPOOL XX%` from the per-row `.strip-caption` uptime line) so scroll presentation progress is never conflated with data verification metrics while real incident counts (`SEAL: CLEAN` / `N ACTIVE` and `N RECORD(S)`) remain separate.
+   - Replaced React `useState` scroll updates with a single-per-frame `requestAnimationFrame` coalescer (`scheduleScrollChoreography` -> `applyScrollChoreography`) that mutates DOM styles/attributes directly. Verified in Playwright (`e2e/public.spec.ts`) that bursting 10 raw `scroll` events triggers exactly `1` rAF update and `0` React rerenders, and scrolling from `0px` to `maxScroll` across all 4 chapters on both desktop (1440×900) and mobile (390×844) produces `0` whole-page React rerenders (`data-render-count` delta = `0`).
+
+### Measured Two-Position Scroll-Delta Evidence (`docs/motion-review/scroll-measurements.json`)
+
+#### Desktop Viewport (`1440×900` — `innerWidth: 1440, clientWidth: 1440, scrollWidth: 1440`)
+
+| Chapter & Element | Selector | Before (`scrollY`) | Before Computed Value | After (`scrollY`) | After Computed Value | Measured Delta |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Hero Drum Carriage** | `#hero-drum-carriage` | `0px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `2449px` | `transform: matrix(1, 0, 0, 1, 296, 0)` | `+296px` X sweep |
+| **Canvas Paper Feed** | `.telemetry-canvas` | `0px` | `data-paper-offset: "0"` | `2449px` | `data-paper-offset: "122"` | `+122px` paper feed |
+| **Ch 1: Fleet Matrix** | `#services` | `0px` | `data-scroll-progress: "0.000"` | `2449px` | `data-scroll-progress: "1.000"` | `+1.000` progress |
+| **Ch 1: Spool Tape Fill** | `#services-spool-fill` | `0px` | `transform: matrix(0, 0, 0, 1, 0, 0)` | `2449px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `scaleX(0 -> 1)` |
+| **Ch 1: Spool Reel Wheel** | `#services-spool-wheel` | `0px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `2449px` | `transform: matrix(-1, 0, 0, -1, 0, 0)` | `rotate(0deg -> 180deg)` |
+| **Ch 1: Service Row** | `#project-2 .service:first-of-type` | `0px` | `progress: "0.000"`, `matrix(1, 0, 0, 1, -12, 0)` | `2449px` | `progress: "1.000"`, `matrix(1, 0, 0, 1, 0, 0)` | `+12px` X lock-in |
+| **Ch 1: 30D Ledger Strip** | `#project-2 .service:first-of-type .uptime-strip` | `0px` | `clip-path: inset(0px 88% 0px 0px)` | `2449px` | `clip-path: inset(0px 0% 0px 0px)` | `88% -> 0%` unspooled |
+| **Ch 2: Probe Section** | `#probe` | `4025px` | `data-scroll-progress: "0.000"` | `4779px` | `data-scroll-progress: "0.767"` | `+0.767` progress |
+| **Ch 2: Timeline Trace** | `#timeline-svg-trace` | `4025px` | `stroke-dashoffset: 1000px` | `4779px` | `stroke-dashoffset: 233px` | `-767px` drawn |
+| **Ch 2: Timeline Area** | `#timeline-area-group` | `4025px` | `clip-path: inset(0px 100% 0px 0px)` | `4779px` | `clip-path: inset(0px 23.3% 0px 0px)` | `76.7%` unmasked |
+| **Ch 2: Playhead Sweep** | `#timeline-playhead-group` | `4025px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `4779px` | `transform: matrix(1, 0, 0, 1, 552.4, 0)` | `+552.4px` X sweep |
+| **Ch 2: Probe Chassis** | `#probe-chassis-stage` | `4025px` | `transform: matrix(1, 0, 0, 1, 0, 26)` | `4779px` | `transform: matrix(1, 0, 0, 1, 0, 6.1)` | `-19.9px` Y lift |
+| **Ch 3: Incidents Section** | `#incidents` | `5211px` | `data-scroll-progress: "0.000"` | `5975px` | `data-scroll-progress: "0.778"` | `+0.778` progress |
+| **Ch 3: Rotary Seal Ring** | `#incident-seal-ring` | `5211px` | `stroke-dashoffset: 1000px` | `5975px` | `stroke-dashoffset: 222px` | `-778px` drawn |
+| **Ch 3: Seal Rotor** | `#incident-seal-rotor` | `5211px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `5975px` | `transform: matrix(-0.767, 0.641, -0.641, -0.767, 0, 0)` | `+140.0deg` rotation |
+| **Ch 3: Audit Spine Fill** | `#incident-spine-fill` | `5211px` | `transform: matrix(1, 0, 0, 0, 0, 0)` | `5975px` | `transform: matrix(1, 0, 0, 0.778, 0, 0)` | `scaleY(0 -> 0.778)` |
+| **Ch 3: Broadsheet Panel** | `#incident-broadsheet-panel` | `5211px` | `transform: matrix(1, 0, 0, 1, 20, 26)` | `5975px` | `transform: matrix(1, 0, 0, 1, 4.4, 5.8)` | `(-15.6px, -20.2px)` unfold |
+| **Ch 4: Method Section** | `#method` | `5774px` | `data-scroll-progress: "0.000"` | `6797px` | `data-scroll-progress: "1.000"` | `+1.000` progress |
+| **Ch 4: Protocol Bus Line** | `#method-bus-line` | `5774px` | `stroke-dashoffset: 1000px` | `6797px` | `stroke-dashoffset: 0px` | `-1000px` wired |
+| **Ch 4: Signal Carriage** | `#method-signal-carriage` | `5774px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `6797px` | `transform: matrix(1, 0, 0, 1, 680, 0)` | `+680px` X sweep |
+| **Ch 4: Protocol Cards** | `#method-cards-stage` | `5774px` | `transform: matrix(1, 0, 0, 1, 0, 24)` | `6797px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `-24px` Y lift |
+
+#### Mobile Viewport (`390×844` — `innerWidth: 390, clientWidth: 390, scrollWidth: 390`)
+
+| Chapter & Element | Selector | Before (`scrollY`) | Before Computed Value | After (`scrollY`) | After Computed Value | Measured Delta |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Hero Drum Carriage** | `#hero-drum-carriage` | `0px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `3973px` | `transform: matrix(1, 0, 0, 1, 296, 0)` | `+296px` X sweep |
+| **Ch 1: Fleet Matrix** | `#services` | `0px` | `data-scroll-progress: "0.000"` | `3973px` | `data-scroll-progress: "1.000"` | `+1.000` progress |
+| **Ch 1: Spool Tape Fill** | `#services-spool-fill` | `0px` | `transform: matrix(0, 0, 0, 1, 0, 0)` | `3973px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `scaleX(0 -> 1)` |
+| **Ch 1: Spool Reel Wheel** | `#services-spool-wheel` | `0px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `3973px` | `transform: matrix(-1, 0, 0, -1, 0, 0)` | `rotate(0deg -> 180deg)` |
+| **Ch 1: 30D Ledger Strip** | `#project-2 .service:first-of-type .uptime-strip` | `0px` | `clip-path: inset(0px 88% 0px 0px)` | `3973px` | `clip-path: inset(0px 0% 0px 0px)` | `88% -> 0%` unspooled |
+| **Ch 2: Probe Section** | `#probe` | `7190px` | `data-scroll-progress: "0.000"` | `7890px` | `data-scroll-progress: "0.759"` | `+0.759` progress |
+| **Ch 2: Timeline Trace** | `#timeline-svg-trace` | `7190px` | `stroke-dashoffset: 1000px` | `7890px` | `stroke-dashoffset: 241px` | `-759px` drawn |
+| **Ch 2: Timeline Area** | `#timeline-area-group` | `7190px` | `clip-path: inset(0px 100% 0px 0px)` | `7890px` | `clip-path: inset(0px 24.1% 0px 0px)` | `75.9%` unmasked |
+| **Ch 2: Playhead Sweep** | `#timeline-playhead-group` | `7190px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `7890px` | `transform: matrix(1, 0, 0, 1, 546.6, 0)` | `+546.6px` X sweep |
+| **Ch 3: Incidents Section** | `#incidents` | `8820px` | `data-scroll-progress: "0.000"` | `9530px` | `data-scroll-progress: "0.771"` | `+0.771` progress |
+| **Ch 3: Rotary Seal Ring** | `#incident-seal-ring` | `8820px` | `stroke-dashoffset: 1000px` | `9530px` | `stroke-dashoffset: 229px` | `-771px` drawn |
+| **Ch 3: Seal Rotor** | `#incident-seal-rotor` | `8820px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `9530px` | `transform: matrix(-0.751, 0.660, -0.660, -0.751, 0, 0)` | `+138.8deg` rotation |
+| **Ch 3: Audit Spine Fill** | `#incident-spine-fill` | `8820px` | `transform: matrix(1, 0, 0, 0, 0, 0)` | `9530px` | `transform: matrix(1, 0, 0, 0.771, 0, 0)` | `scaleY(0 -> 0.771)` |
+| **Ch 4: Method Section** | `#method` | `9571px` | `data-scroll-progress: "0.000"` | `11111px` | `data-scroll-progress: "1.000"` | `+1.000` progress |
+| **Ch 4: Protocol Bus Line** | `#method-bus-line` | `9571px` | `stroke-dashoffset: 1000px` | `11111px` | `stroke-dashoffset: 0px` | `-1000px` wired |
+| **Ch 4: Signal Carriage** | `#method-signal-carriage` | `9571px` | `transform: matrix(1, 0, 0, 1, 0, 0)` | `11111px` | `transform: matrix(1, 0, 0, 1, 680, 0)` | `+680px` X sweep |
+
+### Captured Before/After Chapter Evidence
+- Desktop (`1440×900`): `docs/motion-review/chapter{1..4}-desktop-1440-{before|after}.png`
+- Mobile (`390×844`): `docs/motion-review/chapter{1..4}-mobile-390-{before|after}.png`
+- Full-page & Admin Views: `docs/screenshots/public-status-{desktop|mobile}.png`, `docs/screenshots/admin-{login|overview|monitors|incidents|audit}-{desktop|mobile}.png`
 
