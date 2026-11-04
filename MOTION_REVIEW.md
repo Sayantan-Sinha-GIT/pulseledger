@@ -79,15 +79,44 @@ The page journey unfolds across four distinct chapters rather than uniform card 
   - Implemented the **Continuous Seismic & Print Operations Journal with Layered Ink**:
     - **Continuous Millimetric Ledger Rules**: Horizontal paper rules (`#283243`) spaced at 28px, major register bands (`#3b475c`) at 140px, and vertical timecode margin ticks (`#647287`).
     - **Dual-Channel Analog Stylus Traces**:
-      - *Channel 1 (Fleet Baseline Harmonic Inkwash)*: Drafting cobalt ink trace (`#388bfd` / `#58a6ff`) gliding continuously across $y = 0.38 \times \text{height}$. Driven by real fleet health (steady harmonic sine/perlin waves when nominal; dynamic shock tremors and high-frequency spike jitter if degraded/down).
-      - *Channel 2 (Cron Cadence & Epoch Heartbeat)*: Register emerald ink trace (`#2ea043`) gliding across $y = 0.72 \times \text{height}$ with moving rhythmic cardiac impulse deflections mimicking Cloudflare cron checks.
+      - *Channel 1 (Fleet Baseline Harmonic Inkwash)*: Drafting cobalt ink trace (`#388bfd` / `#58a6ff`) gliding continuously. Driven by real fleet health (steady harmonic sine/perlin waves when nominal; dynamic shock tremors and high-frequency spike jitter if degraded/down).
+      - *Channel 2 (Cron Cadence & Epoch Heartbeat)*: Register emerald ink trace (`#2ea043`) gliding with moving rhythmic cardiac impulse deflections mimicking Cloudflare cron checks.
     - **Physical Embossed Ink Stamps & Seals**: In place of glowing neon halos, status badges use crisp double-rule ink stamps with mechanical outline breathing.
-    - **Precision Laboratory Drum Oscillograph**: In place of generic oscilloscope rings, `#probe` features a heavy matte graphite instrument chassis with calibrated vertical scale (0 to 500ms), dual-trace persistence, and a stepped 5-stage mechanical verification pipeline.
+    - **Precision Laboratory Drum Oscillograph**: In place of generic oscilloscope rings, `#probe` features a heavy matte graphite instrument chassis with calibrated vertical scale, dual-trace persistence, and a stepped mechanical verification pipeline.
 - **Observed Continuous Motion Proof ($t = 0.0\text{s}$ vs $t = 1.8\text{s}$)**:
   - Initial frame ($t=0\text{s}$): `docs/motion-review/round1-desktop-initial-t0.png` captures the initial waveform phase and stylus needle positions.
   - Later frame ($t=1.8\text{s}$): `docs/motion-review/round1-desktop-later-t18.png` captures smooth pixel displacement: Channel 1 harmonic wave has progressed across the drum; Channel 2 heartbeat impulse has traveled across the canvas; mechanical stylus points deposit continuous analog ink with zero dropped frames.
 - **Equal-Width Benchmark Verification (1440px)**:
   - Documented side-by-side comparison with CodeSense (`docs/screenshots/comparison-codesense-1440.png`) and Pathfolio (`docs/screenshots/comparison-pathfolio-1440.png`). PulseLedger is completely original: distinct palette (deep carbon graphite `#0b0e14`, not cosmic black `#08090c` or porcelain `#f8f7f2`), distinct continuous drum recorder metaphor, distinct typography, and zero borrowed sci-fi or dossier tropes.
 - **Verification Result**: PASS. 100% original visual identity, fully verified across desktop, mobile, and reduced-motion states.
+
+## 9. Waveform Collision Correction, Composition Rebalance & Provenance Audit (Rounds 9–11)
+- **Problem Addressed (Blocker 1 & 2)**:
+  1. *Waveform Collision & Composition Gap*: In `docs/screenshots/public-status-desktop.png`, animated red waveform at $y = 0.38 \times \text{height}$ ($342\text{px}$) was cutting horizontally through the "Partial degradation" headline, while `.hero` grid `align-items: end` pushed `.hero-figure` to the bottom, leaving a large empty gap above it.
+  2. *Fabricated Probe Data*: `runProbe` in `StatusPage.tsx` fabricated synthetic DNS/TLS/TTFB breakdown, random edge PoP names, and synthetic commit hashes with `Math.random()`.
+- **Waveform Channel Relocation & Clearance Verification**:
+  - Relocated Channel 1 to dedicated lower telemetry band: `const base1 = height - (width < 768 ? 96 : 120)` ($780\text{px}$ on desktop, $748\text{px}$ on mobile).
+  - Relocated Channel 2 to bottom epoch track: `const base2 = height - (width < 768 ? 38 : 46)` ($854\text{px}$ on desktop, $806\text{px}$ on mobile).
+  - Measured clearance:
+    - Desktop 1440×900: Headline H1 bottom is $365.7\text{px}$; Channel 1 baseline is $780.0\text{px}$. Net clearance = **414.3px** (exceeds 200px floor).
+    - Mobile 390×844: Headline H1 bottom is $334.9\text{px}$; Channel 1 baseline is $748.0\text{px}$. Net clearance = **413.1px**.
+  - All content panels have solid surface backgrounds (`#0d1219` / `#121720`) and `z-index: 2`, ensuring decorative lines NEVER intersect or reduce legibility of content across all frames and scroll positions.
+- **Hero Composition & Empty Gap Elimination**:
+  - Restructured `.hero` into `grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr)` with `align-items: stretch`.
+  - Re-engineered `.hero-figure` into a complete **30-Day Fleet Ledger Plate**:
+    - Status pip and `CF-D1 ARCHIVE` badge
+    - Large tabular Fleet Availability in JetBrains Mono (`99.85%` / `100.0%`)
+    - Proportional 30-day health distribution bar (`figure-health-bar`) with emerald operational and rose disruption segments
+    - Authoritative note tracking exact check count and active endpoints in Cloudflare D1
+    - Balanced 4-stat telemetry grid (`15 min interval`, `10s timeout`, `30 days retention`, `11 endpoints monitored`)
+  - Measured vertical fill ratio: **100.0% of hero copy height** (Hero copy H=348px, Hero figure H=348px). Empty gap completely eliminated.
+- **Genuine Recorded Check Telemetry & Signal Inspector**:
+  - Removed all `Math.random()` calls, fake DNS/TLS breakdown, random PoPs, and synthetic commit hashes.
+  - Interactive inspector replays actual recorded check from Cloudflare D1 status API (`selectedMonitor.lastCheck` and `recentChecks`).
+  - `.stage-telemetry-breakdown` displays genuine check attributes: Check Timestamp, HTTP Status Code, Total Measured Latency, and Execution Trigger (Cron slot).
+  - Oscilloscope explicitly tagged: `<span className="oscilloscope-tag mono">CHART RECORDER // ILLUSTRATIVE RESPONSE WAVEFORM</span>` and shows real integer check primary key ID (`D1-REC:#ID`).
+  - Audited UI claims in `StatusPage.tsx`, `AdminApp.tsx`, and `README.md` to ensure zero unsupported "live edge probe" claims.
+- **Verification Result**: PASS. All 66 Vitest tests, 16 Playwright e2e tests, anchor arrival checks, and secret scans pass.
+
 
 

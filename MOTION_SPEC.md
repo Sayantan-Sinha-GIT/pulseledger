@@ -67,19 +67,19 @@ Actual live screenshots captured at 1440×900:
   - Major register bands every 140px (`rgba(56, 70, 92, 0.52)`).
   - Vertical timecode division graduation marks along margins every 120px (80px on mobile).
 - **Layer 3: Continuous Dual Stylus Needle Traces (`<canvas class="telemetry-canvas">`)**:
-  - **Channel 1 (Fleet Harmonic Baseline)**: Continuous drafting cobalt ink trace (`#388bfd`) gliding across $y = 0.38 \times \text{height}$. Smooth multi-frequency sine/perlin waves in nominal state; sharp erratic tremors when degraded.
-  - **Channel 2 (Cron Cadence)**: Register emerald ink trace (`#2ea043`) gliding across $y = 0.72 \times \text{height}$ with moving rhythmic cardiac impulse deflections.
-  - Active mechanical stylus points at current trace coordinates with soft ink bleeds.
+  - **Channel 1 (Fleet Harmonic Baseline)**: Continuous drafting cobalt ink trace (`#388bfd` / `#58a6ff` nominal; `#f85149` vermilion with dynamic shock tremors if degraded/down) gliding along the dedicated lower telemetry band at $y = \text{height} - 120\text{px}$ on desktop and $y = \text{height} - 96\text{px}$ on mobile. Measured clearance from headline $H_1$ bottom exceeds 410px across all moving frames, ensuring decorative lines never cross text.
+  - **Channel 2 (Cron Cadence & Epoch Heartbeat)**: Register emerald ink trace (`#2ea043`) gliding along the bottom edge strip at $y = \text{height} - 46\text{px}$ ($y = \text{height} - 38\text{px}$ on mobile) with moving rhythmic cardiac impulse deflections.
+  - Active mechanical stylus needle points track current trace coordinates with soft ink bleeds.
   - Tab visibility observer: cancels RAF when tab is hidden (`document.hidden`).
 - **Layer 4: Continuous Ledger Panels & Plates**:
-  - High-contrast matte surfaces (`#121720`) with hairline borders (`#283243`), zero layout shift, WCAG AAA text contrast.
+  - High-contrast matte surfaces (`#121720`) with hairline borders (`#283243`), zero layout shift, WCAG AAA text contrast. Solid backing plates protect all text content from background elements.
 
 ---
 
 ## 5. Hero Timeline & Choreography
-- **T = 0.0s**: Background chart rulings and margin ticks appear immediately. Primary headline and uptime figures are 100% legible.
+- **T = 0.0s**: Background chart rulings and margin ticks appear immediately. Primary headline and 30-Day Fleet Ledger plate are 100% legible.
 - **T = 0.2s**: Dual stylus needles begin continuous trace deposition across the paper band.
-- **T = 0.4s**: Hero lede, status stamp, and drum tape uptime reading settle into place (`translateY(16px)` -> `0px`).
+- **T = 0.4s**: Hero lede, status stamp, and 30-day fleet availability bar settle into place (`translateY(16px)` -> `0px`). Hero figure spans 100% of hero copy height, completely eliminating empty voids.
 - **T = 0.8s**: Live UTC epoch ticker synchronizes with mechanical status pip.
 - **T = 1.0s**: Interactive CTAs ("Launch Signal Probe" and "Refresh now") are active and responsive.
 
@@ -92,12 +92,12 @@ Actual live screenshots captured at 1440×900:
    - Inline 30-day seismograph day-ticks (`.uptime-strip .day`).
    - Collapsible diagnostic drawer with drafting cyan sparkline and raw check history table.
 2. **Chapter 2: Precision Laboratory Drum Oscillograph (`#probe`)**:
-   - Heavy matte graphite housing with calibrated vertical latency scale (0 to 500ms).
-   - Dual-trace persistence canvas with analog phosphor bleed.
-   - Waveform mode switcher ("Continuous Sweep" vs "Impulse Trace").
-   - 5-stage mechanical verification pipeline:
-     `1/5 DNS Resolution -> 2/5 TLS Handshake -> 3/5 HTTP/2 GET -> 4/5 Assertion -> 5/5 D1 Ledger Commit`.
-   - Telemetry HUD with RTT latency, outcome badge, and cryptographic commit hash.
+   - Heavy matte graphite housing with calibrated vertical latency scale (0 to 400ms).
+   - Dual-trace persistence canvas displaying illustrative response waveforms calibrated to real check latency.
+   - Waveform mode switcher ("Sine Wave" vs "Pulse Stream").
+   - 4-stage recorded check inspection pipeline:
+     `1/4 D1 Ledger Access -> 2/4 Slot & Trigger Inspection -> 3/4 Outcome Evaluation -> 4/4 Illustrative Waveform Replay`.
+   - Telemetry HUD with measured RTT latency, recorded status outcome, and authentic Cloudflare D1 check record ID (`D1-REC:#ID`). Honest provenance: zero fabricated stages, zero fake DNS/TLS breakdown, zero invented edge PoPs.
 3. **Chapter 3: Chronological Incident Journal (`#incidents`)**:
    - Clean state: Embossed inspection seal (`0 DISRUPTIONS ACTIVE // ALL MONITORED ENDPOINTS IN CALM REGISTER`).
    - Active state: Timestamped dispatch ledger cards with priority ribbons.

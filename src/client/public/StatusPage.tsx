@@ -137,8 +137,8 @@ function TelemetryCanvas({ overallState = "operational" }: { overallState?: Over
         ctx.stroke();
       }
 
-      // Static Channel 1 baseline (calm harmonic wave)
-      const base1 = height * 0.38;
+      // Static Channel 1 baseline (dedicated lower margin channel clear of text)
+      const base1 = height - (width < 768 ? 96 : 120);
       ctx.strokeStyle = "rgba(56, 139, 253, 0.75)";
       ctx.lineWidth = 1.8;
       ctx.beginPath();
@@ -149,8 +149,8 @@ function TelemetryCanvas({ overallState = "operational" }: { overallState?: Over
       }
       ctx.stroke();
 
-      // Static Channel 2 baseline (cron cadence)
-      const base2 = height * 0.72;
+      // Static Channel 2 baseline (cron cadence epoch strip)
+      const base2 = height - (width < 768 ? 38 : 46);
       ctx.strokeStyle = "rgba(46, 160, 67, 0.7)";
       ctx.lineWidth = 1.8;
       ctx.beginPath();
@@ -229,9 +229,9 @@ function TelemetryCanvas({ overallState = "operational" }: { overallState?: Over
         ctx.stroke();
       }
 
-      // 2. Channel 1: Fleet Baseline & Operational Inkwash (Drafting Cobalt / Cyan)
-      const base1 = height * 0.38;
-      const amp1 = isDegradedOrDown ? 24 : 12;
+      // 2. Channel 1: Fleet Baseline & Operational Inkwash (glides along lower telemetry band, never crossing text)
+      const base1 = height - (width < 768 ? 96 : 120);
+      const amp1 = isDegradedOrDown ? 18 : 10;
 
       ctx.save();
       ctx.strokeStyle = isDegradedOrDown ? "rgba(248, 81, 73, 0.85)" : "rgba(56, 139, 253, 0.8)";
@@ -251,7 +251,7 @@ function TelemetryCanvas({ overallState = "operational" }: { overallState?: Over
         // Status-driven turbulence
         if (isDegradedOrDown) {
           deflection +=
-            Math.sin(x * 0.08 + phaseA * 3.5) * 8 + Math.cos(x * 0.14) * 4;
+            Math.sin(x * 0.08 + phaseA * 3.5) * 6 + Math.cos(x * 0.14) * 3;
         }
 
         const y = base1 + deflection;
@@ -273,8 +273,8 @@ function TelemetryCanvas({ overallState = "operational" }: { overallState?: Over
       ctx.fill();
       ctx.restore();
 
-      // 3. Channel 2: Cron Cadence & Epoch Heartbeat (Register Emerald)
-      const base2 = height * 0.72;
+      // 3. Channel 2: Cron Cadence & Epoch Heartbeat (Register Emerald along bottom edge strip)
+      const base2 = height - (width < 768 ? 38 : 46);
       ctx.save();
       ctx.strokeStyle = "rgba(46, 160, 67, 0.75)";
       ctx.lineWidth = 2.0;
@@ -328,9 +328,10 @@ function TelemetryCanvas({ overallState = "operational" }: { overallState?: Over
 }
 
 /**
- * Real interactive status & signal probe sandbox.
- * Demonstrates actual product behavior: DNS resolve -> TLS handshake -> HTTP response -> D1 ledger.
- * Features an interactive real-time oscilloscope displaying live latency waveforms.
+ * Interactive Recorded Check Telemetry Inspector & Replay.
+ * Replays and inspects genuine HTTPS checks recorded in Cloudflare D1.
+ * Features an interactive oscilloscope displaying illustrative response waveforms
+ * calibrated against real check latency.
  */
 function InteractiveProbeSandbox({
   monitors,
@@ -343,16 +344,16 @@ function InteractiveProbeSandbox({
     monitors[0]?.id ?? "mon_haan_web",
   );
   const [probeStatus, setProbeStatus] = useState<"idle" | "probing" | "complete">("idle");
-  const [probeStage, setProbeStage] = useState<string>("Ready to transmit");
+  const [probeStage, setProbeStage] = useState<string>("Ready to inspect recorded checks");
   const [probeLatency, setProbeLatency] = useState<number | null>(null);
   const [stageBreakdown, setStageBreakdown] = useState<{
-    dns: number;
-    tls: number;
-    ttfb: number;
-    transfer: number;
+    timestamp: string;
+    status: string;
+    latency: string;
+    trigger: string;
   } | null>(null);
   const [hashSignature, setHashSignature] = useState<string>("");
-  const [edgePop, setEdgePop] = useState<string>("CCU (Kolkata Edge)");
+  const [edgePop, setEdgePop] = useState<string>("CF-D1 LEDGER ARCHIVE");
   const [waveformType, setWaveformType] = useState<"sine" | "pulse">("sine");
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -418,14 +419,19 @@ function InteractiveProbeSandbox({
       ctx.lineTo(width / 2, height);
       ctx.stroke();
 
-      // 3. Analog stylus signal wave with dual-trace persistence
+      // 3. Illustrative analog stylus signal wave with dual-trace persistence
       if (!isReduced) {
         wavePhaseRef.current += probeStatus === "probing" ? 0.22 : 0.04;
       }
       const phase = wavePhaseRef.current;
       const midY = height / 2;
+      const measuredMs =
+        probeLatency ??
+        selectedMonitor?.lastCheck?.duration_ms ??
+        selectedMonitor?.latency.p95 ??
+        45;
       const amplitude =
-        probeStatus === "probing" ? 34 : probeLatency ? Math.min(26, probeLatency / 8) : 16;
+        probeStatus === "probing" ? 32 : Math.min(26, Math.max(8, measuredMs / 8));
       const freq = probeStatus === "probing" ? 0.045 : 0.025;
 
       // Ghost / persistence trace
@@ -488,7 +494,7 @@ function InteractiveProbeSandbox({
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
     };
-  }, [probeStatus, probeLatency, waveformType]);
+  }, [probeStatus, probeLatency, waveformType, selectedMonitor]);
 
   const runProbe = () => {
     if (probeStatus === "probing" || !selectedMonitor) return;
@@ -496,12 +502,24 @@ function InteractiveProbeSandbox({
     setProbeLatency(null);
     setStageBreakdown(null);
 
+    const last = selectedMonitor.lastCheck;
+    const checksCount = selectedMonitor.recentChecks?.length ?? 0;
+    const targetHost = hostOf(selectedMonitor.url);
+    const measuredMs =
+      last?.duration_ms ??
+      selectedMonitor.latency.p95 ??
+      selectedMonitor.latency.p50 ??
+      42;
+    const statusCode = last?.status_code ?? 200;
+    const triggerSource = last?.source ?? "cron";
+    const slotStr = last?.slot ?? "cadence";
+    const recordId = last?.id ? `#${last.id}` : "LATEST";
+
     const stages = [
-      { text: "1/5 Resolving DNS (Cloudflare 1.1.1.1)...", delay: 250 },
-      { text: "2/5 Initializing TLS 1.3 ECDHE-ECDSA session...", delay: 550 },
-      { text: "3/5 Dispatching HTTP/2 GET (redirect: manual)...", delay: 900 },
-      { text: "4/5 Asserting expected 2xx/3xx response criteria...", delay: 1250 },
-      { text: "5/5 Committing slot hash to Cloudflare D1 ledger...", delay: 1600 },
+      { text: `1/4 Accessing Cloudflare D1 check ledger for ${targetHost}...`, delay: 200 },
+      { text: `2/4 Reading recorded check slot ${slotStr} (${triggerSource} trigger)...`, delay: 500 },
+      { text: `3/4 Evaluating stored outcome: HTTP ${statusCode} in ${measuredMs}ms...`, delay: 850 },
+      { text: `4/4 Replaying illustrative telemetry waveform for check ${recordId}...`, delay: 1200 },
     ];
 
     stages.forEach(({ text, delay }) => {
@@ -511,41 +529,33 @@ function InteractiveProbeSandbox({
     });
 
     setTimeout(() => {
-      // Derive probe metrics from real monitor data if available, with realistic jitter
-      const baseMs = selectedMonitor.latency.p95 || 62;
-      const jitter = Math.floor(Math.random() * 14) - 7;
-      const finalLatency = Math.max(22, baseMs + jitter);
-      const dns = Math.max(6, Math.round(finalLatency * 0.16));
-      const tls = Math.max(12, Math.round(finalLatency * 0.32));
-      const ttfb = Math.max(16, Math.round(finalLatency * 0.42));
-      const transfer = Math.max(4, finalLatency - dns - tls - ttfb);
-
-      const pops = ["CCU (Kolkata)", "BOM (Mumbai)", "DEL (Delhi)", "SIN (Singapore)", "LHR (London)"];
-      const randomPop = pops[Math.floor(Math.random() * pops.length)] ?? "CCU (Kolkata)";
-
-      // Deterministic synthetic ledger hash
-      const randomHash = Array.from({ length: 16 }, () =>
-        Math.floor(Math.random() * 16).toString(16),
-      ).join("");
-
-      setProbeLatency(finalLatency);
-      setStageBreakdown({ dns, tls, ttfb, transfer });
-      setEdgePop(randomPop);
-      setHashSignature(`CF-D1:${randomHash.toUpperCase()}`);
-      setProbeStage(`Verified: HTTP ${selectedMonitor.lastCheck?.status_code ?? 200} in ${finalLatency}ms`);
+      setProbeLatency(measuredMs);
+      setStageBreakdown({
+        timestamp: last?.checked_at ? formatShortTime(last.checked_at) : "Recent check",
+        status: `HTTP ${statusCode}`,
+        latency: `${measuredMs} ms`,
+        trigger: `${triggerSource.toUpperCase()} / Slot ${slotStr}`,
+      });
+      setEdgePop(`APAC · D1 ARCHIVE (${checksCount} checks)`);
+      setHashSignature(`D1-REC:#${last?.id ?? "ARCHIVE"}`);
+      setProbeStage(
+        last
+          ? `Recorded: HTTP ${statusCode} in ${measuredMs}ms (${triggerSource} trigger at ${formatShortTime(last.checked_at)})`
+          : `Recorded: HTTP ${statusCode} in ${measuredMs}ms (ledger aggregate)`,
+      );
       setProbeStatus("complete");
-    }, 1800);
+    }, 1500);
   };
 
   return (
     <div className="probe-sandbox" id="probe" aria-labelledby="probe-heading">
       <div className="section-head">
         <div>
-          <p className="section-kicker">02 / Laboratory Instrument</p>
-          <h2 id="probe-heading">Live Telemetry & Signal Probe</h2>
+          <p className="section-kicker">02 / Telemetry Inspector</p>
+          <h2 id="probe-heading">Recorded Check Telemetry &amp; Signal Inspector</h2>
         </div>
         <p className="section-meta">
-          Test real-time Cloudflare edge check mechanics against any monitored endpoint.
+          Inspect genuine recorded HTTPS check telemetry, latency metrics, and execution triggers stored in Cloudflare D1.
         </p>
       </div>
 
@@ -563,7 +573,7 @@ function InteractiveProbeSandbox({
               onChange={(e) => {
                 setSelectedMonitorId(e.target.value);
                 setProbeStatus("idle");
-                setProbeStage("Target changed. Ready to transmit.");
+                setProbeStage("Target changed. Ready to inspect.");
               }}
               disabled={probeStatus === "probing"}
             >
@@ -602,7 +612,7 @@ function InteractiveProbeSandbox({
               disabled={probeStatus === "probing"}
             >
               <span className={`probe-radar-icon ${probeStatus === "probing" ? "spinning" : ""}`} />
-              {probeStatus === "probing" ? "Broadcasting Probe..." : "Fire Edge Signal Probe"}
+              {probeStatus === "probing" ? "Replaying Telemetry..." : "Inspect Recorded Check Telemetry"}
             </button>
             <div className="waveform-toggle" role="group" aria-label="Oscilloscope wave type">
               <button
@@ -630,20 +640,20 @@ function InteractiveProbeSandbox({
           {stageBreakdown && (
             <div className="stage-telemetry-breakdown">
               <div className="breakdown-card">
-                <span className="breakdown-title">DNS Lookup</span>
-                <span className="breakdown-val mono">{stageBreakdown.dns} ms</span>
+                <span className="breakdown-title">Check Timestamp</span>
+                <span className="breakdown-val mono">{stageBreakdown.timestamp}</span>
               </div>
               <div className="breakdown-card">
-                <span className="breakdown-title">TLS Handshake</span>
-                <span className="breakdown-val mono">{stageBreakdown.tls} ms</span>
+                <span className="breakdown-title">HTTP Status</span>
+                <span className="breakdown-val mono">{stageBreakdown.status}</span>
               </div>
               <div className="breakdown-card">
-                <span className="breakdown-title">Time to First Byte</span>
-                <span className="breakdown-val mono">{stageBreakdown.ttfb} ms</span>
+                <span className="breakdown-title">Measured Latency</span>
+                <span className="breakdown-val mono">{stageBreakdown.latency}</span>
               </div>
               <div className="breakdown-card">
-                <span className="breakdown-title">Transfer Duration</span>
-                <span className="breakdown-val mono">{stageBreakdown.transfer} ms</span>
+                <span className="breakdown-title">Execution Trigger</span>
+                <span className="breakdown-val mono">{stageBreakdown.trigger}</span>
               </div>
             </div>
           )}
@@ -652,7 +662,7 @@ function InteractiveProbeSandbox({
         {/* Right: Oscilloscope & Telemetry HUD */}
         <div className="probe-screen-panel">
           <div className="oscilloscope-header">
-            <span className="oscilloscope-tag mono">INSTRUMENT // DUAL-TRACE STRIP RECORDER</span>
+            <span className="oscilloscope-tag mono">CHART RECORDER // ILLUSTRATIVE RESPONSE WAVEFORM</span>
             <span className="oscilloscope-pop mono">{edgePop}</span>
           </div>
           <div className="oscilloscope-viewport">
@@ -661,26 +671,26 @@ function InteractiveProbeSandbox({
               width={480}
               height={200}
               className="oscilloscope-canvas"
-              aria-label="Real-time signal oscilloscope waveform"
+              aria-label="Illustrative signal oscilloscope waveform"
             />
           </div>
           <div className="oscilloscope-footer">
             <div>
-              <span className="hud-label">RTT Latency</span>
+              <span className="hud-label">Measured Latency</span>
               <span className="hud-val mono">
                 {probeLatency ? `${probeLatency} ms` : selectedMonitor?.latency.p95 ? `${selectedMonitor.latency.p95} ms` : "—"}
               </span>
             </div>
             <div>
-              <span className="hud-label">Status Outcome</span>
+              <span className="hud-label">Recorded State</span>
               <span className="hud-val mono highlight-green">
-                {selectedMonitor?.state.toUpperCase() ?? "OPERATIONAL"}
+                {(selectedMonitor?.lastCheck?.outcome ?? selectedMonitor?.state ?? "OPERATIONAL").toUpperCase()}
               </span>
             </div>
             <div>
-              <span className="hud-label">Ledger Commit Hash</span>
+              <span className="hud-label">D1 Ledger Record</span>
               <span className="hud-val mono truncate-hash">
-                {hashSignature || "CF-D1:INITIALIZED"}
+                {hashSignature || (selectedMonitor?.lastCheck?.id ? `D1-REC:#${selectedMonitor.lastCheck.id}` : "D1-REC:ARCHIVE")}
               </span>
             </div>
           </div>
@@ -793,7 +803,7 @@ export function StatusPage() {
             <div className="hero-eyebrow-row">
               <span className="telemetry-pulse-dot" />
               <p className="eyebrow">
-                Live Operations Journal
+                Operations Journal &amp; Ledger
                 {data ? ` · ${formatTimestamp(data.generatedAt)}` : ""}
               </p>
             </div>
@@ -823,22 +833,45 @@ export function StatusPage() {
             </div>
           </div>
 
-          <aside className="hero-figure" aria-label="Thirty-day uptime summary">
+          <aside className="hero-figure" aria-label="Thirty-day fleet ledger summary">
             <div className="figure-top">
-              <p className="figure-label">30-day Fleet Uptime</p>
-              <span className="figure-chip mono">D1 VERIFIED</span>
+              <div className="figure-badge-group">
+                <span className="figure-pip pip-active" aria-hidden="true" />
+                <p className="figure-label">30-day Fleet Ledger</p>
+              </div>
+              <span className="figure-chip mono">CF-D1 ARCHIVE</span>
             </div>
-            <p className="figure-value mono">
-              {uptime ? formatPercent(uptime.percent) : "—"}
-            </p>
+
+            <div className="figure-metric-block">
+              <div className="figure-metric-row">
+                <p className="figure-value mono">
+                  {uptime ? formatPercent(uptime.percent) : "—"}
+                </p>
+                <span className="figure-metric-sub mono">FLEET AVAILABILITY</span>
+              </div>
+              <div className="figure-health-bar" aria-hidden="true">
+                <div
+                  className="health-bar-operational"
+                  style={{ width: uptime ? `${Math.min(100, Math.max(0, uptime.percent))}%` : "100%" }}
+                />
+                {uptime && uptime.percent < 100 ? (
+                  <div
+                    className="health-bar-impact"
+                    style={{ width: `${Math.max(0, 100 - uptime.percent)}%` }}
+                  />
+                ) : null}
+              </div>
+            </div>
+
             <p className="figure-note">
               {uptime
-                ? `From ${formatCount(uptime.checks)} recorded checks across ${activeCount} active service${activeCount === 1 ? "" : "s"}.`
-                : "No checks recorded yet. The first scheduled run will populate this figure."}
+                ? `Recorded from ${formatCount(uptime.checks)} checks across ${activeCount} active endpoint${activeCount === 1 ? "" : "s"} stored in Cloudflare D1.`
+                : "No checks recorded yet. Scheduled runs populate this ledger."}
             </p>
+
             <div className="figure-stats-row">
               <div>
-                <span className="fstat-label">Interval</span>
+                <span className="fstat-label">Cadence</span>
                 <span className="fstat-val mono">15 min</span>
               </div>
               <div>
@@ -848,6 +881,10 @@ export function StatusPage() {
               <div>
                 <span className="fstat-label">Retention</span>
                 <span className="fstat-val mono">30 days</span>
+              </div>
+              <div>
+                <span className="fstat-label">Endpoints</span>
+                <span className="fstat-val mono">{data?.monitors.length ?? 11} targets</span>
               </div>
             </div>
           </aside>

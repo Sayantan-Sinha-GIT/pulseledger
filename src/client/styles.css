@@ -312,11 +312,13 @@ li {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 0.75fr);
-  gap: clamp(28px, 5vw, 64px);
-  align-items: end;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: stretch;
   padding: clamp(40px, 7vw, 78px) 0 clamp(32px, 5vw, 54px);
   border-bottom: 1px solid var(--rule);
+  position: relative;
+  z-index: 2;
 }
 
 .eyebrow {
@@ -1578,11 +1580,26 @@ li {
   color: var(--tele-cyan);
 }
 
-/* Choreographed Hero Section — Live Operations Journal Masthead */
+/* Choreographed Hero Section — Operations Journal Masthead */
 .telemetric-world .hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: stretch;
   border-bottom: 1px solid var(--tele-border);
   padding: clamp(48px, 8vw, 84px) 0 clamp(36px, 6vw, 60px);
   animation: heroEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  position: relative;
+  z-index: 2;
+}
+
+.telemetric-world .hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  position: relative;
+  z-index: 3;
 }
 
 .telemetric-world .hero-eyebrow-row {
@@ -1611,13 +1628,26 @@ li {
   font-family: var(--sans);
   font-weight: 700;
   letter-spacing: -0.035em;
-  line-height: 1.06;
+  line-height: 1.08;
+  max-width: 22ch;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 3;
 }
 
 .telemetric-world .hero-lede {
   color: var(--tele-text-soft);
   font-size: clamp(1.05rem, 1.4vw, 1.18rem);
   line-height: 1.6;
+  max-width: 54ch;
+}
+
+.telemetric-world .hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 24px;
 }
 
 .telemetric-world .status-badge-wrap {
@@ -1655,16 +1685,21 @@ li {
   animation: stampBreathe 2s infinite ease-in-out;
 }
 
-/* Hero Figure: Continuous Drum Recorder Reading Plate */
+/* Hero Figure: Continuous Drum Recorder Reading Plate & 30-Day Fleet Ledger */
 .telemetric-world .hero-figure {
   border-left: 0;
   background: var(--tele-surface-solid);
   border: 1px solid var(--tele-border);
   border-radius: 8px;
-  padding: 24px;
+  padding: clamp(22px, 2.6vw, 30px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+  z-index: 3;
 }
 
 .telemetric-world .hero-figure::before {
@@ -1681,40 +1716,104 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+}
+
+.telemetric-world .figure-badge-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.telemetric-world .figure-pip {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--tele-emerald-bright);
+  box-shadow: 0 0 6px rgba(63, 185, 80, 0.6);
 }
 
 .telemetric-world .figure-label {
   color: var(--tele-text-soft);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .telemetric-world .figure-chip {
   font-size: 0.62rem;
   letter-spacing: 0.08em;
-  padding: 2px 7px;
+  padding: 3px 8px;
   border-radius: 4px;
   background: var(--tele-emerald-soft);
   border: 1px solid rgba(46, 160, 67, 0.35);
   color: var(--tele-emerald-bright);
 }
 
+.telemetric-world .figure-metric-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.telemetric-world .figure-metric-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .telemetric-world .figure-value {
   color: var(--tele-text);
   font-family: var(--mono);
+  font-size: clamp(2.4rem, 4.2vw, 3.2rem);
   font-weight: 700;
   letter-spacing: -0.04em;
-  margin: 12px 0 10px;
+  line-height: 1;
+  margin: 0;
+}
+
+.telemetric-world .figure-metric-sub {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--tele-text-faint);
+  text-transform: uppercase;
+}
+
+.telemetric-world .figure-health-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--tele-surface-sunken);
+  border: 1px solid var(--tele-border);
+  overflow: hidden;
+  display: flex;
+}
+
+.telemetric-world .health-bar-operational {
+  height: 100%;
+  background: var(--tele-emerald-bright);
+  transition: width 0.3s ease;
+}
+
+.telemetric-world .health-bar-impact {
+  height: 100%;
+  background: var(--tele-rose);
+  transition: width 0.3s ease;
 }
 
 .telemetric-world .figure-note {
   color: var(--tele-text-soft);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .telemetric-world .figure-stats-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
-  margin-top: 16px;
   padding-top: 14px;
   border-top: 1px solid var(--tele-border);
 }
@@ -2512,6 +2611,9 @@ li {
   .telemetric-world .service-stats {
     grid-template-columns: repeat(2, 1fr);
   }
+  .telemetric-world .figure-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 420px) {
@@ -2520,6 +2622,9 @@ li {
   }
   .telemetric-world .stage-telemetry-breakdown {
     grid-template-columns: 1fr;
+  }
+  .telemetric-world .figure-stats-row {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

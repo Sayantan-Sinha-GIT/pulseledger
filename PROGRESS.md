@@ -26,11 +26,14 @@ Last updated: 2026-11-04
 6. Live QA Navigation Fix: Corrected anchor offsets (`scroll-margin-top: 104px` desktop, `180px` mobile) for `#probe`, `#services`, `#project-*`, `#incidents`, `#method`; added automated Playwright regression test; redeployed and verified live — complete
 7. Visual Identity & Admin Flow Unification: Self-hosted Space Grotesk + JetBrains Mono font pair, redesigned `/admin` sign-in console and owner desk into restrained telemetric operations language, audited 1440px and 390px viewports, passed test suites, redeployed live worker, and captured 12 live screenshots — complete
 8. Seismic & Print Operations Journal Redesign: Completely overhauled visual world and background engine to eliminate CodeSense/Pathfolio resemblance; captured equal-width 1440px benchmark comparisons; re-ran all 6 motion rounds and 12 public/admin view screenshots; verified 66 Vitest tests, 16 Playwright tests, zero secret findings, and quality gate — complete
+9. Blocker Corrections & Provenance Audit: Relocated Channel 1 waveform to lower margin band with 414px clearance from headline (zero text collision); rebalanced hero grid into 1.22fr / 1fr with full-height 30-Day Fleet Ledger Plate (zero empty gap); replaced fabricated probe metrics with authentic Recorded Check Telemetry Inspector replaying actual Cloudflare D1 check records with illustrative response waveforms; audited UI and README claims; passed 66 Vitest tests, 16 Playwright tests, anchor checks, and secret scans — complete
 
 ## Feature Ledger
 
 | ID | Behavior | Status | Evidence |
 | --- | --- | --- | --- |
+| BLOCKER-1 | Waveform relocated to dedicated lower margin band with 414px clearance from headline; hero grid rebalanced into full-height 30-Day Fleet Ledger Plate with zero empty gap | verified | `docs/screenshots/public-status-desktop.png`, `public-status-mobile.png`, `scripts/run-motion-review.mjs` |
+| BLOCKER-2 | Removed all `Math.random()` and fake stages/PoPs/hashes; replaced with genuine Recorded Check Telemetry Inspector replaying actual D1 check records with illustrative response waveforms and explicit disclaimer | verified | `src/client/public/StatusPage.tsx`, `round2-probe-completed.png` |
 | SEISMIC-1 | Dual-channel analog stylus needle ink traces gliding continuously across millimetric ledger paper rules | verified | `docs/motion-review/round1-desktop-initial-t0.png` vs `round1-desktop-later-t18.png` |
 | SEISMIC-2 | Real-data driven health dynamics: smooth harmonic waves during nominal state; shock tremors during degraded/down states | verified | `src/client/public/StatusPage.tsx` state-driven canvas engine |
 | SEISMIC-3 | Precision Laboratory Drum Oscillograph with physical scale markings and 5-stage mechanical pipeline | verified | `docs/motion-review/round2-probe-completed.png` |
@@ -57,3 +60,4 @@ Last updated: 2026-11-04
 | 2 | 13 | 0 | passed (9 cases) | 0 | Combinations & Release |
 | 3 | 13 | 0 | passed (9 cases) | 0 | Final quality gate check passed |
 | 4 | 6 (Seismic Redesign) | 0 | passed (9 cases) | 0 | Production Deployment & Verification |
+| 5 | 4 (Blocker Fixes) | 0 | passed (9 cases) | 0 | GitHub Commit & Push (Visual Changes Only) |

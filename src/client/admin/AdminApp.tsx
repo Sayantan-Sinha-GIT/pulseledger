@@ -146,7 +146,7 @@ export function AdminApp() {
       <footer className="admin-footer">
         <div className="admin-footer-left">
           <span className="admin-footer-dot" aria-hidden="true" />
-          <span>PulseLedger owner desk · Live Edge Telemetry</span>
+          <span>PulseLedger owner desk · Recorded Telemetry &amp; Ledger</span>
         </div>
         <span className="mono">Session expires {new Date(session.expiresAt).toISOString().slice(0, 16).replace("T", " ")} UTC</span>
       </footer>
