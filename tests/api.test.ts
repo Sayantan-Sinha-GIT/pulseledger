@@ -27,6 +27,7 @@ describe("public status API", () => {
     expect(data.meta.retentionDays).toBe(30);
     expect(data.meta.checkIntervalMinutes).toBe(15);
     expect(data.meta.maxMonitors).toBe(12);
+    expect(data.meta.refreshSeconds).toBe(300);
     expect(data.monitors[0].url).toMatch(/^https:\/\//);
   });
 
@@ -55,11 +56,43 @@ describe("public status API", () => {
     expect(monitor?.trend).toHaveLength(6);
   });
 
+  it("counts full UTC days and rolling boundary days beyond the recent-check limit", async () => {
+    const monitorId = await getMonitorId("Haan website");
+    const now = Date.now();
+    for (let index = 0; index < 130; index += 1) {
+      await insertCheck({
+        monitorId,
+        outcome: "up",
+        checkedAt: new Date(now - (index + 1) * 60_000).toISOString(),
+      });
+    }
+    await insertCheck({ monitorId, outcome: "down", checkedAt: new Date(now - 25 * 3_600_000).toISOString() });
+    await insertCheck({ monitorId, outcome: "down", checkedAt: new Date(now - 8 * 86_400_000).toISOString() });
+    await insertCheck({ monitorId, outcome: "down", checkedAt: new Date(now - 31 * 86_400_000).toISOString() });
+
+    const monitor = (await status()).monitors.find((item) => item.id === monitorId);
+    expect(monitor?.recentChecks).toHaveLength(8);
+    expect(monitor?.uptime.h24).toMatchObject({ up: 130, down: 0, total: 130 });
+    expect(monitor?.uptime.d7).toMatchObject({ up: 130, down: 1, total: 131 });
+    expect(monitor?.uptime.d30).toMatchObject({ up: 130, down: 2, total: 132 });
+
+    await env.DB.prepare("DELETE FROM checks WHERE monitor_id = ? AND outcome = 'down'")
+      .bind(monitorId).run();
+    const afterDeletion = (await status()).monitors.find((item) => item.id === monitorId);
+    expect(afterDeletion?.uptime.d30).toMatchObject({ up: 130, down: 0, total: 130 });
+  });
+
   it("does not expose the owner password hash", async () => {
     const response = await SELF.fetch(`${BASE}/api/status`);
     const text = await response.text();
     expect(text).not.toContain("pbkdf2");
     expect(text).not.toContain(env.ADMIN_PASSWORD_HASH);
+  });
+
+  it("lets a manual status refresh bypass cached snapshots", async () => {
+    const response = await SELF.fetch(`${BASE}/api/status?fresh=1`);
+    expect(response.status).toBe(200);
+    expect(response.headers.get("cache-control")).toBe("no-store");
   });
 });
 

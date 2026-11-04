@@ -98,8 +98,8 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
 }
 
 export const api = {
-  status(signal?: AbortSignal) {
-    return request<StatusResponse>("/api/status", { signal });
+  status(signal?: AbortSignal, fresh = false) {
+    return request<StatusResponse>(fresh ? "/api/status?fresh=1" : "/api/status", { signal });
   },
 
   async login(email: string, password: string) {

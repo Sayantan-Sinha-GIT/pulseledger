@@ -70,7 +70,7 @@ export async function handleApi(request: Request, env: Env): Promise<Response> {
     }
 
     if (path === "/api/status" && method === "GET") {
-      return await publicStatus(env);
+      return await cachedPublicStatus(request, env);
     }
 
     if (path === "/api/admin/login" && method === "POST") {
@@ -181,7 +181,31 @@ export async function handleApi(request: Request, env: Env): Promise<Response> {
   }
 }
 
-async function publicStatus(env: Env): Promise<Response> {
+async function cachedPublicStatus(request: Request, env: Env): Promise<Response> {
+  const fresh = new URL(request.url).searchParams.get("fresh") === "1";
+  if (env.ENVIRONMENT !== "production") return publicStatus(env, fresh);
+  const key = new Request(new URL("/api/status", request.url).toString());
+  if (!fresh) {
+    try {
+      const cached = await caches.default.match(key);
+      if (cached) return cached;
+    } catch (error) {
+      console.warn("Status cache read failed", error instanceof Error ? error.message : error);
+    }
+  }
+  const response = await publicStatus(env, fresh);
+  if (!fresh) {
+    try {
+      await caches.default.put(key, response.clone());
+    } catch (error) {
+      // A cache outage must not turn a successful D1 response into an API error.
+      console.warn("Status cache write failed", error instanceof Error ? error.message : error);
+    }
+  }
+  return response;
+}
+
+async function publicStatus(env: Env, fresh = false): Promise<Response> {
   const now = new Date();
   const incidents = await loadIncidents(env, {
     now,
@@ -209,7 +233,7 @@ async function publicStatus(env: Env): Promise<Response> {
     },
   };
   return ok(body, {
-    cacheControl: "public, max-age=15, stale-while-revalidate=30",
+    cacheControl: fresh ? "no-store" : "public, max-age=300",
   });
 }
 
