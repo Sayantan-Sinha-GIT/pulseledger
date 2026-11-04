@@ -709,7 +709,7 @@ export function StatusPage() {
     abortRef.current = controller;
     if (mode !== "initial") setRefreshing(true);
     try {
-      const next = await api.status(controller.signal, mode === "manual");
+      const next = await api.status(controller.signal);
       const generatedAt = Date.parse(next.generatedAt);
       if (generatedAt >= newestGeneratedAtRef.current) {
         newestGeneratedAtRef.current = generatedAt;
@@ -719,7 +719,7 @@ export function StatusPage() {
       setError(null);
       lastFetchAtRef.current = Date.now();
       if (mode === "manual") {
-        setAnnouncement(`Status updated at ${formatShortTime(next.generatedAt)}.`);
+        setAnnouncement(`Latest available snapshot checked at ${formatShortTime(next.generatedAt)}.`);
       }
     } catch (caught) {
       if (caught instanceof DOMException && caught.name === "AbortError") return;

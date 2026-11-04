@@ -12,16 +12,16 @@ Cloudflare blocked this account's D1 row reads after the 5,000,000-row daily fre
 - The public endpoint fetches at most 120 recent checks per monitor using `(monitor_id, checked_at DESC, id DESC)`. The old window function scanned the entire 30-day history on every request.
 - Rolling 24-hour, 7-day, and 30-day uptime sums use the daily summary for complete UTC days and an indexed raw-check scan for only the three partial boundary days. The 30-day chart uses the summary table.
 - Cron's `slot = ?` lookup now has its own index; the previous `(monitor_id, slot)` index could not efficiently serve a query with no monitor ID.
-- A visible page auto-refreshes every five minutes. The public response is cached for five minutes per Cloudflare edge location; a manual refresh requests an uncached snapshot. Production code tolerates a cache failure and falls back to D1.
+- A visible page auto-refreshes every five minutes. The public response is cached for five minutes per Cloudflare edge location. Manual refresh checks the latest available snapshot but cannot bypass the server cache with a query parameter. Production code tolerates a cache failure and falls back to D1.
 
-At the 12-monitor cap and 15-minute checks, a cold status request reads no more than roughly 1,440 recent checks, 3,456 boundary-day checks, and 372 daily summaries, plus small monitor and incident lookups. This is a conservative bound based on retained rows and the query shape, not a measured production row-read total. One five-minute refresh stream would be roughly 1.5 million read rows per day before cache reuse. Multiple edge locations, manual refreshes, and admin traffic still count; inspect Cloudflare's real usage after deployment and adjust the design if it approaches the cap.
+At the 12-monitor cap and 15-minute checks, a cold status request reads no more than roughly 1,440 recent checks, 3,456 boundary-day checks, and 372 daily summaries, plus small monitor and incident lookups. This is a conservative bound based on retained rows and the query shape, not a measured production row-read total. One five-minute refresh stream would be roughly 1.5 million read rows per day before cache reuse. Multiple edge locations and admin traffic still count; inspect Cloudflare's real usage after deployment and adjust the design if it approaches the cap.
 
 ## Safe deployment order
 
 1. Wait for the D1 limit to reset at 00:00 UTC. Do not deploy the Worker code first: it queries the new summary table.
 2. Run `npm run db:migrate:remote` and confirm `0004_read_budget.sql` applied successfully.
 3. Run `npm run check` and `npm run check:secrets`, then `npm run deploy`.
-4. Fetch `/health`, `/api/status`, `/api/status?fresh=1`, and the public page. Confirm the response is based on stored checks. Compare two ordinary status responses for a cache hit, then check D1 Insights and account usage after representative traffic.
+4. Fetch `/health`, `/api/status`, and the public page. Confirm the response is based on stored checks. Verify that `/api/status?fresh=1` cannot bypass the cache, compare two ordinary status responses for a cache hit, then check D1 Insights and account usage after representative traffic.
 5. If deployment fails, retain the migration and deploy the previous Worker revision. The added summary table and triggers are compatible with the old code. Do not claim the incident resolved until the live queries and read-rate trend have been checked.
 
 Local verification: 68 Vitest cases, a separate SQLite migration/backfill/trigger/query-plan test, typecheck, build, `npm audit`, secret scan, and 16 Playwright cases passed before production migration. Production application was blocked by D1 error `7500` on 4 November; the live result must be recorded after reset.
