@@ -412,50 +412,131 @@ test.describe("public status page", () => {
     }
   });
 
-  test("mobile touch navigation provides >=44px touch targets, handles escape key, and navigates", async ({
+  test("mobile drawer accessibility: closed menu excluded from tab order, modal focus trap, Escape/backdrop return, and link arrival", async ({
     page,
   }) => {
+    // -----------------------------------------------------------------------
+    // A. DESKTOP CHECK: Verify closed drawer is completely inert & not tabbable
+    // -----------------------------------------------------------------------
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/");
+    await page.waitForSelector(".service");
+
+    const desktopDrawer = page.locator("#mobile-nav-drawer");
+    await expect(desktopDrawer).toHaveAttribute("aria-hidden", "true");
+    await expect(desktopDrawer).toHaveAttribute("inert", "");
+
+    // -----------------------------------------------------------------------
+    // B. MOBILE 390px CHECK: Closed state tab order exclusion
+    // -----------------------------------------------------------------------
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
+    await page.waitForSelector(".service");
 
     const toggle = page.locator(".mobile-nav-toggle");
-    await expect(toggle).toBeVisible();
-
-    const toggleBox = await toggle.boundingBox();
-    expect(toggleBox).not.toBeNull();
-    expect(toggleBox!.width).toBeGreaterThanOrEqual(44);
-    expect(toggleBox!.height).toBeGreaterThanOrEqual(44);
-
-    // Open mobile drawer
-    await toggle.click();
     const drawer = page.locator("#mobile-nav-drawer");
-    await expect(drawer).toBeVisible();
+    const closeBtn = page.locator(".mobile-menu-close");
+    const footerLink = page.locator(".mobile-menu-footer-link");
 
-    // Assert all navigation touch targets have >= 44px height
+    // 1. Initial closed assertions
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(drawer).not.toHaveClass(/open/);
+    await expect(drawer).toHaveAttribute("aria-hidden", "true");
+    await expect(drawer).toHaveAttribute("inert", "");
+
+    // Focus the mobile nav toggle and tab forward to verify closed drawer contents are never focused
+    await toggle.focus();
+    await expect(toggle).toBeFocused();
+    await page.keyboard.press("Tab");
+    const focusedInsideDrawer = await page.evaluate(() =>
+      Boolean(document.getElementById("mobile-nav-drawer")?.contains(document.activeElement))
+    );
+    expect(focusedInsideDrawer).toBe(false);
+
+    // 2. Open drawer and verify initial focus moves inside (to close button)
+    await toggle.click();
+    await expect(drawer).toHaveClass(/open/);
+    await expect(drawer).toHaveAttribute("aria-hidden", "false");
+    await expect(drawer).toHaveAttribute("aria-modal", "true");
+    await expect(drawer).not.toHaveAttribute("inert");
+    await expect(closeBtn).toBeFocused();
+
+    // Verify touch target comfort (>= 40px)
     const links = drawer.locator(".mobile-menu-link, .mobile-menu-project-link, .mobile-menu-footer-link");
     const count = await links.count();
     expect(count).toBeGreaterThan(5);
-
     for (let i = 0; i < count; i++) {
       const box = await links.nth(i).boundingBox();
       if (box) {
-        expect(box.height).toBeGreaterThanOrEqual(40); // Within standard touch comfort
+        expect(box.height).toBeGreaterThanOrEqual(40);
       }
     }
 
-    // Escape closes drawer
+    // 3. Focus containment (Tab / Shift+Tab wrapping)
+    // On close button (first element), Shift+Tab must wrap to footer link (last element)
+    await page.keyboard.press("Shift+Tab");
+    await expect(footerLink).toBeFocused();
+
+    // On footer link (last element), Tab must wrap back to close button (first element)
+    await page.keyboard.press("Tab");
+    await expect(closeBtn).toBeFocused();
+
+    // 4. Escape dismissal and focus restoration to toggle button
     await page.keyboard.press("Escape");
     await expect(drawer).not.toHaveClass(/open/);
+    await expect(drawer).toHaveAttribute("aria-hidden", "true");
+    await expect(drawer).toHaveAttribute("inert", "");
+    await expect(toggle).toBeFocused();
 
-    // Reopen and click a project link
+    // 5. Backdrop click dismissal and focus restoration
     await toggle.click();
     await expect(drawer).toHaveClass(/open/);
-    await drawer.locator(".mobile-menu-project-link", { hasText: "Haan" }).click();
+    await expect(closeBtn).toBeFocused();
 
-    // Drawer closes after navigation
+    // Click outside panel (left side of viewport)
+    await page.mouse.click(20, 200);
+    await expect(drawer).not.toHaveClass(/open/);
+    await expect(drawer).toHaveAttribute("aria-hidden", "true");
+    await expect(toggle).toBeFocused();
+
+    // 6. Section link arrival: close drawer, smooth scroll, clear sticky header, focus destination
+    await toggle.click();
+    await expect(drawer).toHaveClass(/open/);
+
+    const mastheadBox = await page.locator("header.masthead").boundingBox();
+    const mastheadBottom = (mastheadBox?.y ?? 0) + (mastheadBox?.height ?? 0);
+
+    const haanLink = drawer.locator(".mobile-menu-project-link", { hasText: "Haan" });
+    await haanLink.click();
+
+    // Drawer must be closed
     await expect(drawer).not.toHaveClass(/open/);
 
-    // Verify 320px viewport without overflow
+    // Wait for smooth scroll to finish
+    await page.waitForFunction(() => {
+      return new Promise((resolve) => {
+        let lastPos = window.scrollY;
+        const check = () => {
+          setTimeout(() => {
+            if (Math.abs(window.scrollY - lastPos) < 2) resolve(true);
+            else { lastPos = window.scrollY; check(); }
+          }, 80);
+        };
+        check();
+      });
+    }, { timeout: 10000 });
+
+    // Focus must land at the destination target (#project-haan or inside it)
+    const activeElementId = await page.evaluate(() => document.activeElement?.id);
+    expect(activeElementId).toBe("project-haan");
+
+    // Destination target must be clear of sticky masthead
+    const targetBox = await page.locator("#project-haan").boundingBox();
+    expect(targetBox).not.toBeNull();
+    expect(targetBox!.y).toBeGreaterThanOrEqual(mastheadBottom - 2);
+
+    // 7. Verify 320px viewport without overflow
     await page.setViewportSize({ width: 320, height: 568 });
     await page.waitForTimeout(100);
     await expectNoHorizontalOverflow(page);

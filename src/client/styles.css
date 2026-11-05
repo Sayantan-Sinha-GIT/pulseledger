@@ -2523,6 +2523,11 @@ section, #services, #probe, #incidents, #method, #owner, .project-group-wrap, .p
   scroll-margin-top: 96px;
 }
 
+section[tabindex="-1"]:focus,
+div[tabindex="-1"]:focus {
+  outline: none;
+}
+
 .sr-only {
   position: absolute !important;
   left: 0 !important;
@@ -2723,12 +2728,21 @@ section, #services, #probe, #incidents, #method, #owner, .project-group-wrap, .p
   justify-content: flex-end;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0s 0.25s;
 }
 
 .mobile-menu-backdrop.open {
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
+  transition: opacity 0.25s ease, visibility 0s 0s;
+}
+
+@media(min-width: 861px) {
+  #mobile-nav-drawer {
+    display: none !important;
+  }
 }
 
 .mobile-menu-panel {

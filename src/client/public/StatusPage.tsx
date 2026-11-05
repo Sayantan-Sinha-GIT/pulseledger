@@ -178,6 +178,97 @@ export function StatusPage() {
   const [expandedDetails, setExpandedDetails] = useState<Record<string, boolean>>({});
   const [selectedMonitorId, setSelectedMonitorId] = useState<string>("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
+  const drawerRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const lastFocusedElementRef = useRef<HTMLElement | null>(null);
+
+  const closeMenu = useCallback((restoreFocus = true) => {
+    setMobileMenuOpen(false);
+    if (restoreFocus) {
+      setTimeout(() => {
+        const toFocus = lastFocusedElementRef.current || toggleButtonRef.current;
+        toFocus?.focus();
+      }, 0);
+    }
+  }, []);
+
+  const openMenu = useCallback(() => {
+    if (document.activeElement instanceof HTMLElement) {
+      lastFocusedElementRef.current = document.activeElement;
+    } else {
+      lastFocusedElementRef.current = toggleButtonRef.current;
+    }
+    setMobileMenuOpen(true);
+  }, []);
+
+  // When drawer opens, focus initial element (close button)
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const timer = setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 40);
+    return () => clearTimeout(timer);
+  }, [mobileMenuOpen]);
+
+  // Focus trap inside drawer
+  const handleDrawerKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      closeMenu(true);
+      return;
+    }
+
+    if (e.key === "Tab") {
+      const drawer = drawerRef.current;
+      if (!drawer) return;
+      const focusables = Array.from(
+        drawer.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((el) => el.offsetParent !== null || el === closeButtonRef.current);
+
+      if (focusables.length === 0) return;
+
+      const firstEl = focusables[0];
+      const lastEl = focusables[focusables.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl || !drawer.contains(document.activeElement)) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    }
+  }, [closeMenu]);
+
+  const handleMenuNavigate = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      closeMenu(false);
+      const targetId = href.slice(1);
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (!targetEl.hasAttribute("tabindex")) {
+          targetEl.setAttribute("tabindex", "-1");
+        }
+        targetEl.focus({ preventScroll: true });
+        if (window.history.pushState) {
+          window.history.pushState(null, "", href);
+        } else {
+          window.location.hash = href;
+        }
+      }
+    } else {
+      closeMenu(false);
+    }
+  }, [closeMenu]);
 
   const lastUpdatedRef = useRef<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -199,17 +290,7 @@ export function StatusPage() {
     } catch {}
   }, []);
 
-  // Close mobile drawer on Escape key
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMobileMenuOpen(false);
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [mobileMenuOpen]);
+
 
   const toggleTheme = useCallback(() => {
     setThemeMode((prev) => {
@@ -1145,12 +1226,19 @@ export function StatusPage() {
               </svg>
             </button>
             <button
+              ref={toggleButtonRef}
               type="button"
               className="mobile-nav-toggle"
               aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-nav-drawer"
-              onClick={() => setMobileMenuOpen((o) => !o)}
+              onClick={() => {
+                if (mobileMenuOpen) {
+                  closeMenu(true);
+                } else {
+                  openMenu();
+                }
+              }}
             >
               {mobileMenuOpen ? (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -1168,26 +1256,28 @@ export function StatusPage() {
 
         {/* Accessible mobile drawer menu */}
         <div
+          ref={drawerRef}
           id="mobile-nav-drawer"
           className={`mobile-menu-backdrop ${mobileMenuOpen ? "open" : ""}`}
           role="dialog"
-          aria-modal="true"
+          aria-modal={mobileMenuOpen ? "true" : undefined}
+          aria-hidden={!mobileMenuOpen}
+          inert={!mobileMenuOpen ? true : undefined}
           aria-label="Navigation menu"
           onClick={(e) => {
-            if (e.target === e.currentTarget) setMobileMenuOpen(false);
+            if (e.target === e.currentTarget) closeMenu(true);
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setMobileMenuOpen(false);
-          }}
+          onKeyDown={handleDrawerKeyDown}
         >
           <div className="mobile-menu-panel">
             <div className="mobile-menu-header">
               <span className="mobile-menu-title">PulseLedger</span>
               <button
+                ref={closeButtonRef}
                 type="button"
                 className="mobile-menu-close"
-                aria-label="Close menu"
-                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Close navigation menu"
+                onClick={() => closeMenu(true)}
               >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M18 6L6 18M6 6l12 12" />
@@ -1197,41 +1287,44 @@ export function StatusPage() {
 
             <div className="mobile-menu-section-label">Chapters &amp; Sections</div>
             <nav className="mobile-menu-nav" aria-label="Mobile Navigation">
-              <a className="mobile-menu-link" href="#services" onClick={() => setMobileMenuOpen(false)}>
+              <a className="mobile-menu-link" href="#services" onClick={(e) => handleMenuNavigate(e, "#services")}>
                 Fleet ledger
               </a>
-              <a className="mobile-menu-link" href="#probe" onClick={() => setMobileMenuOpen(false)}>
+              <a className="mobile-menu-link" href="#probe" onClick={(e) => handleMenuNavigate(e, "#probe")}>
                 Recorded checks
               </a>
-              <a className="mobile-menu-link" href="#incidents" onClick={() => setMobileMenuOpen(false)}>
+              <a className="mobile-menu-link" href="#incidents" onClick={(e) => handleMenuNavigate(e, "#incidents")}>
                 Incidents journal
               </a>
-              <a className="mobile-menu-link" href="#method" onClick={() => setMobileMenuOpen(false)}>
+              <a className="mobile-menu-link" href="#method" onClick={(e) => handleMenuNavigate(e, "#method")}>
                 Security &amp; method
               </a>
-              <a className="mobile-menu-link" href="#owner" onClick={() => setMobileMenuOpen(false)}>
+              <a className="mobile-menu-link" href="#owner" onClick={(e) => handleMenuNavigate(e, "#owner")}>
                 Owner ledger
               </a>
             </nav>
 
             <div className="mobile-menu-section-label">Portfolio Projects</div>
             <div className="mobile-menu-projects-grid">
-              {PORTFOLIO_PROJECTS.map((p) => (
-                <a
-                  key={p}
-                  className="mobile-menu-project-link"
-                  href={`#${slugifyProject(p)}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {p}
-                </a>
-              ))}
+              {PORTFOLIO_PROJECTS.map((p) => {
+                const slug = slugifyProject(p);
+                return (
+                  <a
+                    key={p}
+                    className="mobile-menu-project-link"
+                    href={`#${slug}`}
+                    onClick={(e) => handleMenuNavigate(e, `#${slug}`)}
+                  >
+                    {p}
+                  </a>
+                );
+              })}
             </div>
 
             <Link
               className="mobile-menu-footer-link"
               href="/admin"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() => closeMenu(false)}
             >
               Owner desk sign in &rarr;
             </Link>

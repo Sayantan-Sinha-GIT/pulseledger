@@ -50,6 +50,12 @@ Last updated: 2026-11-04
    - Restored authored hero density: `h1` margin-top = 0px, margin-bottom = 0px, line-height = 146.88px, heading top = 165.5px (matching source ~166px); `#numbers h2` margin-bottom = 0px, margin-top = 18px; `#services h2` margin = 18px 0 18px.
    - Extended test suite: added layout, margin, header height, and bounding box assertions to both `e2e/public.spec.ts` (20 passed) and `e2e/fidelity-side-by-side.spec.ts` (2 passed; 2 skipped cleanly with `SKIP_FIDELITY_REFERENCE=true`).
    - Deployed Worker version `c1c3b767-82ed-45c4-a605-0589643cbea9`; verified live computed styles and truthful single-row D1 status API.
+16. Mobile Drawer Accessibility, Focus Trapping & Navigation Arrival (2026-11-05):
+   - Corrected `#mobile-nav-drawer` closed accessibility: applied `inert={!mobileMenuOpen ? true : undefined}`, `aria-hidden={!mobileMenuOpen}`, and `visibility: hidden` when closed; configured desktop exclusion via `@media(min-width: 861px) { #mobile-nav-drawer { display: none !important; } }`, eliminating hidden links from desktop and phone tab sequences.
+   - Implemented W3C modal dialog pattern: initial focus moves to `.mobile-menu-close` on open; Tab and Shift+Tab wrap circularly within drawer focusable elements; Escape and backdrop clicks dismiss modal and restore focus to `.mobile-nav-toggle`.
+   - Section navigation arrival: clicking or activating drawer links closes the drawer, smoothly scrolls to destination with sticky masthead clearance preserved, and shifts focus to destination element (`tabindex="-1"` set, outline suppressed).
+   - Added comprehensive automated keyboard lifecycle tests in `e2e/public.spec.ts` (all 20 public regression tests passed locally and live).
+   - Deployed Worker version `9d194242-e2ab-43b6-8ea4-618f541b8a3a` to production; verified live public endpoint and single-row D1 read budget.
 
 ## Feature Ledger
 
