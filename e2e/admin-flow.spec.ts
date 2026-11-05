@@ -71,6 +71,8 @@ test.describe("owner monitor and incident lifecycle", () => {
     await page.getByRole("dialog").getByRole("button", { name: "Remove monitor" }).click();
     await expect(page.getByRole("status")).toContainText("removed.");
     await expect(page.getByRole("heading", { name: renamed })).toBeHidden();
+    await page.goto("/admin/audit");
+    await expect(page.getByText("monitor created", { exact: true }).first()).toBeVisible();
   });
 
   test("opens, updates, and resolves an incident visible to visitors", async ({
@@ -142,9 +144,6 @@ test.describe("owner monitor and incident lifecycle", () => {
     ).toBeVisible();
     await expect(
       page.getByText("incident opened", { exact: true }).first(),
-    ).toBeVisible();
-    await expect(
-      page.getByText("monitor created", { exact: true }).first(),
     ).toBeVisible();
   });
 });

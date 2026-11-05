@@ -82,6 +82,10 @@ test.describe("owner access", () => {
       await page.setViewportSize({ width: viewport.width, height: viewport.height });
       await page.goto("/admin");
 
+      // Production font loading can complete between successive geometry
+      // reads; test the settled layout instead of mixing two font metrics.
+      await page.evaluate(async () => { await document.fonts.ready; });
+
       const intro = page.locator(".login-intro");
       const h1 = page.locator(".login-intro h1");
       const eyebrow = page.locator(".login-intro .eyebrow");

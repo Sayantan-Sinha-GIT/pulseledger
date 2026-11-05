@@ -4,8 +4,8 @@
  * credential files are ignored. Exits non-zero when a finding is present.
  */
 import { execFileSync } from "node:child_process";
-import { readFileSync, statSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync, statSync, existsSync, readdirSync } from "node:fs";
+import { resolve, relative } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
 const patterns = [
@@ -21,7 +21,18 @@ function git(args) {
   return execFileSync("git", args, { cwd: root, encoding: "utf8" });
 }
 
-const files = git(["ls-files", "-z"]).split("\0").filter(Boolean);
+const hasGit = existsSync(resolve(root, ".git"));
+function sourceFiles(directory = root) {
+  const excluded = new Set([".git", "node_modules", ".wrangler", "secrets", "dist", "release", "test-results", "playwright-report"]);
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    if (entry.isSymbolicLink() || excluded.has(entry.name) || entry.name === ".dev.vars" || /^\.env(?:\.|$)/.test(entry.name)) return [];
+    const absolute = resolve(directory, entry.name);
+    return entry.isDirectory() ? sourceFiles(absolute) : [relative(root, absolute)];
+  });
+}
+// A Drive/source archive intentionally has no Git metadata. It must still be
+// possible to run the same source scan without initializing a repository.
+const files = hasGit ? git(["ls-files", "-z"]).split("\0").filter(Boolean) : sourceFiles();
 const findings = [];
 
 for (const file of files) {
@@ -50,7 +61,11 @@ for (const file of files) {
 
 for (const ignored of [".dev.vars", "secrets/owner-credentials.txt"]) {
   try {
-    git(["check-ignore", "-q", ignored]);
+    if (hasGit) git(["check-ignore", "-q", ignored]);
+    else {
+      const rules = readFileSync(resolve(root, ".gitignore"), "utf8").split(/\r?\n/).map(line => line.trim());
+      if (!rules.includes(ignored) && !(ignored.startsWith("secrets/") && rules.includes("secrets/"))) throw new Error("Missing ignore rule");
+    }
   } catch {
     findings.push(`${ignored}: not ignored by git`);
   }
@@ -61,4 +76,4 @@ if (findings.length > 0) {
   for (const finding of findings) console.error(`- ${finding}`);
   process.exit(1);
 }
-console.log(`Secret scan passed: ${files.length} tracked files checked, credential files ignored.`);
+console.log(`Secret scan passed: ${files.length} ${hasGit ? "tracked" : "archive source"} files checked, credential files ignored.`);

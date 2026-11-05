@@ -18,8 +18,8 @@ const sql = [
   "DELETE FROM incident_updates WHERE incident_id IN (SELECT id FROM incidents WHERE title LIKE '[E2E]%');",
   "DELETE FROM incidents WHERE title LIKE '[E2E]%';",
   "DELETE FROM monitors WHERE name LIKE '[E2E]%';",
-  "DELETE FROM sessions;",
-  "DELETE FROM login_attempts;",
+  // Production cleanup must not log out the owner or reset login protections.
+  ...(!remote ? ["DELETE FROM sessions;", "DELETE FROM login_attempts;"] : []),
 ].join(" ");
 
 execFileSync(

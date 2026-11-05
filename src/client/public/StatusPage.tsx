@@ -490,17 +490,17 @@ export function StatusPage() {
     });
 
     // 3. Chapter 2 (#probe) — progress markers for tests; visual transform driven by GSAP matchMedia
-    if (probeEl) {
+    if (probeEl && isReduced) {
       probeEl.setAttribute("data-scroll-progress", chapter2Progress.toFixed(3));
     }
 
     // 4. Chapter 3 (#incidents) — progress markers for tests; visual transform driven by GSAP
-    if (incidentsEl) {
+    if (incidentsEl && isReduced) {
       incidentsEl.setAttribute("data-scroll-progress", chapter3Progress.toFixed(3));
     }
 
     // 5. Chapter 4 (#method) — progress markers for tests; visual transform driven by GSAP
-    if (methodEl) {
+    if (methodEl && isReduced) {
       methodEl.setAttribute("data-scroll-progress", chapter4Progress.toFixed(3));
     }
   }, []);
@@ -950,10 +950,12 @@ export function StatusPage() {
     };
 
     const sealRing = document.getElementById("incident-seal-ring") as SVGGeometryElement | null;
-    const arts = Array.from(document.querySelectorAll("#incident-broadsheet-panel article"));
+    const sealLength = sealRing?.getTotalLength() ?? 440;
+    if (sealRing) sealRing.style.strokeDasharray = String(sealLength);
+    const arts = Array.from(document.querySelectorAll("#incident-broadsheet-panel > article"));
     const sealp = (p: number) => {
       if (sealRing) {
-        const dashoffset = Math.round(440 * (1 - p));
+        const dashoffset = sealLength * (1 - p);
         sealRing.style.strokeDashoffset = `${dashoffset}`;
         sealRing.setAttribute("stroke-dashoffset", String(dashoffset));
       }
@@ -1890,8 +1892,8 @@ export function StatusPage() {
                       cx="100"
                       cy="100"
                       r="70"
-                      strokeDasharray="1000"
-                      strokeDashoffset="1000"
+                      strokeDasharray={Math.PI * 140}
+                      strokeDashoffset={Math.PI * 140}
                       transform="rotate(-90 100 100)"
                     />
                     <g id="incident-seal-rotor">
@@ -1941,17 +1943,20 @@ export function StatusPage() {
                       Active &amp; Historical Incidents Ledger
                     </h4>
                     {data.incidents.map((inc) => (
-                      <div
+                      <article
                         key={inc.id}
+                        className={`incident severity-${inc.severity} status-${inc.status}`}
+                        aria-labelledby={`incident-title-${inc.id}`}
                         style={{
                           borderTop: "1px solid var(--line)",
                           paddingTop: 14,
                           marginTop: 14,
                         }}
                       >
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                          <h3 style={{ fontSize: 18, margin: 0 }}>{inc.title}</h3>
-                          <StateBadge state={inc.status === "resolved" ? "operational" : "incident"} />
+                        <div className="incident-title-row">
+                          <h3 id={`incident-title-${inc.id}`} style={{ fontSize: 18, margin: 0 }}>{inc.title}</h3>
+                          <span className={`severity severity-${inc.severity}`}>{inc.severity}</span>
+                          <span className="incident-status">{inc.status}</span>
                         </div>
                         <p style={{ fontSize: 13, color: "var(--mut)", margin: "4px 0" }}>
                           Affected: {inc.monitorName || "All services"} · Started {formatTimestamp(inc.startedAt)}
@@ -1978,7 +1983,7 @@ export function StatusPage() {
                             ))}
                           </ul>
                         )}
-                      </div>
+                      </article>
                     ))}
                   </div>
                 )}

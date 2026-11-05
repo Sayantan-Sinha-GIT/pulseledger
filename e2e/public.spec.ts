@@ -250,19 +250,23 @@ test.describe("public status page", () => {
     expect(chassisAfter?.transform).not.toBe(chassisBefore?.transform);
 
     // 3. Chapter 3 (#incidents — Forensic Incident Broadsheet & Rotary Verification Seal)
-    const incidentsDocTop = await page.evaluate(() => {
-      const el = document.getElementById("incidents");
-      return el ? el.getBoundingClientRect().top + window.scrollY : 4500;
+    const incidentScene = await page.evaluate(() => {
+      const el = document.querySelector("#incidents .grid");
+      if (!el) throw new Error("Incident scene is missing");
+      const rect = el.getBoundingClientRect();
+      // Match the actual scene's top 70% -> bottom 60% scroll range.
+      return { start: rect.top + window.scrollY - innerHeight * 0.7,
+        end: rect.bottom + window.scrollY - innerHeight * 0.6 };
     });
 
-    await scrollToY(Math.max(0, incidentsDocTop - vh * 0.96));
+    await scrollToY(Math.max(0, incidentScene.start - 20));
     const ch3Before = await getChapterMetrics("#incidents");
     const sealRingBefore = await getChapterMetrics("#incident-seal-ring");
     const sealRotorBefore = await getChapterMetrics("#incident-seal-rotor");
     const spineBefore = await getChapterMetrics("#incident-spine-fill");
     const broadsheetBefore = await getChapterMetrics("#incident-broadsheet-panel");
 
-    await scrollToY(incidentsDocTop + (isMobile ? 380 : 350));
+    await scrollToY(incidentScene.end + 20);
     const ch3After = await getChapterMetrics("#incidents");
     const sealRingAfter = await getChapterMetrics("#incident-seal-ring");
     const sealRotorAfter = await getChapterMetrics("#incident-seal-rotor");
@@ -271,6 +275,13 @@ test.describe("public status page", () => {
 
     expect(Number(ch3After?.progress) - Number(ch3Before?.progress)).toBeGreaterThan(0.55);
     expect(parseFloat(sealRingBefore?.strokeDashoffset ?? "0") - parseFloat(sealRingAfter?.strokeDashoffset ?? "0")).toBeGreaterThan(250);
+    const sealGeometry = await page.locator('#incident-seal-ring').evaluate((el) => ({
+      length: (el as SVGGeometryElement).getTotalLength(),
+      dash: parseFloat(getComputedStyle(el).strokeDasharray),
+    }));
+    // The dash must match the circle: an oversized dash looks fully drawn even
+    // when strokeDashoffset changes, so transform-only tests missed this bug.
+    expect(Math.abs(sealGeometry.dash - sealGeometry.length)).toBeLessThan(1);
     expect(
       sealRotorAfter?.inlineTransform !== sealRotorBefore?.inlineTransform ||
       sealRotorAfter?.transform !== sealRotorBefore?.transform

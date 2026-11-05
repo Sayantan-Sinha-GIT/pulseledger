@@ -245,3 +245,8 @@ The dashboard preserves the later manual failures and slow responses in its hist
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+
+## Final handoff (6 November 2026)
+
+See [START_HERE.txt](START_HERE.txt) for simple run/recovery steps and [FINAL_VERIFICATION.md](FINAL_VERIFICATION.md) for the final verification. The release repairs public incident severity/status visibility, the SVG verification-seal drawing, conflicting scene progress, responsive owner-header font loading, and production test-cleanup scope. The approved homepage design and the persisted D1 read-budget protections are preserved.

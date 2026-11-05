@@ -1,0 +1,63 @@
+PULSELEDGER - FINAL PROJECT HANDOFF
+Release: 1.0.1
+
+USE IT
+Website: https://pulseledger.srimantasutapa123.workers.dev/
+Owner desk: https://pulseledger.srimantasutapa123.workers.dev/admin
+Source: https://github.com/Sayantan-Sinha-GIT/pulseledger
+Owner email: srimantasutapa123@gmail.com
+Your existing owner password is preserved in the separate private recovery
+archive. No password or signing material belongs in the public source zip.
+
+YOUR DRIVE BACKUP
+Use the prepared PulseLedger archive in Desktop\FINAL_DRIVE_UPLOAD.
+It contains complete source, database migrations, tests, documentation,
+the owner-supplied homepage designs, and the built frontend assets.
+Keep the separate PRIVATE_RECOVERY archive private. It contains owner
+credentials and the local environment configuration for this deployment.
+
+FOLDER MAP
+src/client/   React public status page and owner desk
+src/worker/   Cloudflare API, authentication and scheduled checks
+src/shared/   Shared types and status/URL rules
+migrations/   Reproducible D1 schema and portfolio monitor seeds
+tests/, e2e/  Backend and desktop/mobile browser checks
+docs/         Architecture evidence and D1 read-budget explanation
+my-design/    Your homepage source (local/private; not on GitHub)
+dist/         Built frontend (included in the Drive archive)
+FINAL_VERIFICATION.md  Actual final results and fixes
+README.md     Full setup, architecture and deployment instructions
+
+RUN LOCALLY
+Install Node.js 24. A Cloudflare account is not required for local use.
+From this folder:
+  npm ci
+  npm run setup:local
+  npm run db:reset:local
+  npm run dev
+Open http://127.0.0.1:8787/ and /admin.
+Read the generated local password in secrets/owner-credentials.txt.
+setup:local never overwrites an existing .dev.vars configuration.
+If restoring this exact deployment, use the private recovery files instead
+of generating a new owner password. Local checks can be triggered at:
+http://127.0.0.1:8787/cdn-cgi/local/scheduled
+
+REDEPLOY
+Use your Cloudflare Wrangler login. For this existing deployment, preserve
+the current database ID in wrangler.jsonc and existing Worker secret.
+For a different account, create a new D1 database and update that ID.
+  npm run db:migrate:remote
+  npm run deploy
+The Worker, D1 database, and password secret live on Cloudflare. A source
+archive alone does not duplicate your live database history or cloud account.
+
+WHAT IT MONITORS
+11 public URLs across Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu and
+Dispatch. The owner desk can manage up to 12 monitors and incidents.
+Scheduled checks run every 15 minutes. Public refresh reads one persisted
+snapshot instead of scanning history. Incidents show severity, actual
+lifecycle status, affected service, timestamped updates and resolution.
+This is HTTP endpoint monitoring, not a test of those apps' private flows.
+Single owner; no email/SMS alerting or team access. These are stated scope
+limits, not hidden unfinished features. No Android APK is needed for this
+web-only product.

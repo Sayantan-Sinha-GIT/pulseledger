@@ -966,22 +966,22 @@ nav[aria-label="Primary"] a:focus-visible {
   background: var(--bg2);
 }
 
-.bs article {
+.bs > article {
   padding: 26px;
   border-top: 1px solid var(--line);
   opacity: .4;
   transition: opacity .4s;
 }
 
-.bs article:first-child {
+.bs > article:first-child {
   border: 0;
 }
 
-.bs article.on {
+.bs > article.on {
   opacity: 1;
 }
 
-.bs article h3 {
+.bs > article h3 {
   margin: 8px 0 6px;
 }
 
@@ -2192,6 +2192,15 @@ li {
   gap: 16px;
 }
 
+.public-shell .incident {
+  background: var(--bg2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  box-shadow: none;
+  opacity: 1;
+  overflow-wrap: anywhere;
+}
+
 .incident {
   padding: 22px 24px;
   border: 1px solid var(--rule-strong);
@@ -2468,9 +2477,11 @@ li {
 
 .masthead-brand .wordmark {
   white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .telemetry-badge {
+  flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 0.64rem;
   font-weight: 500;
