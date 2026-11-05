@@ -11,3 +11,6 @@ secrets/
 coverage/
 test-results/
 playwright-report/
+
+# Owner-provided design originals remain local
+/my-design/

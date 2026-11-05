@@ -54,9 +54,10 @@ Monitor the publicly reachable websites and available health/version endpoints f
 
 An editorial operations desk: precise, calm, human-readable, and trustworthy. Give actual checks and incidents visual prominence. Avoid stock dashboard clichés (a wall of same-sized cards, giant vanity numbers, glowing gradients, emoji icons). Distinct typography, useful data graphics, a restrained color system, and polished responsive behavior. Public page should be worthy of a portfolio screenshot. The admin interface should prioritize speed and clarity.
 
-### Operations-Journal Scroll Choreography (2026-11-04)
+### Operations-Journal Scroll Choreography & Authored Claude Design (2026-11-05)
 
-- The public status page must deliver Haan-level craft using PulseLedger's product-specific **Continuous Seismic & Print Operations Journal** identity, without copying Haan or CodeSense.
+- **Governing Visual Truth**: As directed by the owner, the exact Claude-authored HTML (`my-design/home.html`, 33,824 bytes) supersedes prior visual implementations and governs homepage visual and motion truth. PRD continues to govern platform, stack (Cloudflare Worker + D1 + React/Vite), external providers, security, data integrity, and backend behavior.
+- The public status page delivers Haan-level craft matching the supplied Claude design:
 - In addition to continuous dual-channel analog stylus ink traces (`TelemetryCanvas`) with scroll-coupled paper feed rulings, the page must feature **at least three distinct, visible scroll-driven chapters** whose visual state transforms deterministically based on scroll position (`window.scrollY` and `IntersectionObserver`), not merely elapsed time or generic fade-ups:
   1. **Hero Operations Journal & 30-Day Drum Seismograph (`#hero-section`)**: Balanced first-viewport composition pairing the headline, live portfolio project register strip, and 30-Day Fleet Ledger Plate with an aggregate 30-day drum seismograph and scroll-driven drum carriage (`#hero-drum-carriage`).
   2. **Chapter 1 — Fleet Matrix & Physical Ledger Strip Unspooling (`#services`)**: Mechanical 30-day ledger tape spool apparatus (`#chapter-1-spool-bar`, `#services-spool-fill`, `#services-spool-wheel`) and per-row physical 30-day ledger strips (`.uptime-strip`) that physically unspool left-to-right via scroll-driven `clip-path` and a traveling printhead stylus (`.strip-printhead`) as each service row enters the viewport.

@@ -1,18 +1,48 @@
-# MOTION_SPEC.md — PulseLedger Continuous Seismic & Print Operations Journal
+# MOTION_SPEC.md — PulseLedger Operations Journal & Authored Claude Design
 
-## 1. Product Metaphor & Visual Thesis
-PulseLedger is an independent uptime and incident operations desk. Following the owner's feedback to eliminate visual resemblance to CodeSense's cosmic coordinate grid and Pathfolio's centered porcelain dossier, PulseLedger adopts a completely original, product-specific metaphor: **The Continuous Seismic & Print Operations Journal with Layered Ink**.
+## 1. Product Metaphor & Visual Direction (2026-11-05 Update)
+The homepage visual and motion implementation faithfully reflects the owner-supplied reference design (`my-design/home.html`, 33,824 bytes).
 
-It is modeled after an automated physical drum recorder and precision editorial ledger:
-- **Continuous Ruled Ledger Chart Bands**: Continuous horizontal millimetric chart paper rulings (`#283243`), major register bands (`#3b475c`), and margin time-epoch ticks (`#647287`).
-- **Dual-Channel Analog Stylus Needles**: Two continuous living analog ink traces gliding smoothly from right to left across the screen:
-  - **Channel 1 (Fleet Baseline Harmonic Inkwash)**: Smooth compound harmonic waveform in drafting cobalt/cyan (`#388bfd` / `#58a6ff`). When all systems are nominal, it maintains steady harmonic oscillations; if degraded or down, it dynamically exhibits acute shock tremors and high-frequency jitter.
-  - **Channel 2 (Cron Cadence & Epoch Heartbeat)**: A continuous register emerald (`#2ea043`) ink line featuring rhythmic traveling cardiac impulses corresponding to the Cloudflare Worker 15-minute cron check cycle.
-- **Physical Embossed Ink Stamps & Seals**: In place of glowing neon sci-fi halos, status states use crisp double-bordered ink stamps (`.state-operational`, `.state-degraded`, `.state-down`) with tactile breathing outlines.
-- **Precision Laboratory Drum Oscillograph**: In place of generic radar rings, the interactive recorded check inspector is housed in a matte graphite instrument chassis with graduated physical scale ticks (0 to 400ms), dual-trace persistence, and direct selectable inspection of genuine Cloudflare D1 check records.
-- **Zero Cosmic Trope / Zero Porcelain Trope**:
-  - NO pitch-black void `#08090c`, no orbital rings, no celestial planet nodes, no neon orange/cyan halos, no floating star particles (CodeSense).
-  - NO porcelain cream `#f8f7f2`, no centered dossier single-column cards, no brass/stone ornaments, no book serif headlines (Pathfolio).
+It adopts an authentic editorial telemetric operations journal with tactile physical craft:
+- **Authored Typography Trio**:
+  - Display Headlines & Brand Wordmark: **Instrument Serif** (regular & italic, 400).
+  - Telemetry Data, Epoch Tickers, Code, Table Figures, and Eyebrows: **IBM Plex Mono** (400, 500).
+  - Body Text, Lead Explanations, and Interface Copy: **Hanken Grotesk** (400, 500, 600).
+  - All fonts are 100% locally vendored and self-hosted as WOFF2 in `/public/fonts/` with CSP `style-src 'self'`.
+- **Authored Palette System**:
+  - Dark Theme (Default): Canvas Background `--bg: #0c0e0d`, Card Surface `--bg2: #141716`, Accent Amber `--acc: #f0a63a`, Deep Ink `--ink: #edebe4`, Rule Lines `--line: #222624`, Muted Text `--mut: #8e948c`.
+  - Light Theme (`[data-theme="light"]`): Warm Paper Background `--bg: #f3eee2`, Card Surface `--bg2: #eae3d2`, Deep Terracotta Accent `--acc: #9a4400`, Deep Carbon Ink `--ink: #1f211f`, Rule Lines `--line: #dcd4c3`, Muted Text `--mut: #6c7069`.
+- **Dual Living Canvas Engines**:
+  - **Background Particle Field (`canvas#bg`)**: Subtle drifting ambient dust particles floating continuously across viewport height, adjusting particle velocity dynamically on scroll velocity (`vel * 0.02`).
+  - **Seismograph Drum Plate (`canvas#tele`)**: Dual-stylus continuous waveforms (stylus 1: sinuous harmonic amber trace; stylus 2: cyan telemetry square-pulse steps) sweeping across millimetric horizontal rulings (28px spacing) and vertical time epochs (80px spacing), coupled with scroll position (`sy * 0.3`).
+- **Marquee Velocity Ribbon (`.mq`)**:
+  - Continuous running ribbon translating horizontally with translation delta `1.1 + Math.min(40, Math.abs(vel)) * 0.9` proportional to Lenis scroll velocity.
+- **Scroll Performance Guarantee**:
+  - Coalesced into direct requestAnimationFrame DOM updates (`ref` mutations).
+  - Zero React whole-page re-renders during active scrolling (`renderDelta === 0`).
+  - Reduced-motion fallback immediately renders all progress values at 1.0 and halts animations.
+
+---
+
+## 2. The Four Deterministic Scroll-Driven Chapters
+1. **Chapter 1 — Fleet Matrix & Physical Ledger Strip Unspooling (`#services`)**:
+   - Spool wheel (`#services-spool-wheel`) rotates `0deg -> 180deg` via scroll progress.
+   - Spool fill bar (`#services-spool-fill`) scales `scaleX(0 -> 1)`.
+   - Per-service 30-day uptime strips unspool with traveling printhead cursor (`.strip-printhead`) translating `0% -> 100%`.
+2. **Chapter 2 — Recorded Check Explorer & Timeline Chronograph (`#probe`)**:
+   - SVG trace line (`#timeline-svg-trace`) draws via `stroke-dashoffset: 1000 -> 0`.
+   - Area fill (`#timeline-area-group`) reveals via dynamic inset clip path.
+   - Timeline playhead (`#timeline-playhead-group`) translates horizontally `0 -> 720px`.
+   - Connected to genuine stored Cloudflare D1 check records with selectable dropdown.
+3. **Chapter 3 — Forensic Incident Broadsheet & Rotary Verification Seal (`#incidents`)**:
+   - Rotary seal ring (`#incident-seal-ring`) draws via `stroke-dashoffset: 1000 -> 0`.
+   - Seal rotor (`#incident-seal-rotor`) rotates `0deg -> 180deg`.
+   - Incident spine fill (`#incident-spine-fill`) scales vertically `scaleY(0 -> 1)`.
+   - Forensic broadsheet panel (`#incident-broadsheet-panel`) lifts and slides into place.
+4. **Chapter 4 — Operational Protocol Schematic (`#method`)**:
+   - Signal bus line (`#method-bus-line`) draws via `stroke-dashoffset: 1000 -> 0`.
+   - Signal carriage cursor (`#method-signal-carriage`) sweeps across the bus line `0 -> 680px`.
+   - Protocol security cards stage unmasks into view.
 
 ---
 

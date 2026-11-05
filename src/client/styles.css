@@ -1,88 +1,1057 @@
 /* ==========================================================================
-   SELF-HOSTED FONTS: Space Grotesk (Sans) & JetBrains Mono (Mono)
+   SELF-HOSTED FONTS: Instrument Serif, IBM Plex Mono & Hanken Grotesk
    Licensed under SIL Open Font License (OFL 1.1)
    ========================================================================== */
 
 @font-face {
-  font-family: 'Space Grotesk';
+  font-family: 'Instrument Serif';
   font-style: normal;
-  font-weight: 300 700;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/space-grotesk-latin.woff2') format('woff2');
+  src: url('/fonts/instrument-serif-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'Space Grotesk';
-  font-style: normal;
-  font-weight: 300 700;
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/space-grotesk-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  font-style: normal;
-  font-weight: 300 800;
-  font-display: swap;
-  src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2');
+  src: url('/fonts/instrument-serif-italic-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'JetBrains Mono';
+  font-family: 'IBM Plex Mono';
   font-style: normal;
-  font-weight: 300 800;
+  font-weight: 400;
   font-display: swap;
-  src: url('/fonts/jetbrains-mono-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  src: url('/fonts/ibm-plex-mono-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* PulseLedger — Continuous Seismic & Print Operations Journal Design System
-   Universal deep carbon graphite palette (#0b0e14), continuous ruled ledger bands (#283243),
-   engineered Space Grotesk display type, JetBrains Mono data figures, calibrated analog measurement pigments. */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/ibm-plex-mono-latin-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
 :root {
   color-scheme: dark;
-  --bg: #0b0e14;
-  --surface: #121720;
-  --surface-raised: #1a202c;
-  --surface-sunken: #080a0f;
-  --surface-overlay: rgba(18, 23, 32, 0.92);
+  --bg: #0c0e0d;
+  --bg2: #131614;
+  --ink: #ede7d8;
+  --mut: #a9a699;
+  --line: #2a2e2b;
+  --acc: #f0a63a;
+  --acc-ink: #0c0e0d;
+  --ok: #6fcf97;
+  --bad: #ff7a66;
+  --dot: 240, 166, 58;
+  --pen: #f0a63a;
+  --pen2: #7fd1c7;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --sans: 'Hanken Grotesk', system-ui, sans-serif;
+
+  /* Admin & shared surface aliases */
+  --surface: var(--bg2);
+  --surface-raised: #1c201e;
+  --surface-sunken: #080a09;
+  --surface-overlay: rgba(19, 22, 20, 0.94);
   --paper: var(--bg);
-  --paper-raised: var(--surface);
+  --paper-raised: var(--bg2);
   --paper-sunken: var(--surface-sunken);
-  --ink: #f0f3f6;
-  --ink-soft: #9ba7b7;
-  --ink-faint: #647287;
-  --rule: #283243;
-  --rule-strong: #3b475c;
-  --teal: #2ea043;
-  --teal-bright: #3fb950;
-  --teal-soft: rgba(46, 160, 67, 0.15);
-  --teal-line: rgba(46, 160, 67, 0.45);
-  --cyan: #388bfd;
-  --cyan-bright: #58a6ff;
-  --cyan-soft: rgba(56, 139, 253, 0.15);
-  --cyan-line: rgba(56, 139, 253, 0.45);
-  --amber: #d29922;
-  --amber-bright: #e3b341;
-  --amber-soft: rgba(210, 153, 34, 0.15);
-  --amber-line: rgba(210, 153, 34, 0.45);
-  --red: #f85149;
-  --red-bright: #ff7b72;
-  --red-soft: rgba(248, 81, 73, 0.15);
-  --red-line: rgba(248, 81, 73, 0.45);
-  --slate: #647287;
-  --slate-soft: rgba(100, 114, 135, 0.15);
-  --sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  --serif: var(--sans);
+  --ink-soft: var(--mut);
+  --ink-faint: #757369;
+  --rule: var(--line);
+  --rule-strong: #424743;
+  --teal: var(--ok);
+  --teal-bright: var(--ok);
+  --teal-soft: rgba(111, 207, 151, 0.15);
+  --teal-line: rgba(111, 207, 151, 0.45);
+  --cyan: var(--pen2);
+  --cyan-bright: var(--pen2);
+  --cyan-soft: rgba(127, 209, 199, 0.15);
+  --cyan-line: rgba(127, 209, 199, 0.45);
+  --amber: var(--acc);
+  --amber-bright: var(--acc);
+  --amber-soft: rgba(240, 166, 58, 0.15);
+  --amber-line: rgba(240, 166, 58, 0.45);
+  --red: var(--bad);
+  --red-bright: var(--bad);
+  --red-soft: rgba(255, 122, 102, 0.15);
+  --red-line: rgba(255, 122, 102, 0.45);
+  --slate: var(--mut);
+  --slate-soft: rgba(169, 166, 153, 0.15);
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-  --max: 1180px;
+  --max: 1240px;
 }
 
+[data-theme=light] {
+  color-scheme: light;
+  --bg: #f3eee2;
+  --bg2: #e9e2d2;
+  --ink: #1a1a16;
+  --mut: #55534a;
+  --line: #cfc7b3;
+  --acc: #9a4400;
+  --acc-ink: #fff8ec;
+  --ok: #1d6b3f;
+  --bad: #a3281a;
+  --dot: 154, 68, 0;
+  --pen: #9a4400;
+  --pen2: #0d6a63;
+
+  /* Admin & shared surface aliases for light theme */
+  --surface: var(--bg2);
+  --surface-raised: #ded6c2;
+  --surface-sunken: #fcf9f2;
+  --surface-overlay: rgba(233, 226, 210, 0.94);
+  --paper: var(--bg);
+  --paper-raised: var(--bg2);
+  --paper-sunken: var(--surface-sunken);
+  --ink-soft: var(--mut);
+  --ink-faint: #8a877c;
+  --rule: var(--line);
+  --rule-strong: #9e9783;
+  --teal: var(--ok);
+  --teal-bright: var(--ok);
+  --teal-soft: rgba(29, 107, 63, 0.15);
+  --teal-line: rgba(29, 107, 63, 0.45);
+  --cyan: var(--pen2);
+  --cyan-bright: var(--pen2);
+  --cyan-soft: rgba(13, 106, 99, 0.15);
+  --cyan-line: rgba(13, 106, 99, 0.45);
+  --amber: var(--acc);
+  --amber-bright: var(--acc);
+  --amber-soft: rgba(154, 68, 0, 0.15);
+  --amber-line: rgba(154, 68, 0, 0.45);
+  --red: var(--bad);
+  --red-bright: var(--bad);
+  --red-soft: rgba(163, 40, 26, 0.15);
+  --red-line: rgba(163, 40, 26, 0.45);
+  --slate: var(--mut);
+  --slate-soft: rgba(85, 83, 74, 0.15);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.55 var(--sans);
+  overflow-x: clip;
+  max-width: 100%;
+  transition: background .4s, color .4s;
+}
+
+a {
+  color: inherit;
+}
+
+canvas#bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+main, header, footer {
+  position: relative;
+  z-index: 1;
+}
+
+.wrap {
+  width: min(1240px, 100% - 32px);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.mono {
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -.01em;
+}
+
+h1 {
+  font-size: clamp(48px, 9.5vw, 160px);
+  line-height: 1.02;
+}
+
+h2 {
+  font-size: clamp(36px, 6vw, 100px);
+}
+
+h3 {
+  font-size: clamp(24px, 2.8vw, 40px);
+  line-height: 1.05;
+}
+
+em {
+  font-style: italic;
+  color: var(--acc);
+}
+
+.w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: .08em .06em .16em;
+  margin: -.08em -.06em -.16em;
+}
+
+.c {
+  display: inline-block;
+}
+
+p.lead {
+  font-size: clamp(17px, 1.5vw, 22px);
+  max-width: 56ch;
+  color: var(--mut);
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 400 24px var(--serif);
+  text-decoration: none;
+  flex: none;
+}
+
+.brand svg {
+  width: 26px;
+  height: 26px;
+}
+
+nav[aria-label="Primary"] {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+nav[aria-label="Primary"] a {
+  font: 500 11px var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--mut);
+}
+
+nav[aria-label="Primary"] a:hover,
+nav[aria-label="Primary"] a:focus-visible {
+  color: var(--ink);
+}
+
+.hd {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: none;
+}
+
+.tt {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--ink);
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.tt svg {
+  width: 18px;
+  height: 18px;
+}
+
+#prog {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background: var(--acc);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  font: 500 12px var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background: none;
+  cursor: pointer;
+  will-change: transform;
+}
+
+.btn.p {
+  background: var(--acc);
+  border-color: var(--acc);
+  color: var(--acc-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 3px;
+}
+
+#hero {
+  min-height: 100svh;
+  padding: 100px 0 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+#hero .top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+
+.cta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.reg {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border-top: 1px solid var(--line);
+}
+
+.reg span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 8px 0 0;
+  font: 500 12px var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.reg .mk {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.upd {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.upd .btn {
+  padding: 8px 16px;
+}
+
+.ex {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  background: var(--bg2);
+}
+
+.ex dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 16px;
+  margin-top: 8px;
+  font: 500 12px var(--mono);
+  color: var(--mut);
+}
+
+.ex dd {
+  color: var(--ink);
+}
+
+#probe {
+  padding: 0;
+}
+
+.plate {
+  position: relative;
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  height: clamp(180px, 32vh, 300px);
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.plate canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.plate .cap {
+  position: absolute;
+  left: 14px;
+  top: 10px;
+}
+
+.plate .cap2 {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+}
+
+#hero-drum-carriage {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--acc);
+}
+
+.mq {
+  border-block: 1px solid var(--line);
+  overflow: hidden;
+  padding: 20px 0;
+  background: var(--bg);
+  max-width: 100%;
+}
+
+.mq div {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.mq span {
+  font: italic 400 clamp(40px, 6.5vw, 96px)/1 var(--serif);
+  padding-right: .5em;
+}
+
+.mq span i {
+  font: 500 13px var(--mono);
+  color: var(--acc);
+  font-style: normal;
+  padding-left: .5em;
+  vertical-align: middle;
+}
+
+section {
+  padding: clamp(70px, 10vw, 140px) 0;
+  position: relative;
+}
+
+.sbg {
+  background: var(--bg);
+}
+
+.nums {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+  margin-top: 50px;
+}
+
+.nums div {
+  padding: 24px 18px 0 0;
+  border-right: 1px solid var(--line);
+}
+
+.nums div+div {
+  padding-left: 20px;
+}
+
+.nums div:last-child {
+  border: 0;
+}
+
+.nums b {
+  display: block;
+  font: 400 clamp(54px, 8vw, 130px)/.9 var(--serif);
+}
+
+.nums b sup {
+  font: 500 12px var(--mono);
+  color: var(--acc);
+  letter-spacing: .1em;
+  vertical-align: top;
+  margin-left: 6px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 50px;
+  align-items: start;
+}
+
+.states {
+  list-style: none;
+  padding: 0;
+}
+
+.states li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px 190px 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.states li:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: 0;
+  transform: scaleX(var(--d, 1));
+}
+
+.states h3 {
+  font-size: clamp(24px, 2.4vw, 34px);
+}
+
+.states p {
+  color: var(--mut);
+  font-size: 15px;
+  margin: 0;
+}
+
+.mk {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.m-op {
+  background: var(--ok);
+  border-radius: 50%;
+}
+
+.m-dg {
+  border-radius: 50%;
+  border: 2px solid var(--acc);
+  background: linear-gradient(90deg, var(--acc) 50%, transparent 50%);
+}
+
+.m-dn {
+  background: var(--bad);
+  transform: rotate(45deg) scale(.8);
+}
+
+.m-pa {
+  border-left: 5px solid var(--mut);
+  border-right: 5px solid var(--mut);
+  width: 20px;
+  height: 18px;
+}
+
+.m-un {
+  border: 2px dashed var(--mut);
+  border-radius: 50%;
+}
+
+.m-in {
+  background: var(--bad);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.ledger {
+  border: 1px solid var(--line);
+  background: var(--bg2);
+  padding: 22px;
+  max-width: 100%;
+}
+
+#chapter-1-spool-bar {
+  height: 6px;
+  background: var(--line);
+  position: relative;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow: visible;
+}
+
+#services-spool-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: var(--acc);
+  transform-origin: 0;
+  transform: scaleX(0);
+}
+
+#services-spool-wheel {
+  position: absolute;
+  top: -9px;
+  left: 0;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--acc);
+  background: var(--bg2);
+  border-radius: 50%;
+}
+
+#services-spool-wheel:after {
+  content: "";
+  position: absolute;
+  inset: 3px 10px;
+  background: var(--acc);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 240px 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.row h3 {
+  font-size: 22px;
+}
+
+.tape {
+  position: relative;
+  width: 100%;
+}
+
+.uptime-strip {
+  display: grid;
+  grid-template-columns: repeat(30, 1fr);
+  gap: 2px;
+  height: 32px;
+  width: 100%;
+}
+
+.uptime-strip i,
+.uptime-strip .day {
+  display: block;
+  height: 100%;
+  border: 1px solid var(--mut);
+  opacity: .7;
+}
+
+.uptime-strip .day.up {
+  background: var(--ok);
+  border-color: var(--ok);
+  opacity: .95;
+}
+
+.uptime-strip .day.down {
+  background: var(--bad);
+  border-color: var(--bad);
+  opacity: .95;
+}
+
+.uptime-strip .day.paused {
+  background: transparent;
+  border: 1px dashed var(--mut);
+  opacity: .5;
+}
+
+.strip-printhead {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: 0;
+  width: 2px;
+  background: var(--acc);
+}
+
+.strip-printhead:before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 10px;
+  height: 6px;
+  background: var(--acc);
+}
+
+.note {
+  margin-top: 16px;
+  color: var(--mut);
+  font-size: 14px;
+}
+
+#pipe {
+  min-height: 100svh;
+  padding: 80px 0 32px;
+  display: flex;
+  align-items: center;
+  border-block: 1px solid var(--line);
+  background: var(--bg);
+}
+
+#pipe .in {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 44px;
+  align-items: center;
+  width: 100%;
+}
+
+#monitoring-timeline-stage svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+#timeline-svg-trace {
+  fill: none;
+  stroke: var(--pen);
+  stroke-width: 3;
+}
+
+.stg {
+  list-style: none;
+  margin-top: 24px;
+  padding: 0;
+}
+
+.stg li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  opacity: .45;
+  transition: opacity .3s;
+}
+
+.stg li.on {
+  opacity: 1;
+}
+
+.stg li.on b {
+  color: var(--acc);
+}
+
+.stg b {
+  font: 500 13px var(--mono);
+  letter-spacing: .1em;
+  padding-top: 4px;
+}
+
+.stg span {
+  display: block;
+  color: var(--mut);
+  font-size: 15px;
+}
+
+.stg strong {
+  font: 400 24px/1.1 var(--serif);
+  display: block;
+}
+
+#incidents .grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 50px;
+}
+
+.sealbox {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+
+#incident-seal svg {
+  width: min(340px, 100%);
+  height: auto;
+  display: block;
+}
+
+#incident-seal circle {
+  fill: none;
+}
+
+#incident-seal-ring {
+  stroke: var(--acc);
+  stroke-width: 6;
+}
+
+.bs {
+  border: 1px solid var(--line);
+  background: var(--bg2);
+}
+
+.bs article {
+  padding: 26px;
+  border-top: 1px solid var(--line);
+  opacity: .4;
+  transition: opacity .4s;
+}
+
+.bs article:first-child {
+  border: 0;
+}
+
+.bs article.on {
+  opacity: 1;
+}
+
+.bs article h3 {
+  margin: 8px 0 6px;
+}
+
+.bs p {
+  color: var(--mut);
+  max-width: 52ch;
+}
+
+#incident-spine {
+  position: relative;
+  height: 3px;
+  background: var(--line);
+  margin-top: 20px;
+}
+
+#incident-spine-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--acc);
+  transform-origin: 0;
+  transform: scaleX(0);
+}
+
+.own {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+  margin-top: 50px;
+}
+
+.own div {
+  padding: 22px 16px 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.own div:nth-child(1) { grid-column: span 3; }
+.own div:nth-child(2) { grid-column: span 3; }
+.own div:nth-child(3), .own div:nth-child(4) { grid-column: span 2; }
+.own div:nth-child(5) { grid-column: span 2; }
+.own div:nth-child(6) { grid-column: span 6; }
+
+.own h3 {
+  margin-bottom: 6px;
+}
+
+.own p {
+  color: var(--mut);
+  font-size: 15px;
+  margin: 0;
+}
+
+#sec {
+  padding: 0;
+}
+
+#sec .panel {
+  background: var(--ink);
+  color: var(--bg);
+  padding: clamp(60px, 9vw, 130px) 0;
+  clip-path: inset(14% 8% round 24px);
+}
+
+#sec .mono {
+  color: var(--bg);
+  opacity: .75;
+}
+
+#sec em {
+  color: var(--acc-ink);
+  background: none;
+  font-style: italic;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 8px;
+  text-decoration-color: var(--acc);
+}
+
+[data-theme=light] #sec .panel {
+  background: #16150f;
+  color: #f3eee2;
+}
+
+[data-theme=light] #sec .mono {
+  color: #f3eee2;
+}
+
+[data-theme=light] #sec em {
+  color: #f0a63a;
+}
+
+.sg {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 50px;
+  border-top: 1px solid currentColor;
+}
+
+.sg div {
+  padding: 20px 20px 20px 0;
+  border-bottom: 1px solid rgba(128, 128, 120, .4);
+}
+
+.sg b {
+  font: 500 12px var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+  opacity: .8;
+}
+
+footer {
+  padding: 90px 0 40px;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  background: var(--bg);
+  max-width: 100%;
+}
+
+.big {
+  font: 400 clamp(38px, 11vw, 240px)/.85 var(--serif);
+  letter-spacing: -.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.fl {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 44px;
+  align-items: flex-end;
+}
+
+.fl ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+}
+
+.fl a {
+  font: 500 12px var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--mut);
+}
+
+.fl a:hover {
+  color: var(--ink);
+}
+
+
+
+/* ==========================================================================
+   ADMIN & SHARED CONTROLS
+   ========================================================================== */
 *,
 *::before,
 *::after {
@@ -203,6 +1172,12 @@ li {
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+  max-width: 1px;
+}
+
+.sr-only * {
+  max-width: 1px;
+  overflow: hidden;
 }
 
 .skip-link {
@@ -244,9 +1219,10 @@ li {
 /* ---------- Public shell ---------- */
 
 .public-shell {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 clamp(16px, 4vw, 44px);
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+  overflow-x: clip;
 }
 
 .masthead {
@@ -1463,2402 +2439,347 @@ li {
   font-size: 0.92rem;
 }
 
-/* ==========================================================================
-   SEISMIC & PRINT OPERATIONS JOURNAL (Public Operations Desk Redesign)
-   Authentic continuous drum recorder & ink-ruled operations journal:
-   Deep carbon slate (#0b0e14), continuous ledger bands, precision drafting
-   ruling (#283243), physical ink-stamp seals, zero cosmic particles or sci-fi neon halos.
-   ========================================================================== */
 
-.telemetric-world {
-  --tele-bg: #0b0e14;
-  --tele-surface: rgba(18, 23, 32, 0.88);
-  --tele-surface-solid: #121720;
-  --tele-surface-sunken: #080a0f;
-  --tele-surface-raised: #1a202c;
-  --tele-border: #283243;
-  --tele-border-strong: #3b475c;
-  --tele-emerald: #2ea043;
-  --tele-emerald-bright: #3fb950;
-  --tele-emerald-soft: rgba(46, 160, 67, 0.15);
-  --tele-cyan: #58a6ff;
-  --tele-cyan-draft: #388bfd;
-  --tele-cyan-soft: rgba(56, 139, 253, 0.15);
-  --tele-amber: #d29922;
-  --tele-amber-bright: #e3b341;
-  --tele-amber-soft: rgba(210, 153, 34, 0.15);
-  --tele-rose: #f85149;
-  --tele-rose-bright: #ff7b72;
-  --tele-rose-soft: rgba(248, 81, 73, 0.15);
-  --tele-text: #f0f3f6;
-  --tele-text-soft: #9ba7b7;
-  --tele-text-faint: #647287;
-  position: relative;
-  z-index: 1;
-  color: var(--tele-text);
-  min-height: 100vh;
+
+/* Integration classes for real monitors */
+section, #services, #probe, #incidents, #method, #owner, .project-group {
+  scroll-margin-top: 80px;
 }
 
-/* Background canvas: Continuous Drum Recorder / Seismograph Paper */
-.telemetry-canvas {
+.sr-only {
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only:not(:focus):not(:focus-within) * {
+  display: inline-block !important;
+  max-width: 1px !important;
+  max-height: 1px !important;
+  overflow: hidden !important;
+}
+
+.sr-only:focus {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.telemetric-world > main,
-.telemetric-world > .footer {
-  position: relative;
-  z-index: 2;
-}
-
-/* Masthead */
-.telemetric-world .masthead {
-  border-bottom: 1px solid var(--tele-border);
-  padding: 16px 0;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  background: rgba(11, 14, 20, 0.98);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.telemetric-world .masthead-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.telemetric-world .brand-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--tele-emerald);
-  border: 1px solid var(--tele-emerald-bright);
-  box-shadow: 0 0 6px rgba(46, 160, 67, 0.5);
-  animation: pulseDot 2.4s infinite ease-in-out;
-}
-
-.telemetric-world .wordmark {
-  color: var(--tele-text);
-  font-family: var(--sans);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.telemetric-world .wordmark span {
-  color: var(--tele-emerald-bright);
-  font-style: normal;
-  font-weight: 700;
-}
-
-.telemetric-world .telemetry-badge {
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background: #121720;
-  border: 1px solid var(--tele-border);
-  color: var(--tele-text-soft);
-}
-
-.telemetric-world .masthead-nav a {
-  color: var(--tele-text-soft);
-  transition: color 150ms ease;
-}
-
-.telemetric-world .masthead-nav a:hover {
-  color: var(--tele-cyan);
+  top: 12px;
+  left: 12px;
+  z-index: 1000;
+  width: auto;
+  height: auto;
+  padding: 10px 18px;
+  background: var(--acc);
+  color: var(--acc-ink);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 12px;
+  clip: auto;
   text-decoration: none;
 }
 
-.telemetric-world .masthead-nav .owner-link {
-  border: 1px solid var(--tele-border);
-  color: var(--tele-text);
-  border-radius: 4px;
-  background: #121720;
-  transition: all 180ms ease;
+.project-group {
+  margin-bottom: 30px;
 }
 
-.telemetric-world .masthead-nav .owner-link:hover {
-  border-color: var(--tele-cyan-draft);
-  background: rgba(56, 139, 253, 0.1);
-  color: var(--tele-cyan);
-}
-
-/* Choreographed Hero Section — Operations Journal Masthead */
-.telemetric-world .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 48px);
-  align-items: stretch;
-  border-bottom: 1px solid var(--tele-border);
-  padding: clamp(44px, 6vw, 64px) 0 clamp(32px, 5vw, 48px);
-  margin-bottom: 140px;
-  animation: heroEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
-  position: relative;
-  z-index: 2;
-}
-
-.telemetric-world .hero-copy {
+.project-group-header {
   display: flex;
-  flex-direction: column;
+  align-items: baseline;
   justify-content: space-between;
-  min-width: 0;
-  position: relative;
-  z-index: 3;
-  background: rgba(11, 14, 20, 0.94);
-  border: 1px solid var(--tele-border);
-  border-radius: 8px;
-  padding: clamp(22px, 2.6vw, 30px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-}
-
-.telemetric-world .hero-eyebrow-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.telemetric-world .telemetry-pulse-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--tele-emerald);
-  box-shadow: 0 0 6px rgba(46, 160, 67, 0.6);
-  animation: pulseDot 2s infinite ease-in-out;
-}
-
-.telemetric-world .eyebrow {
-  color: var(--tele-text-soft);
-  margin-bottom: 0;
-}
-
-.telemetric-world .hero h1 {
-  color: var(--tele-text);
-  font-family: var(--sans);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1.08;
-  max-width: 22ch;
-  margin-bottom: 18px;
-  position: relative;
-  z-index: 3;
-}
-
-.telemetric-world .hero-lede {
-  color: var(--tele-text-soft);
-  font-size: clamp(1.05rem, 1.4vw, 1.18rem);
-  line-height: 1.6;
-  max-width: 54ch;
-}
-
-.telemetric-world .hero-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 24px;
-}
-
-/* Hero Portfolio Register Strip */
-.telemetric-world .hero-portfolio-strip {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 22px;
-  padding-top: 16px;
-  border-top: 1px dashed var(--tele-border);
-}
-
-.telemetric-world .portfolio-register-cell {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  padding: 6px 10px;
-  background: rgba(18, 23, 32, 0.85);
-  border: 1px solid var(--tele-border);
-  border-radius: 4px;
-  text-decoration: none;
-  color: var(--tele-text);
-  font-size: 0.74rem;
-  transition: border-color 150ms ease, background 150ms ease;
-}
-
-.telemetric-world .portfolio-register-cell:hover {
-  border-color: var(--tele-cyan-draft);
-  background: rgba(56, 139, 253, 0.1);
-}
-
-.telemetric-world .register-pip {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex: none;
-}
-
-.telemetric-world .register-pip.pip-up {
-  background: var(--tele-emerald-bright);
-  box-shadow: 0 0 5px rgba(63, 185, 80, 0.6);
-}
-
-.telemetric-world .register-pip.pip-degraded {
-  background: var(--tele-amber-bright);
-}
-
-.telemetric-world .register-pip.pip-down {
-  background: var(--tele-rose-bright);
-}
-
-.telemetric-world .register-proj-name {
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-}
-
-.telemetric-world .register-proj-count {
-  font-size: 0.66rem;
-  color: var(--tele-text-soft);
-}
-
-/* Masthead Scroll Progress Tape */
-.telemetric-world .masthead {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-}
-
-.telemetric-world .masthead-tape-track {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  background: rgba(40, 50, 67, 0.45);
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.telemetric-world .masthead-scroll-fill {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--tele-cyan-draft), var(--tele-emerald-bright));
-  transform-origin: 0 50%;
-}
-
-/* Hero Aggregate 30D Seismograph Block */
-.telemetric-world .hero-seismograph-block {
-  background: #090d14;
-  border: 1px solid var(--tele-border);
-  border-radius: 6px;
-  padding: 10px 12px 8px;
-}
-
-.telemetric-world .seismo-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  color: var(--tele-cyan);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
   margin-bottom: 6px;
 }
 
-.telemetric-world .hero-seismograph-svg {
-  display: block;
-  width: 100%;
-  height: 54px;
-  overflow: hidden;
-}
-
-.telemetric-world .status-badge-wrap {
-  position: relative;
-  display: inline-flex;
-}
-
-/* Physical Embossed Stamp Ring (replaces sci-fi glow halos) */
-.telemetric-world .status-halo {
-  position: absolute;
-  inset: -4px;
-  border-radius: 999px;
-  pointer-events: none;
-}
-
-.telemetric-world .halo-operational {
-  border: 1px solid var(--tele-emerald);
-  outline: 1px solid rgba(46, 160, 67, 0.35);
-  outline-offset: 2px;
-  animation: stampBreathe 3.5s infinite ease-in-out;
-}
-
-.telemetric-world .halo-degraded {
-  border: 1px solid var(--tele-amber);
-  outline: 1px solid rgba(210, 153, 34, 0.35);
-  outline-offset: 2px;
-  animation: stampBreathe 3s infinite ease-in-out;
-}
-
-.telemetric-world .halo-down,
-.telemetric-world .halo-incident {
-  border: 1px solid var(--tele-rose);
-  outline: 1px solid rgba(248, 81, 73, 0.35);
-  outline-offset: 2px;
-  animation: stampBreathe 2s infinite ease-in-out;
-}
-
-/* Hero Figure: Continuous Drum Recorder Reading Plate & 30-Day Fleet Ledger */
-.telemetric-world .hero-figure {
-  border-left: 0;
-  background: var(--tele-surface-solid);
-  border: 1px solid var(--tele-border);
-  border-radius: 8px;
-  padding: clamp(22px, 2.6vw, 30px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 18px;
-  z-index: 3;
-}
-
-.telemetric-world .hero-figure::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--tele-emerald), transparent);
-}
-
-.telemetric-world .figure-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.telemetric-world .figure-badge-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.telemetric-world .figure-pip {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--tele-emerald-bright);
-  box-shadow: 0 0 6px rgba(63, 185, 80, 0.6);
-}
-
-.telemetric-world .figure-label {
-  color: var(--tele-text-soft);
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.telemetric-world .figure-chip {
-  font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background: var(--tele-emerald-soft);
-  border: 1px solid rgba(46, 160, 67, 0.35);
-  color: var(--tele-emerald-bright);
-}
-
-.telemetric-world .figure-metric-block {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.telemetric-world .figure-metric-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.telemetric-world .figure-value {
-  color: var(--tele-text);
-  font-family: var(--mono);
-  font-size: clamp(2.4rem, 4.2vw, 3.2rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
+.project-group-title {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 400;
   margin: 0;
 }
 
-.telemetric-world .figure-metric-sub {
-  font-size: 0.65rem;
-  letter-spacing: 0.14em;
-  color: var(--tele-text-faint);
-  text-transform: uppercase;
-}
-
-.telemetric-world .figure-health-bar {
-  width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--tele-surface-sunken);
-  border: 1px solid var(--tele-border);
-  overflow: hidden;
-  display: flex;
-}
-
-.telemetric-world .health-bar-operational {
-  height: 100%;
-  background: var(--tele-emerald-bright);
-  transition: width 0.3s ease;
-}
-
-.telemetric-world .health-bar-impact {
-  height: 100%;
-  background: var(--tele-rose);
-  transition: width 0.3s ease;
-}
-
-.telemetric-world .figure-note {
-  color: var(--tele-text-soft);
-  font-size: 0.84rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.telemetric-world .figure-stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  padding-top: 14px;
-  border-top: 1px solid var(--tele-border);
-}
-
-.telemetric-world .fstat-label {
-  display: block;
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  color: var(--tele-text-faint);
-}
-
-.telemetric-world .fstat-val {
-  display: block;
-  font-size: 0.78rem;
-  color: var(--tele-text);
-  margin-top: 2px;
-}
-
-/* Button & Action styles */
-.telemetric-world .button {
-  border-radius: 4px;
-  font-family: var(--sans);
-  font-weight: 600;
-  transition: all 180ms ease;
-}
-
-.telemetric-world .button-quiet {
-  background: var(--tele-surface-solid);
-  border: 1px solid var(--tele-border);
-  color: var(--tele-text);
-}
-
-.telemetric-world .button-quiet:hover:not(:disabled) {
-  border-color: var(--tele-cyan-draft);
-  background: rgba(56, 139, 253, 0.1);
-  color: var(--tele-cyan);
-}
-
-.telemetric-world .button-accent {
-  background: linear-gradient(135deg, var(--tele-cyan-draft), var(--tele-emerald));
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #0b0e14;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 0 2px 12px rgba(56, 139, 253, 0.3);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 9px 18px;
-  border-radius: 4px;
-}
-
-.telemetric-world .button-accent:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 18px rgba(56, 139, 253, 0.45);
-}
-
-/* Sections & Navigation Anchor Offsets (Accounting for Sticky Masthead) */
-.telemetric-world .section,
-.telemetric-world #probe,
-.telemetric-world .probe-sandbox,
-.telemetric-world .project-group,
-.telemetric-world [id] {
-  scroll-margin-top: 104px;
-}
-
-.telemetric-world .section {
-  position: relative;
-  z-index: 2;
-  border-bottom: 1px solid var(--tele-border);
-  padding: clamp(40px, 6vw, 68px) 0;
-}
-
-.telemetric-world .section > .section-head {
-  background: #0d1219;
-  border: 1px solid var(--tele-border);
-  border-left: 3px solid var(--tele-cyan-draft);
-  border-radius: 6px;
-  padding: 16px 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
-}
-
-.telemetric-world .section-kicker {
-  color: var(--tele-cyan);
-}
-
-.telemetric-world .section-head h2 {
-  color: var(--tele-text);
-  font-family: var(--sans);
-  font-weight: 700;
-}
-
-.telemetric-world .section-meta {
-  color: var(--tele-text-soft);
-}
-
-.telemetric-world .probe-sandbox .section-head {
-  align-items: flex-end;
-}
-
-.telemetric-world .probe-sandbox .section-meta {
-  max-width: 34ch;
-  text-align: left;
-}
-
-/* Project Filter Ribbon */
-.telemetric-world .project-filter-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow-x: auto;
-  background: #0d1219;
-  border: 1px solid var(--tele-border);
-  border-radius: 6px;
-  padding: 10px 14px;
-  margin-bottom: 18px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.telemetric-world .project-index {
-  background: #0a0e15;
-  border: 1px solid var(--tele-border);
-  border-radius: 6px;
-  padding: 10px 16px;
-  margin: 0 0 24px;
-}
-
-.telemetric-world .project-filter-bar::-webkit-scrollbar {
-  display: none;
-}
-
-.telemetric-world .filter-pill {
-  background: var(--tele-surface-solid);
-  border: 1px solid var(--tele-border);
-  border-radius: 4px;
-  padding: 7px 16px;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--tele-text-soft);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 180ms ease;
-  min-height: 36px;
-}
-
-.telemetric-world .filter-pill:hover {
-  border-color: var(--tele-cyan-draft);
-  color: var(--tele-text);
-  background: rgba(56, 139, 253, 0.08);
-}
-
-.telemetric-world .filter-pill.active {
-  background: var(--tele-emerald-soft);
-  border-color: var(--tele-emerald);
-  color: var(--tele-emerald-bright);
-  font-weight: 600;
-}
-
-.telemetric-world .filtered-hidden {
-  display: none !important;
-}
-
-/* Chapter 1: Continuous Ledger Bands & Physical Spool Apparatus */
-.telemetric-world .chapter-spool-bar {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 18px;
-  background: #0a0e15;
-  border: 1px solid var(--tele-border);
-  border-left: 3px solid var(--tele-cyan-draft);
-  border-radius: 6px;
-  padding: 12px 16px;
-  margin-bottom: 18px;
-}
-
-.telemetric-world .spool-reel-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.telemetric-world .spool-wheel-svg {
-  width: 28px;
-  height: 28px;
-  flex: none;
-  transform-origin: 50% 50%;
-}
-
-.telemetric-world .spool-label {
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  color: var(--tele-cyan);
-  white-space: nowrap;
-}
-
-.telemetric-world .spool-track-wrap {
+.row-meta {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-}
-
-.telemetric-world .spool-track {
-  width: 100%;
-  height: 6px;
-  background: var(--tele-surface-sunken);
-  border: 1px solid var(--tele-border);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.telemetric-world .spool-track-fill {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--tele-cyan-draft), var(--tele-emerald-bright));
-  transform-origin: 0 50%;
-}
-
-.telemetric-world .spool-ruler-ticks {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.56rem;
-  color: var(--tele-text-faint);
-  letter-spacing: 0.08em;
-}
-
-.telemetric-world .spool-readout {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.68rem;
-  color: var(--tele-emerald-bright);
-  background: rgba(46, 160, 67, 0.1);
-  border: 1px solid rgba(46, 160, 67, 0.3);
-  border-radius: 4px;
-  padding: 5px 10px;
-  white-space: nowrap;
-}
-
-.telemetric-world .project-group {
-  background: var(--tele-surface-solid);
-  border: 1px solid var(--tele-border);
-  border-radius: 8px;
-  padding: clamp(20px, 3vw, 28px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-}
-
-.telemetric-world .project-group + .project-group {
-  margin-top: 32px;
-}
-
-.telemetric-world .project-heading {
-  border-bottom: 1px solid var(--tele-border);
-  padding-bottom: 14px;
-}
-
-.telemetric-world .project-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.telemetric-world .project-indicator {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--tele-cyan-draft);
-  box-shadow: 0 0 6px rgba(56, 139, 253, 0.6);
-}
-
-.telemetric-world .project-heading h3 {
-  font-family: var(--sans);
-  font-weight: 700;
-  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
-  color: var(--tele-text);
-}
-
-.telemetric-world .project-count-badge {
-  font-size: 0.68rem;
-  color: var(--tele-text-soft);
-  background: var(--tele-bg);
-  border: 1px solid var(--tele-border);
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-
-.telemetric-world .service-list {
-  border-bottom: 0;
-  overflow: hidden;
-}
-
-.telemetric-world .service {
-  background: #0d1219;
-  border: 1px solid var(--tele-border);
-  border-radius: 6px;
-  padding: 20px;
-  margin-top: 16px;
-  transition: border-color 180ms ease, box-shadow 180ms ease;
-  position: relative;
-  overflow: hidden;
-  will-change: transform;
-}
-
-.telemetric-world .service:hover {
-  border-color: var(--tele-cyan-draft);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-}
-
-.telemetric-world .service-state-down,
-.telemetric-world .service-state-incident {
-  border-left: 3px solid var(--tele-rose);
-}
-
-.telemetric-world .service-state-degraded {
-  border-left: 3px solid var(--tele-amber);
-}
-
-.telemetric-world .service-state-operational {
-  border-left: 3px solid var(--tele-emerald);
-}
-
-.telemetric-world .service-identity h3 {
-  color: var(--tele-text);
-  font-family: var(--sans);
-  font-weight: 600;
-}
-
-.telemetric-world .service-url {
-  color: var(--tele-cyan);
-  text-decoration: none;
-}
-
-.telemetric-world .service-url:hover {
-  text-decoration: underline;
-}
-
-.telemetric-world .service-stats dt {
-  color: var(--tele-text-faint);
-}
-
-.telemetric-world .service-stats dd {
-  color: var(--tele-text);
-}
-
-.telemetric-world .service-strip-unspool {
-  position: relative;
-  overflow: hidden;
-  background: #080b10;
-  border: 1px solid rgba(56, 70, 92, 0.45);
-  border-radius: 4px;
-  padding: 4px;
-}
-
-.telemetric-world .strip-printhead {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--tele-cyan);
-  box-shadow: 0 0 8px rgba(88, 166, 255, 0.8);
-  pointer-events: none;
-}
-
-.telemetric-world .uptime-strip {
-  gap: 3px;
-  height: 28px;
-  will-change: clip-path, transform;
-}
-
-.telemetric-world .uptime-strip .day {
-  border-radius: 2px;
-  transition: transform 150ms ease, opacity 150ms ease;
-}
-
-.telemetric-world .uptime-strip .day:hover {
-  transform: scaleY(1.2);
-  opacity: 1;
-}
-
-.telemetric-world .uptime-strip .day-up {
-  background: var(--tele-emerald);
-  box-shadow: 0 0 4px rgba(46, 160, 67, 0.4);
-}
-
-.telemetric-world .uptime-strip .day-down {
-  background: var(--tele-rose);
-  box-shadow: 0 0 4px rgba(248, 81, 73, 0.4);
-}
-
-.telemetric-world .uptime-strip .day-mixed {
-  background: var(--tele-amber);
-  box-shadow: 0 0 4px rgba(210, 153, 34, 0.4);
-}
-
-.telemetric-world .uptime-strip .day-empty {
-  background: #161b24;
-  border: 1px solid var(--tele-border);
-}
-
-.telemetric-world .strip-caption {
-  color: var(--tele-text-soft);
-}
-
-.telemetric-world .service-detail {
-  border-top: 1px solid var(--tele-border);
-  margin-top: 20px;
-  padding-top: 20px;
-}
-
-.telemetric-world .sparkline svg {
-  border-bottom: 1px solid var(--tele-border);
-  background: #090d14;
-  border-radius: 4px;
-}
-
-.telemetric-world .spark-line {
-  stroke: var(--tele-cyan);
-  stroke-width: 2;
-}
-
-.telemetric-world .spark-down {
-  fill: var(--tele-rose);
-  stroke: var(--tele-bg);
-}
-
-.telemetric-world .data-table th {
-  border-bottom: 1px solid var(--tele-border);
-  color: var(--tele-text-soft);
-}
-
-.telemetric-world .data-table td {
-  border-bottom: 1px solid rgba(40, 50, 67, 0.5);
-  color: var(--tele-text);
-}
-
-.telemetric-world .result-up {
-  color: var(--tele-emerald-bright);
-  border-color: var(--tele-emerald);
-  background: var(--tele-emerald-soft);
-}
-
-.telemetric-world .result-down {
-  color: var(--tele-rose-bright);
-  border-color: var(--tele-rose);
-  background: var(--tele-rose-soft);
-}
-
-/* State badges — Tactile Physical Ink Stamp */
-.telemetric-world .state {
-  border-radius: 4px;
-  padding: 5px 10px;
-  font-family: var(--mono);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.telemetric-world .state-operational {
-  color: var(--tele-emerald-bright);
-  border-color: var(--tele-emerald);
-  background: var(--tele-emerald-soft);
-}
-
-.telemetric-world .state-degraded {
-  color: var(--tele-amber-bright);
-  border-color: var(--tele-amber);
-  background: var(--tele-amber-soft);
-}
-
-.telemetric-world .state-down,
-.telemetric-world .state-incident {
-  color: var(--tele-rose-bright);
-  border-color: var(--tele-rose);
-  background: var(--tele-rose-soft);
-}
-
-.telemetric-world .state-paused {
-  color: var(--tele-text-soft);
-  border-color: var(--tele-border-strong);
-  background: rgba(100, 114, 135, 0.12);
-}
-
-.telemetric-world .state-unknown {
-  color: var(--tele-text-faint);
-  border-color: var(--tele-border);
-  background: transparent;
-}
-
-/* Chapter 2: Laboratory Drum Oscillograph & Scroll-Drawn Monitoring Timeline (#probe) */
-.telemetric-world .probe-sandbox {
-  background: var(--tele-surface-solid);
-  border: 1px solid var(--tele-border);
-  border-radius: 8px;
-  padding: clamp(20px, 3.5vw, 36px);
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.35);
-  position: relative;
-  overflow: hidden;
-}
-
-.telemetric-world .probe-sandbox::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--tele-cyan-draft), var(--tele-emerald), transparent);
-}
-
-.telemetric-world .monitoring-timeline-stage {
-  background: #090d14;
-  border: 1px solid var(--tele-border);
-  border-left: 3px solid var(--tele-emerald);
-  border-radius: 6px;
-  padding: 14px 16px 12px;
-  margin-top: 20px;
-  overflow: hidden;
-}
-
-.telemetric-world .timeline-stage-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.telemetric-world .timeline-stage-title {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.68rem;
-  color: var(--tele-cyan);
-  letter-spacing: 0.08em;
-}
-
-.telemetric-world .timeline-pulse-pip {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--tele-emerald-bright);
-  box-shadow: 0 0 6px rgba(63, 185, 80, 0.7);
-}
-
-.telemetric-world .timeline-scroll-readout {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 0.68rem;
-  color: var(--tele-text-soft);
-}
-
-.telemetric-world .timeline-sweep-pct {
-  background: rgba(56, 139, 253, 0.14);
-  border: 1px solid rgba(56, 139, 253, 0.38);
-  color: var(--tele-cyan);
-  padding: 2px 7px;
-  border-radius: 4px;
-}
-
-.telemetric-world .timeline-svg-wrap {
-  width: 100%;
-  overflow: hidden;
-  border-radius: 4px;
-  background: #070a0f;
-  border: 1px solid rgba(56, 70, 92, 0.45);
-}
-
-.telemetric-world .monitoring-timeline-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 165px;
-}
-
-.telemetric-world .probe-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.25fr);
-  gap: 28px;
-  align-items: start;
-  margin-top: 24px;
-  will-change: transform;
-}
-
-.telemetric-world .probe-controls-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.telemetric-world .probe-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.telemetric-world .probe-label {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--tele-text-soft);
-}
-
-.telemetric-world .probe-select {
-  background: var(--tele-bg);
-  border: 1px solid var(--tele-border);
-  border-radius: 4px;
-  color: var(--tele-text);
-  padding: 10px 14px;
-  font-size: 0.88rem;
-  width: 100%;
-  transition: border-color 150ms ease;
-}
-
-.telemetric-world .probe-select:focus {
-  outline: 2px solid var(--tele-cyan-draft);
-  border-color: var(--tele-cyan-draft);
-}
-
-.telemetric-world .notice-quiet {
-  background: var(--tele-surface-sunken);
-  border: 1px solid var(--tele-border);
-  border-left: 3px solid var(--tele-text-soft);
-  padding: 12px 16px;
-  border-radius: 4px;
-  color: var(--tele-text-soft);
-  margin: 8px 0;
-}
-
-.telemetric-world .probe-details-strip {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  background: #090d14;
-  padding: 12px 14px;
-  border-radius: 4px;
-  border: 1px solid var(--tele-border);
-}
-
-.telemetric-world .probe-meta-label {
-  display: block;
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  color: var(--tele-text-faint);
-  font-family: var(--mono);
-}
-
-.telemetric-world .probe-meta-value {
-  display: block;
-  font-size: 0.82rem;
-  color: var(--tele-cyan);
-  margin-top: 2px;
-}
-
-.telemetric-world .probe-action-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.telemetric-world .probe-button {
-  min-height: 44px;
-  padding: 10px 20px;
-  font-size: 0.88rem;
-  cursor: pointer;
-}
-
-.telemetric-world .probe-radar-icon {
-  width: 14px;
-  height: 14px;
-  border: 2px solid #0b0e14;
-  border-top-color: transparent;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.telemetric-world .probe-radar-icon.spinning {
-  animation: radarSpin 0.8s linear infinite;
-}
-
-.telemetric-world .waveform-toggle {
-  display: flex;
   gap: 4px;
+  min-width: 0;
 }
 
-.telemetric-world .button-chip {
-  background: #161b24;
-  border: 1px solid var(--tele-border);
-  border-radius: 4px;
-  color: var(--tele-text-soft);
+.row-url {
   font-family: var(--mono);
-  font-size: 0.7rem;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: all 150ms ease;
-  min-height: 32px;
-}
-
-.telemetric-world .button-chip.active {
-  background: rgba(56, 139, 253, 0.15);
-  border-color: var(--tele-cyan-draft);
-  color: var(--tele-cyan);
-}
-
-.telemetric-world .probe-pipeline-status {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #090d14;
-  padding: 11px 16px;
-  border-radius: 4px;
-  border-left: 3px solid var(--tele-emerald);
-}
-
-.telemetric-world .pipeline-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--tele-emerald);
-}
-
-.telemetric-world .pipeline-indicator.probing {
-  background: var(--tele-cyan);
-  animation: pulseDot 0.6s infinite ease-in-out;
-}
-
-.telemetric-world .pipeline-text {
-  font-size: 0.78rem;
-  color: var(--tele-text);
-}
-
-.telemetric-world .stage-telemetry-breakdown {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-
-.telemetric-world .breakdown-card {
-  background: #090d14;
-  border: 1px solid var(--tele-border);
-  border-radius: 4px;
-  padding: 8px 10px;
-  text-align: center;
-}
-
-.telemetric-world .breakdown-title {
-  display: block;
-  font-size: 0.58rem;
-  color: var(--tele-text-faint);
-  font-family: var(--mono);
-}
-
-.telemetric-world .breakdown-val {
-  display: block;
-  font-size: 0.82rem;
-  color: var(--tele-emerald-bright);
-  margin-top: 3px;
-  font-weight: 600;
-}
-
-.telemetric-world .probe-screen-panel {
-  background: #080b10;
-  border: 1px solid var(--tele-border);
-  border-radius: 6px;
-  padding: 18px;
-}
-
-.telemetric-world .oscilloscope-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.66rem;
-  color: var(--tele-cyan);
-  margin-bottom: 12px;
-}
-
-.telemetric-world .oscilloscope-viewport {
-  position: relative;
-  overflow: hidden;
-  border-radius: 4px;
-  background: #090d14;
-  border: 1px solid var(--tele-border);
-}
-
-.telemetric-world .oscilloscope-canvas {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.telemetric-world .oscilloscope-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--tele-border);
-}
-
-.telemetric-world .hud-label {
-  display: block;
-  font-size: 0.58rem;
-  color: var(--tele-text-faint);
-  font-family: var(--mono);
-  text-transform: uppercase;
-}
-
-.telemetric-world .hud-val {
-  display: block;
-  font-size: 0.84rem;
-  color: var(--tele-text);
-  margin-top: 3px;
-}
-
-.telemetric-world .highlight-green {
-  color: var(--tele-emerald-bright) !important;
-  font-weight: 700;
-}
-
-.telemetric-world .truncate-hash {
-  max-width: 14ch;
+  font-size: 11px;
+  color: var(--mut);
+  text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--tele-cyan);
-}
-
-/* Chapter 3: Chronological Incident Journal & Rotary Verification Seal */
-.telemetric-world .incident-dossier-stage {
-  display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
-  gap: 24px;
-  align-items: stretch;
-  overflow: hidden;
-  padding: 4px 0;
-}
-
-.telemetric-world .incident-seal-panel {
-  background: #0a0e15;
-  border: 1px solid var(--tele-border);
-  border-radius: 8px;
-  padding: 18px 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-.telemetric-world .seal-svg-wrap {
-  width: 152px;
-  height: 152px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.telemetric-world .incident-seal-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.telemetric-world .incident-audit-spine {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.telemetric-world .spine-label {
-  font-size: 0.58rem;
-  color: var(--tele-text-faint);
-  letter-spacing: 0.1em;
-}
-
-.telemetric-world .spine-track {
-  width: 6px;
-  height: 44px;
-  background: var(--tele-surface-sunken);
-  border: 1px solid var(--tele-border);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.telemetric-world .spine-track-fill {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, var(--tele-cyan-draft), var(--tele-emerald-bright));
-  transform-origin: 50% 0%;
-}
-
-.telemetric-world .spine-readout {
-  font-size: 0.66rem;
-  color: var(--tele-emerald-bright);
-}
-
-.telemetric-world .incident-broadsheet-panel {
-  min-width: 0;
-  will-change: transform;
-}
-
-.telemetric-world .incident-clean-seal {
-  text-align: center;
-  padding: 40px 24px;
-  background: var(--tele-surface-solid);
-  border: 1px solid var(--tele-border);
-  border-radius: 8px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.telemetric-world .seal-badge {
-  display: inline-block;
-  font-size: 0.68rem;
-  color: var(--tele-emerald-bright);
-  background: var(--tele-emerald-soft);
-  border: 1px solid rgba(46, 160, 67, 0.4);
-  border-radius: 4px;
-  padding: 5px 14px;
-  margin-bottom: 14px;
-  letter-spacing: 0.12em;
-}
-
-.telemetric-world .incident {
-  background: var(--tele-surface-solid);
-  border: 1px solid var(--tele-border);
-  border-radius: 6px;
-}
-
-.telemetric-world .incident h3 {
-  color: var(--tele-text);
-}
-
-.telemetric-world .incident-latest > p:last-child {
-  color: var(--tele-text-soft);
-}
-
-/* Chapter 4: Operational Broadsheet & Scroll-Wired Signal Bus (#method) */
-.telemetric-world #method {
-  overflow: hidden;
-}
-
-.telemetric-world .method-schematic-stage {
-  background: #090d14;
-  border: 1px solid var(--tele-border);
-  border-radius: 6px;
-  padding: 10px 16px;
-  margin-bottom: 22px;
-  overflow: hidden;
-}
-
-.telemetric-world .method-schematic-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 76px;
-}
-
-.telemetric-world .method-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  will-change: transform;
-}
-
-.telemetric-world .method-card {
-  background: var(--tele-surface-solid);
-  border: 1px solid var(--tele-border);
-  border-radius: 8px;
-  padding: 24px;
-}
-
-.telemetric-world .method-card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.telemetric-world .card-num {
-  font-size: 0.72rem;
-  color: var(--tele-emerald-bright);
-  padding: 2px 7px;
-  border-radius: 4px;
-  background: var(--tele-emerald-soft);
-  border: 1px solid rgba(46, 160, 67, 0.35);
-}
-
-.telemetric-world .method-card h3 {
-  color: var(--tele-text);
-  font-family: var(--sans);
-  font-weight: 600;
-  margin-bottom: 0;
-}
-
-.telemetric-world .method-card p {
-  color: var(--tele-text-soft);
-}
-
-.telemetric-world .state-legend {
-  color: var(--tele-text-soft);
-}
-
-/* Footer */
-.telemetric-world .footer {
-  background: #0d1219;
-  border: 1px solid var(--tele-border);
-  border-radius: 8px;
-  padding: 24px 28px;
-  margin: 28px 0 44px;
-  color: var(--tele-text-soft);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
-}
-
-.telemetric-world .footer-wordmark {
-  color: var(--tele-text);
-  font-family: var(--sans);
-  font-weight: 700;
-}
-
-.telemetric-world .footer-wordmark span {
-  color: var(--tele-emerald-bright);
-}
-
-.telemetric-world .footer-links a {
-  color: var(--tele-text-soft);
-}
-
-.telemetric-world .footer-links a:hover {
-  color: var(--tele-cyan);
-}
-
-/* Keyframe Animations */
-@keyframes pulseDot {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(0.92);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-@keyframes stampBreathe {
-  0%, 100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.85;
-  }
-}
-
-@keyframes radarSpin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes heroEntrance {
-  0% {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Mobile responsive adjustments */
-@media (max-width: 900px) {
-  .telemetric-world .hero {
-    grid-template-columns: 1fr;
-  }
-  .telemetric-world .probe-grid {
-    grid-template-columns: 1fr;
-  }
-  .telemetric-world .incident-dossier-stage {
-    grid-template-columns: 1fr;
-  }
-  .telemetric-world .incident-seal-panel {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-  .telemetric-world .incident-audit-spine {
-    width: auto;
-  }
-  .telemetric-world .chapter-spool-bar {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  .telemetric-world .method-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 680px) {
-  .telemetric-world .section,
-  .telemetric-world #probe,
-  .telemetric-world .probe-sandbox,
-  .telemetric-world .project-group,
-  .telemetric-world [id] {
-    scroll-margin-top: 180px;
-  }
-  .telemetric-world .hero-portfolio-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .telemetric-world .stage-telemetry-breakdown {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .telemetric-world .service-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .telemetric-world .figure-stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 420px) {
-  .telemetric-world .service-stats {
-    grid-template-columns: 1fr;
-  }
-  .telemetric-world .stage-telemetry-breakdown {
-    grid-template-columns: 1fr;
-  }
-  .telemetric-world .figure-stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* ---------- Admin shell (Restrained Telemetric Console) ---------- */
-
-.admin-shell {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
-  color: var(--ink);
-  position: relative;
-  z-index: 1;
-}
-
-.admin-header {
-  background: rgba(11, 14, 20, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--rule);
-  position: sticky;
-  top: 0;
-  z-index: 30;
-}
-
-.admin-header-top {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 12px clamp(16px, 3vw, 40px);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.admin-brand-wrap {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.admin-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--teal);
-  border: 1px solid var(--teal-line);
-  background: var(--teal-soft);
-  padding: 3px 8px;
-  border-radius: 3px;
-}
-
-.admin-tag-pip {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--teal);
-  box-shadow: 0 0 8px var(--teal);
-}
-
-.admin-account {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.admin-email {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--ink-soft);
-  background: var(--surface-sunken);
-  border: 1px solid var(--rule);
-  padding: 4px 10px;
-  border-radius: 4px;
-  overflow-wrap: anywhere;
-}
-
-.admin-nav {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 clamp(16px, 3vw, 40px);
-  display: flex;
-  gap: 4px;
-  border-top: 1px solid var(--rule);
-  overflow-x: auto;
-}
-
-.admin-nav-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 16px;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--ink-faint);
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  transition: all 140ms ease;
-}
-
-.admin-nav-link:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.admin-nav-link.is-active {
-  color: var(--teal);
-  border-bottom-color: var(--teal);
-  text-shadow: 0 0 12px rgba(0, 229, 153, 0.4);
-}
-
-.admin-main {
-  width: 100%;
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: clamp(26px, 4vw, 44px) clamp(16px, 3vw, 40px) 64px;
-  flex: 1;
-}
-
-.admin-page {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.page-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-  padding-bottom: 22px;
-  border-bottom: 1px solid var(--rule-strong);
-}
-
-.page-head h1 {
-  font-size: clamp(2rem, 4.4vw, 3.2rem);
-  max-width: 20ch;
-  margin-bottom: 10px;
-  letter-spacing: -0.03em;
-  color: #ffffff;
-}
-
-.page-lede {
-  max-width: 70ch;
-  color: var(--ink-soft);
-  font-size: 0.96rem;
-}
-
-.admin-footer {
-  border-top: 1px solid var(--rule);
-  padding: 16px clamp(16px, 3vw, 40px);
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  background: var(--surface);
-}
-
-.admin-footer-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.admin-footer-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--teal);
-  box-shadow: 0 0 6px var(--teal);
-}
-
-.admin-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.stat-strip {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border: 1px solid var(--rule-strong);
-  border-radius: 8px;
-  background: var(--surface);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.stat {
-  padding: 20px 22px;
-  border-left: 1px solid var(--rule);
-  min-width: 0;
-  background: var(--surface);
-}
-
-.stat:first-child {
-  border-left: 0;
-}
-
-.stat-label {
-  font-family: var(--mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-.stat-value {
-  font-family: var(--mono);
-  font-size: clamp(2.2rem, 3.4vw, 3rem);
-  line-height: 1;
-  margin: 10px 0 6px;
-  letter-spacing: -0.03em;
-  color: #ffffff;
-  font-weight: 700;
-}
-
-.stat-suffix {
-  font-size: 1.1rem;
-  color: var(--ink-faint);
-  letter-spacing: 0;
-  font-weight: 400;
-}
-
-.stat-note {
-  font-size: 0.78rem;
-  color: var(--ink-soft);
-}
-
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--rule-strong);
-  border-radius: 8px;
-  padding: clamp(20px, 2.8vw, 30px);
-  box-shadow: var(--shadow);
-}
-
-.panel-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 22px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--rule);
-}
-
-.panel-head h2 {
-  font-size: 1.55rem;
-  color: #ffffff;
-}
-
-.panel-note {
-  font-size: 0.8rem;
-  color: var(--ink-soft);
-  max-width: 42ch;
-}
-
-/* ---------- Monitor cards ---------- */
-
-.monitor-list {
-  display: grid;
-  gap: 16px;
-}
-
-.monitor-card {
-  background: var(--surface);
-  border: 1px solid var(--rule-strong);
-  border-left: 4px solid var(--rule-strong);
-  border-radius: 8px;
-  padding: 20px 24px;
-  box-shadow: var(--shadow);
-  transition: border-color 140ms ease, box-shadow 140ms ease;
-}
-
-.monitor-card:hover {
-  border-color: rgba(148, 163, 184, 0.4);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
-}
-
-.state-edge-operational {
-  border-left-color: var(--teal);
-}
-
-.state-edge-degraded {
-  border-left-color: var(--amber);
-}
-
-.state-edge-down,
-.state-edge-incident {
-  border-left-color: var(--red);
-}
-
-.state-edge-paused,
-.state-edge-unknown {
-  border-left-color: var(--slate);
-}
-
-.monitor-card-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-.monitor-card-identity {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px 14px;
-  min-width: 0;
-}
-
-.monitor-card-identity h3 {
-  font-size: 1.3rem;
-  color: #ffffff;
-}
-
-.rule-note {
-  font-family: var(--mono);
-  font-size: 0.64rem;
-  color: var(--cyan);
-  background: var(--cyan-soft);
-  border: 1px solid var(--cyan-line);
-  padding: 2px 7px;
-  border-radius: 3px;
-  letter-spacing: 0.04em;
 }
 
 .row-actions {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
   align-items: center;
+  gap: 8px;
 }
 
-.monitor-meta {
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 11px;
+}
+
+.service-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 4px 0 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.service-stats dt {
+  color: var(--mut);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  display: inline;
+}
+
+.service-stats dd {
+  color: var(--ink);
+  margin: 0 8px 0 4px;
+  display: inline;
+}
+
+.service-detail {
+  grid-column: 1 / -1;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 16px 20px;
+  margin-top: 10px;
+}
+
+.service-stats-expanded {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px 22px;
-  margin-top: 18px;
-  padding-top: 16px;
-  border-top: 1px solid var(--rule);
-}
-
-.inline-edit,
-.check-log {
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
-}
-
-.inline-edit {
-  background: var(--surface-sunken);
-  padding: 20px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 6px;
-}
-
-.check-log .data-table {
-  min-width: 520px;
-}
-
-.update-form {
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
-}
-
-.update-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 14px;
   margin-bottom: 14px;
 }
 
-.resolved-note {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid var(--rule);
+.service-stats-expanded dt {
   font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.06em;
-  color: var(--teal);
+  font-size: 11px;
+  color: var(--mut);
   text-transform: uppercase;
+  letter-spacing: .1em;
 }
 
-.admin-table .table-primary {
-  display: block;
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.admin-table .table-secondary {
-  display: block;
+.service-stats-expanded dd {
   font-family: var(--mono);
-  font-size: 0.72rem;
-  color: var(--ink-faint);
-  margin-top: 3px;
-}
-
-.admin-table th {
-  background: var(--surface-sunken);
-  color: var(--ink-faint);
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--rule-strong);
-}
-
-.admin-table td {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--rule);
-  vertical-align: middle;
-}
-
-.table-scroll .admin-table th,
-.table-scroll .admin-table td {
-  white-space: nowrap;
-}
-
-.table-scroll .admin-table .detail-cell {
-  white-space: normal;
-  min-width: 220px;
-}
-
-.admin-table tbody tr:hover td {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.action-tag {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: 1px solid var(--cyan-line);
-  color: var(--cyan);
-  background: var(--cyan-soft);
-  padding: 2px 7px;
-  border-radius: 3px;
-  white-space: nowrap;
-}
-
-.detail-cell {
-  font-family: var(--mono);
-  font-size: 0.74rem;
-  color: var(--ink-soft);
-  max-width: 34ch;
-}
-
-/* ---------- Dialog and toast ---------- */
-
-.dialog-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: rgba(7, 10, 16, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: grid;
-  place-items: center;
-  padding: 20px;
-}
-
-.dialog {
-  width: min(480px, 100%);
-  background: var(--surface-raised);
-  border: 1px solid var(--rule-strong);
-  border-radius: 8px;
-  padding: 28px;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(148, 163, 184, 0.1);
-}
-
-.dialog h2 {
-  font-size: 1.6rem;
-  margin-bottom: 12px;
-  color: #ffffff;
-}
-
-.dialog-body {
-  color: var(--ink-soft);
-  font-size: 0.94rem;
-  display: grid;
-  gap: 10px;
-}
-
-.dialog-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 26px;
-  flex-wrap: wrap;
-}
-
-.toast {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 90;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  max-width: min(460px, calc(100vw - 40px));
-  padding: 14px 18px;
-  background: var(--surface-raised);
+  font-size: 14px;
   color: var(--ink);
-  border: 1px solid var(--teal-line);
-  border-left: 4px solid var(--teal);
-  border-radius: 6px;
-  font-size: 0.88rem;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  margin-top: 4px;
 }
 
-.toast .text-button {
-  color: var(--teal);
+.service-detail table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.service-detail th, .service-detail td {
+  padding: 8px 12px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+
+.service-detail th {
+  color: var(--mut);
+  font-weight: 500;
+}
+
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.state-mark {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
   flex: none;
 }
 
-/* ---------- Responsive ---------- */
+.state-operational .state-mark { background: var(--ok); }
+.state-degraded .state-mark { background: var(--acc); border: 2px solid var(--acc); }
+.state-down .state-mark { background: var(--bad); }
+.state-paused .state-mark { border: 2px solid var(--mut); }
+.state-unknown .state-mark { border: 2px dashed var(--mut); }
+.state-incident .state-mark { background: var(--bad); }
 
-@media (max-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-
-  .hero h1 {
-    max-width: 20ch;
-  }
-
-  .hero-figure {
-    border-left: 0;
-    border-top: 1px solid var(--rule-strong);
-    padding-left: 0;
-    padding-top: 20px;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0 20px;
-    align-items: baseline;
-  }
-
-  .figure-label {
-    grid-column: 1 / -1;
-  }
-
-  .figure-value {
-    margin: 6px 0 0;
-  }
-
-  .figure-note {
-    margin-top: 6px;
-  }
-
-  .detail-grid,
-  .method-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stat-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .stat:nth-child(3) {
-    border-left: 0;
-    border-top: 1px solid var(--rule);
-  }
-
-  .stat:nth-child(4) {
-    border-top: 1px solid var(--rule);
-  }
-
-  .login-main {
-    grid-template-columns: 1fr;
-    padding: 40px 0;
-  }
-
-  .login-intro h1 {
-    max-width: 18ch;
-  }
+.mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  place-items: center;
 }
 
-@media (max-width: 680px) {
-  .overview-desktop-table {
+@media(max-width:860px) {
+  .wrap {
+    width: calc(100% - 28px);
+    max-width: calc(100% - 28px);
+  }
+  header {
+    overflow-x: clip;
+    max-width: 100vw;
+  }
+  header .wrap {
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 8px 0;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+  .brand {
+    font-size: 20px;
+    gap: 8px;
+  }
+  .brand svg {
+    width: 22px;
+    height: 22px;
+  }
+  nav[aria-label="Primary"] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    max-width: 100%;
+    order: 3;
+    width: 100%;
+  }
+  nav[aria-label="Primary"] a {
+    font-size: 9px;
+    letter-spacing: .06em;
+  }
+  .hd {
+    order: 2;
+    margin-left: auto;
+    gap: 8px;
+  }
+  .hd .btn.p {
     display: none;
   }
-
-  .overview-mobile-list {
-    display: block;
+  .tt {
+    width: 34px;
+    height: 34px;
   }
-
-  .masthead {
-    align-items: flex-start;
-    flex-direction: column;
+  .tt svg {
+    width: 16px;
+    height: 16px;
+  }
+  .mobile-nav-toggle {
+    display: none;
+  }
+  .reg {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  .reg span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+  }
+  .service-detail {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  .table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .split, #incidents .grid, #pipe .in {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .nums {
+    grid-template-columns: 1fr 1fr;
+  }
+  .nums div:nth-child(2) {
+    border: 0;
+  }
+  .nums div:nth-child(n+3) {
+    border-top: 1px solid var(--line);
+    margin-top: 20px;
+  }
+  .nums div:nth-child(3) {
+    padding-left: 0;
+  }
+  .states li {
+    grid-template-columns: 32px 1fr;
+  }
+  .states p {
+    grid-column: 2;
+  }
+  .row {
+    grid-template-columns: 1fr;
     gap: 10px;
-    padding-bottom: 14px;
   }
-
-  .login-shell .masthead {
-    align-items: center;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 16px;
+  .uptime-strip {
+    height: 24px;
+    gap: 2px;
+  }
+  #pipe {
+    height: auto;
+    min-height: 0;
+    padding: 60px 0;
+  }
+  .sealbox {
     position: static;
   }
-
-  .login-shell .masthead-nav {
-    width: auto;
+  .own div, .own div:nth-child(n) {
+    grid-column: span 6;
   }
-
-  .masthead-nav {
-    width: 100%;
-    gap: 14px;
-  }
-
-  .masthead-nav .owner-link {
-    margin-left: auto;
-  }
-
-  .hero {
-    padding-top: 34px;
-  }
-
-  .hero h1 {
-    font-size: clamp(2.2rem, 11vw, 3.2rem);
-  }
-
-  .section-meta {
-    text-align: left;
-  }
-
-  .service-top {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .service-toggle {
-    align-self: flex-start;
-  }
-
-  .service-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .strip-caption span:nth-child(2) {
-    display: none;
-  }
-
-  .form-grid {
+  .sg {
     grid-template-columns: 1fr;
   }
-
-  .field-wide {
-    grid-column: auto;
+  #sec .panel {
+    clip-path: inset(4% 3% round 16px);
   }
-
-  .monitor-meta {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .stg strong {
+    font-size: 20px;
   }
-
-  .update-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stat {
-    padding: 14px 14px;
-  }
-
-  .admin-header-top {
-    align-items: flex-start;
-  }
-
-  .admin-account {
-    width: 100%;
-    margin-left: 0;
-    justify-content: space-between;
-  }
-
-  .admin-email {
-    width: 100%;
-  }
-
-  .incident {
-    padding: 18px 16px;
-  }
-
-  .toast {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-    max-width: none;
+  .big {
+    font-size: clamp(34px, 10vw, 80px);
   }
 }
 
-@media (max-width: 420px) {
-  .public-shell,
-  .login-shell {
-    padding: 0 14px;
-  }
-
-  .service-identity h3 {
-    font-size: 1.15rem;
-  }
-
-  .service-stats {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .monitor-meta {
-    grid-template-columns: 1fr;
-  }
-
-  .stat-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .stat {
-    border-left: 0;
-    border-top: 1px solid var(--rule);
-  }
-
-  .stat:first-child {
-    border-top: 0;
-  }
-
-  .row-actions .button {
-    flex: 1 1 auto;
-  }
-
-  .dialog {
-    padding: 18px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-
-  .telemetric-world .hero-copy,
-  .telemetric-world .hero-figure,
-  .telemetric-world .service,
-  .telemetric-world .uptime-strip,
-  .telemetric-world .probe-grid,
-  .telemetric-world .incident-broadsheet-panel,
-  .telemetric-world .method-grid {
-    transform: none !important;
-    clip-path: none !important;
+@media(prefers-reduced-motion:reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
   }
 }
