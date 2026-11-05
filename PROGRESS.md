@@ -56,6 +56,21 @@ Last updated: 2026-11-04
    - Section navigation arrival: clicking or activating drawer links closes the drawer, smoothly scrolls to destination with sticky masthead clearance preserved, and shifts focus to destination element (`tabindex="-1"` set, outline suppressed).
    - Added comprehensive automated keyboard lifecycle tests in `e2e/public.spec.ts` (all 20 public regression tests passed locally and live).
    - Deployed Worker version `9d194242-e2ab-43b6-8ea4-618f541b8a3a` to production; verified live public endpoint and single-row D1 read budget.
+17. Admin & Login Responsive Layout Fix & CSS Scope Isolation (2026-11-05):
+   - Diagnosed `/admin` sign-in console layout breakdown on mobile viewports (390×844 and 320×568):
+     1. `.login-main` was declared as a rigid two-column grid (`minmax(0, 1.25fr) minmax(0, 420px)`) without responsive media queries, compressing column 1 (`.login-intro`) down to 0px width. This caused `.eyebrow` ("Owner Desk · Restricted Access") and `h1` ("Sign in to the operations desk.") to wrap vertically one character per line over a 4500px strip.
+     2. `.masthead-brand`, `.brand-dot`, and `.telemetry-badge` lacked flex alignment and responsive wrap rules, causing the wordmark and `OPERATIONS // DESK` to start at the exact same horizontal coordinate and overlap.
+     3. Authored public CSS rules for `h1, h2, h3`, `header`, `section`, and `footer` were globally unscoped, leaking large display font sizes, `position: fixed`, and 80–160px section padding into `.admin-shell` and `.login-shell`.
+   - Fixes implemented:
+     - Scoped all authored public CSS rules (`h1, h2, h3`, `header`, `p.lead`, `section`, `footer`) strictly to `.public-shell`.
+     - Added responsive single-column layout for `.login-main` at `<=860px` with 100% readable container and heading widths (>=300px at 390px, >=250px at 320px, height <250px).
+     - Styled `.masthead-brand` with flex layout, gap, `.brand-dot` pulse, `.telemetry-badge` tag styles, and responsive stacking preventing wordmark collisions across 1440px, 390px, and 320px.
+     - Restored full `.admin-shell` authenticated desk layout styles (`.admin-header` sticky, `.admin-nav`, `.admin-main`, `.page-head`, `.stat-strip`, `.panel`) with verified responsive behavior.
+   - Verification:
+     - Added comprehensive responsive assertions and authenticated route style audits to `e2e/admin.spec.ts` (all 8 tests pass across desktop and mobile).
+     - Re-verified `e2e/public.spec.ts` (all 20 public regression tests pass in 1.1m).
+     - Re-verified unit & read-budget test suite (all 73 Vitest tests pass in 4.2s, 0 read-budget regressions).
+     - Re-verified TypeScript typecheck (passed with 0 errors).
 
 ## Feature Ledger
 
