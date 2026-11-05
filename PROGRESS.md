@@ -43,6 +43,13 @@ Last updated: 2026-11-04
    - Added core computed typography assertions to `e2e/public.spec.ts` so all 20 functional, motion, font, status, and navigation tests run 100% self-contained without needing the reference file.
    - Verified both branches: normal comparison (2 passed) and skipped branch with `SKIP_FIDELITY_REFERENCE=true` (2 skipped), without editing or deleting `my-design/home.html` (preserved byte-for-byte at 33,824 bytes).
    - Reloaded and resolved intended disk version of `StatusPage.tsx` and updated `README.md` on disk.
+15. Source Margin Reset & Layout Density Restoration (2026-11-05):
+   - Diagnosed missing authored universal reset on `.public-shell`: browser UA rules were applying `margin-block: 0.67em` (`96.48px`) top and bottom on `h1` (~193px extra blank space, pushing heading top to ~262px), `0.83em` (`76.49px`) margin-bottom on `#numbers h2`, and legacy `.masthead` rule was applying `14px 0` padding making header `92.8px` tall.
+   - Added source universal reset strictly scoped to `.public-shell`, zeroing margins and padding across headings, paragraphs, lists, and inputs while preserving `.admin-shell` and `.login-shell` styles.
+   - Scoped legacy `.masthead` rule strictly to `.admin-shell, .login-shell` and reset `.public-shell .masthead` padding to 0, restoring authored `65px` header height (`64.8px` reference).
+   - Restored authored hero density: `h1` margin-top = 0px, margin-bottom = 0px, line-height = 146.88px, heading top = 165.5px (matching source ~166px); `#numbers h2` margin-bottom = 0px, margin-top = 18px; `#services h2` margin = 18px 0 18px.
+   - Extended test suite: added layout, margin, header height, and bounding box assertions to both `e2e/public.spec.ts` (20 passed) and `e2e/fidelity-side-by-side.spec.ts` (2 passed; 2 skipped cleanly with `SKIP_FIDELITY_REFERENCE=true`).
+   - Deployed Worker version `c1c3b767-82ed-45c4-a605-0589643cbea9`; verified live computed styles and truthful single-row D1 status API.
 
 ## Feature Ledger
 

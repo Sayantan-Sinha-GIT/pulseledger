@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const envRefPath = process.env.FIDELITY_REFERENCE_PATH;
-const disableRef = process.env.SKIP_FIDELITY_REFERENCE === "true";
+const disableRef = /^(true|1|yes)$/i.test(process.env.SKIP_FIDELITY_REFERENCE?.trim() ?? "");
 const workingRefPath = resolve(process.cwd(), "my-design/home-working.html");
 const originalRefPath = resolve(process.cwd(), "my-design/home.html");
 
@@ -27,6 +27,13 @@ interface ComputedMetrics {
   fontWeight: string;
   fontSize: number;
   lineHeight: string;
+  lineHeightPx: number;
+  marginTop: number;
+  marginBottom: number;
+  paddingTop: number;
+  paddingBottom: number;
+  top: number;
+  height: number;
 }
 
 async function getHeadingMetrics(page: Page, selector: string): Promise<ComputedMetrics | null> {
@@ -34,13 +41,36 @@ async function getHeadingMetrics(page: Page, selector: string): Promise<Computed
     const el = document.querySelector(sel);
     if (!el) return null;
     const s = window.getComputedStyle(el);
+    const r = el.getBoundingClientRect();
     return {
       fontFamily: s.fontFamily,
       fontWeight: s.fontWeight,
       fontSize: parseFloat(s.fontSize),
       lineHeight: s.lineHeight,
+      lineHeightPx: parseFloat(s.lineHeight) || parseFloat(s.fontSize),
+      marginTop: parseFloat(s.marginTop || "0"),
+      marginBottom: parseFloat(s.marginBottom || "0"),
+      paddingTop: parseFloat(s.paddingTop || "0"),
+      paddingBottom: parseFloat(s.paddingBottom || "0"),
+      top: r.top,
+      height: r.height,
     };
   }, selector);
+}
+
+async function getHeaderMetrics(page: Page) {
+  return page.evaluate(() => {
+    const header = document.querySelector("header");
+    if (!header) return null;
+    const s = window.getComputedStyle(header);
+    const r = header.getBoundingClientRect();
+    return {
+      height: r.height,
+      paddingTop: parseFloat(s.paddingTop || "0"),
+      paddingBottom: parseFloat(s.paddingBottom || "0"),
+      borderBottomWidth: parseFloat(s.borderBottomWidth || "0"),
+    };
+  });
 }
 
 async function getKineticMetrics(page: Page, selector: string) {
@@ -85,6 +115,17 @@ test.describe("Fidelity side-by-side verification", () => {
     await page.waitForTimeout(1000);
     await refPage.waitForTimeout(1000);
 
+    // Assert header metrics: 64px height + 1px border, 0 padding
+    const implHeader = await getHeaderMetrics(page);
+    const refHeader = await getHeaderMetrics(refPage);
+    expect(implHeader).not.toBeNull();
+    expect(refHeader).not.toBeNull();
+    expect(implHeader!.height).toBeGreaterThanOrEqual(64);
+    expect(implHeader!.height).toBeLessThanOrEqual(66);
+    expect(Math.abs(implHeader!.height - refHeader!.height)).toBeLessThanOrEqual(2);
+    expect(implHeader!.paddingTop).toBe(0);
+    expect(implHeader!.paddingBottom).toBe(0);
+
     // Assert computed typography on implementation h1 and h2
     const implH1 = await getHeadingMetrics(page, "#hero h1");
     const refH1 = await getHeadingMetrics(refPage, "#hero h1");
@@ -100,6 +141,19 @@ test.describe("Fidelity side-by-side verification", () => {
     // Compare directly with authored reference: must match within 2px
     expect(Math.abs(implH1!.fontSize - refH1!.fontSize)).toBeLessThanOrEqual(2);
 
+    // Assert h1 margins, line-height, and layout bounds
+    expect(implH1!.marginTop).toBe(0);
+    expect(implH1!.marginBottom).toBe(0);
+    expect(implH1!.paddingTop).toBe(0);
+    expect(implH1!.paddingBottom).toBe(0);
+    expect(implH1!.lineHeightPx).toBeGreaterThanOrEqual(140);
+    expect(implH1!.lineHeightPx).toBeLessThanOrEqual(152);
+    expect(Math.abs(implH1!.lineHeightPx - refH1!.lineHeightPx)).toBeLessThanOrEqual(2);
+    // Heading top position matches source (~166px), not displaced (~262px)
+    expect(implH1!.top).toBeGreaterThanOrEqual(155);
+    expect(implH1!.top).toBeLessThanOrEqual(175);
+    expect(Math.abs(implH1!.top - refH1!.top)).toBeLessThanOrEqual(5);
+
     const implH2 = await getHeadingMetrics(page, "#services h2");
     const refH2 = await getHeadingMetrics(refPage, "#services h2");
 
@@ -111,6 +165,18 @@ test.describe("Fidelity side-by-side verification", () => {
     expect(implH2!.fontSize).toBeGreaterThanOrEqual(85);
     expect(implH2!.fontSize).toBeLessThanOrEqual(100);
     expect(Math.abs(implH2!.fontSize - refH2!.fontSize)).toBeLessThanOrEqual(2);
+    expect(Math.abs(implH2!.marginTop - refH2!.marginTop)).toBeLessThanOrEqual(2);
+    expect(Math.abs(implH2!.marginBottom - refH2!.marginBottom)).toBeLessThanOrEqual(2);
+    expect(implH2!.lineHeightPx).toBeGreaterThanOrEqual(90);
+    expect(implH2!.lineHeightPx).toBeLessThanOrEqual(100);
+
+    // Assert #numbers h2 has zero margin-bottom (eliminating ~76px blank space)
+    const implNumbersH2 = await getHeadingMetrics(page, "#numbers h2");
+    const refNumbersH2 = await getHeadingMetrics(refPage, "#numbers h2");
+    expect(implNumbersH2).not.toBeNull();
+    expect(refNumbersH2).not.toBeNull();
+    expect(implNumbersH2!.marginBottom).toBe(0);
+    expect(Math.abs(implNumbersH2!.marginTop - refNumbersH2!.marginTop)).toBeLessThanOrEqual(2);
 
     // Capture Hero evidence
     await page.screenshot({ path: "docs/motion-review/impl-1440-dark-hero.png" });

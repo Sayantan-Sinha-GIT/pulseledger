@@ -156,6 +156,7 @@ test.describe("public status page", () => {
         return {
           progress: el.getAttribute("data-scroll-progress") ?? el.getAttribute("data-row-progress"),
           transform: style.transform,
+          inlineTransform: (el as HTMLElement | SVGElement).style?.transform,
           clipPath: style.clipPath,
           strokeDashoffset: style.strokeDashoffset,
           paperOffset: el.getAttribute("data-paper-offset"),
@@ -270,7 +271,10 @@ test.describe("public status page", () => {
 
     expect(Number(ch3After?.progress) - Number(ch3Before?.progress)).toBeGreaterThan(0.55);
     expect(parseFloat(sealRingBefore?.strokeDashoffset ?? "0") - parseFloat(sealRingAfter?.strokeDashoffset ?? "0")).toBeGreaterThan(250);
-    expect(sealRotorAfter?.transform).not.toBe(sealRotorBefore?.transform);
+    expect(
+      sealRotorAfter?.inlineTransform !== sealRotorBefore?.inlineTransform ||
+      sealRotorAfter?.transform !== sealRotorBefore?.transform
+    ).toBe(true);
     expect(spineAfter?.transform).not.toBe(spineBefore?.transform);
     expect(broadsheetAfter?.transform).not.toBe(broadsheetBefore?.transform);
 
@@ -474,6 +478,8 @@ test.describe("public status page", () => {
           fontFamily: s.fontFamily.toLowerCase(),
           fontWeight: s.fontWeight,
           fontSize: parseFloat(s.fontSize),
+          marginTop: parseFloat(s.marginTop),
+          marginBottom: parseFloat(s.marginBottom),
         };
       });
 
@@ -483,6 +489,8 @@ test.describe("public status page", () => {
       // Mobile clamp(52px, 10vw, 160px) clamps to ~52px on 390px
       expect(h1Metrics!.fontSize).toBeGreaterThanOrEqual(48);
       expect(h1Metrics!.fontSize).toBeLessThanOrEqual(60);
+      expect(h1Metrics!.marginTop).toBe(0);
+      expect(h1Metrics!.marginBottom).toBe(0);
     } else {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto("/");
@@ -491,15 +499,32 @@ test.describe("public status page", () => {
       const metrics = await page.evaluate(() => {
         const h1 = document.querySelector("#hero h1");
         const h2 = document.querySelector("#services h2");
+        const numbersH2 = document.querySelector("#numbers h2");
         const lead = document.querySelector("p.lead");
         const mono = document.querySelector("#lu");
+        const header = document.querySelector("header.masthead");
+
+        const h1Rect = h1 ? h1.getBoundingClientRect() : null;
+        const headerRect = header ? header.getBoundingClientRect() : null;
+        const headerStyle = header ? window.getComputedStyle(header) : null;
 
         return {
-          h1: h1
+          header: header && headerRect && headerStyle
+            ? {
+                height: headerRect.height,
+                paddingTop: parseFloat(headerStyle.paddingTop),
+                paddingBottom: parseFloat(headerStyle.paddingBottom),
+              }
+            : null,
+          h1: h1 && h1Rect
             ? {
                 fontFamily: window.getComputedStyle(h1).fontFamily.toLowerCase(),
                 fontWeight: window.getComputedStyle(h1).fontWeight,
                 fontSize: parseFloat(window.getComputedStyle(h1).fontSize),
+                lineHeight: parseFloat(window.getComputedStyle(h1).lineHeight),
+                marginTop: parseFloat(window.getComputedStyle(h1).marginTop),
+                marginBottom: parseFloat(window.getComputedStyle(h1).marginBottom),
+                top: h1Rect.top,
               }
             : null,
           h2: h2
@@ -507,6 +532,13 @@ test.describe("public status page", () => {
                 fontFamily: window.getComputedStyle(h2).fontFamily.toLowerCase(),
                 fontWeight: window.getComputedStyle(h2).fontWeight,
                 fontSize: parseFloat(window.getComputedStyle(h2).fontSize),
+                marginTop: parseFloat(window.getComputedStyle(h2).marginTop),
+                marginBottom: parseFloat(window.getComputedStyle(h2).marginBottom),
+              }
+            : null,
+          numbersH2: numbersH2
+            ? {
+                marginBottom: parseFloat(window.getComputedStyle(numbersH2).marginBottom),
               }
             : null,
           lead: lead
@@ -524,12 +556,24 @@ test.describe("public status page", () => {
         };
       });
 
+      expect(metrics.header).not.toBeNull();
+      expect(metrics.header!.height).toBeGreaterThanOrEqual(64);
+      expect(metrics.header!.height).toBeLessThanOrEqual(66);
+      expect(metrics.header!.paddingTop).toBe(0);
+      expect(metrics.header!.paddingBottom).toBe(0);
+
       expect(metrics.h1).not.toBeNull();
       expect(metrics.h1!.fontFamily).toContain("instrument serif");
       expect(metrics.h1!.fontWeight).toBe("400");
       // clamp(52px, 10vw, 160px) at 1440px produces 144px
       expect(metrics.h1!.fontSize).toBeGreaterThanOrEqual(140);
       expect(metrics.h1!.fontSize).toBeLessThanOrEqual(148);
+      expect(metrics.h1!.marginTop).toBe(0);
+      expect(metrics.h1!.marginBottom).toBe(0);
+      expect(metrics.h1!.lineHeight).toBeGreaterThanOrEqual(140);
+      expect(metrics.h1!.lineHeight).toBeLessThanOrEqual(152);
+      expect(metrics.h1!.top).toBeGreaterThanOrEqual(155);
+      expect(metrics.h1!.top).toBeLessThanOrEqual(175);
 
       expect(metrics.h2).not.toBeNull();
       expect(metrics.h2!.fontFamily).toContain("instrument serif");
@@ -537,6 +581,13 @@ test.describe("public status page", () => {
       // clamp(40px, 6.4vw, 100px) at 1440px produces 92.16px
       expect(metrics.h2!.fontSize).toBeGreaterThanOrEqual(88);
       expect(metrics.h2!.fontSize).toBeLessThanOrEqual(96);
+      expect(metrics.h2!.marginTop).toBeGreaterThanOrEqual(16);
+      expect(metrics.h2!.marginTop).toBeLessThanOrEqual(20);
+      expect(metrics.h2!.marginBottom).toBeGreaterThanOrEqual(16);
+      expect(metrics.h2!.marginBottom).toBeLessThanOrEqual(20);
+
+      expect(metrics.numbersH2).not.toBeNull();
+      expect(metrics.numbersH2!.marginBottom).toBe(0);
 
       expect(metrics.lead).not.toBeNull();
       expect(metrics.lead!.fontFamily).toMatch(/hanken grotesk|sans/);

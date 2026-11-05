@@ -171,6 +171,84 @@
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   SOURCE UNIVERSAL RESET SCOPED TO PUBLIC SHELL
+   Faithfully reproduces authored my-design/home.html reset:
+   *{box-sizing:border-box;margin:0;padding:0}
+   without altering admin shell styles.
+   ========================================================================== */
+.public-shell,
+.public-shell *,
+.public-shell *::before,
+.public-shell *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.public-shell ul,
+.public-shell ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.public-shell dl,
+.public-shell dd,
+.public-shell dt {
+  margin: 0;
+  padding: 0;
+}
+
+.public-shell p {
+  margin: 0;
+  padding: 0;
+}
+
+.public-shell h1,
+.public-shell h2,
+.public-shell h3,
+.public-shell h4 {
+  margin: 0;
+  padding: 0;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+.public-shell h1 {
+  line-height: 1.02;
+}
+
+.public-shell h3 {
+  line-height: 1.05;
+}
+
+.public-shell button,
+.public-shell input,
+.public-shell select,
+.public-shell textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.public-shell header.masthead,
+.public-shell .masthead {
+  display: block;
+  min-height: 0;
+  height: auto;
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.public-shell header.masthead .wrap,
+.public-shell .masthead .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  gap: 16px;
+}
+
 html {
   scroll-behavior: auto;
   -webkit-text-size-adjust: 100%;
@@ -1223,7 +1301,8 @@ li {
   overflow-x: clip;
 }
 
-.masthead {
+.admin-shell .masthead,
+.login-shell .masthead {
   display: flex;
   align-items: center;
   justify-content: space-between;
