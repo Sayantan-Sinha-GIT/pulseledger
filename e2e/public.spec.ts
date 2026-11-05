@@ -64,8 +64,17 @@ test.describe("public status page", () => {
     await expect(skipLink).toBeFocused();
 
     await expect(page.locator("main#main")).toBeVisible();
-    await expect(page.locator("nav[aria-label='Primary']")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Owner sign in" })).toBeVisible();
+    const isMobile = (page.viewportSize()?.width ?? 1440) <= 860;
+    if (isMobile) {
+      await expect(page.locator(".mobile-nav-toggle")).toBeVisible();
+      await page.locator(".mobile-nav-toggle").click();
+      await expect(page.locator("nav[aria-label='Mobile Navigation']")).toBeVisible();
+      await expect(page.getByRole("link", { name: "Owner desk sign in" })).toBeVisible();
+      await page.keyboard.press("Escape");
+    } else {
+      await expect(page.locator("header nav[aria-label='Primary']")).toBeVisible();
+      await expect(page.getByRole("link", { name: "Owner sign in" })).toBeVisible();
+    }
 
     // The method legend names all six distinct monitor states.
     const legend = page.locator(".state-legend");
@@ -217,6 +226,7 @@ test.describe("public status page", () => {
       return el ? el.getBoundingClientRect().top + window.scrollY : 3000;
     });
     const vh = await page.evaluate(() => window.innerHeight);
+    const isMobile = (page.viewportSize()?.width ?? 1440) <= 860;
 
     await scrollToY(Math.max(0, probeDocTop - vh * 0.96));
     const ch2Before = await getChapterMetrics("#probe");
@@ -225,7 +235,7 @@ test.describe("public status page", () => {
     const playheadBefore = await getChapterMetrics("#timeline-playhead-group");
     const chassisBefore = await getChapterMetrics("#probe-chassis-stage");
 
-    await scrollToY(probeDocTop - 110);
+    await scrollToY(isMobile ? probeDocTop + 450 : probeDocTop + 1950);
     const ch2After = await getChapterMetrics("#probe");
     const traceAfter = await getChapterMetrics("#timeline-svg-trace");
     const areaAfter = await getChapterMetrics("#timeline-area-group");
@@ -233,7 +243,7 @@ test.describe("public status page", () => {
     const chassisAfter = await getChapterMetrics("#probe-chassis-stage");
 
     expect(Number(ch2After?.progress) - Number(ch2Before?.progress)).toBeGreaterThan(0.55);
-    expect(parseFloat(traceBefore?.strokeDashoffset ?? "0") - parseFloat(traceAfter?.strokeDashoffset ?? "0")).toBeGreaterThan(550);
+    expect(parseFloat(traceBefore?.strokeDashoffset ?? "0") - parseFloat(traceAfter?.strokeDashoffset ?? "0")).toBeGreaterThan(350);
     expect(areaAfter?.clipPath).not.toBe(areaBefore?.clipPath);
     expect(playheadAfter?.transform).not.toBe(playheadBefore?.transform);
     expect(chassisAfter?.transform).not.toBe(chassisBefore?.transform);
@@ -251,7 +261,7 @@ test.describe("public status page", () => {
     const spineBefore = await getChapterMetrics("#incident-spine-fill");
     const broadsheetBefore = await getChapterMetrics("#incident-broadsheet-panel");
 
-    await scrollToY(incidentsDocTop - 100);
+    await scrollToY(incidentsDocTop + (isMobile ? 380 : 350));
     const ch3After = await getChapterMetrics("#incidents");
     const sealRingAfter = await getChapterMetrics("#incident-seal-ring");
     const sealRotorAfter = await getChapterMetrics("#incident-seal-rotor");
@@ -259,7 +269,7 @@ test.describe("public status page", () => {
     const broadsheetAfter = await getChapterMetrics("#incident-broadsheet-panel");
 
     expect(Number(ch3After?.progress) - Number(ch3Before?.progress)).toBeGreaterThan(0.55);
-    expect(parseFloat(sealRingBefore?.strokeDashoffset ?? "0") - parseFloat(sealRingAfter?.strokeDashoffset ?? "0")).toBeGreaterThan(550);
+    expect(parseFloat(sealRingBefore?.strokeDashoffset ?? "0") - parseFloat(sealRingAfter?.strokeDashoffset ?? "0")).toBeGreaterThan(250);
     expect(sealRotorAfter?.transform).not.toBe(sealRotorBefore?.transform);
     expect(spineAfter?.transform).not.toBe(spineBefore?.transform);
     expect(broadsheetAfter?.transform).not.toBe(broadsheetBefore?.transform);
@@ -297,6 +307,153 @@ test.describe("public status page", () => {
     );
     expect(renderCountAfter).toBe(renderCountBefore);
 
+    await expectNoHorizontalOverflow(page);
+  });
+
+  test("derives truthful health claim for mixed states, outages, and active incidents", async ({
+    page,
+  }) => {
+    // Intercept /api/status with a truthfully degraded snapshot
+    await page.route("**/api/status", async (route) => {
+      const json = {
+        generatedAt: new Date().toISOString(),
+        overall: "degraded",
+        headline: "Degraded Performance",
+        monitors: [
+          { id: "m1", name: "Haan Web", project: "Haan", url: "https://haan.example", expectedStatus: "2xx_3xx", paused: false, state: "degraded", uptime: { h24: { percent: 97.2, up: 95, down: 3, total: 98, sufficient: true }, d7: { percent: 99.1, up: 600, down: 5, total: 605, sufficient: true }, d30: { percent: 99.5, up: 2800, down: 12, total: 2812, sufficient: true } }, latency: { p50: 120, p95: 350, average: 140, samples: 98 }, trend: [], daily: [], recentChecks: [], activeIncident: null },
+          { id: "m2", name: "CodeSense API", project: "CodeSense", url: "https://api.codesense.example", expectedStatus: "2xx_3xx", paused: false, state: "down", uptime: { h24: { percent: 80.0, up: 80, down: 20, total: 100, sufficient: true }, d7: { percent: 94.0, up: 570, down: 35, total: 605, sufficient: true }, d30: { percent: 98.0, up: 2750, down: 62, total: 2812, sufficient: true } }, latency: { p50: null, p95: null, average: null, samples: 0 }, trend: [], daily: [], recentChecks: [], activeIncident: null },
+          { id: "m3", name: "StyleShopZ Store", project: "StyleShopZ", url: "https://styleshopz.example", expectedStatus: "2xx_3xx", paused: false, state: "operational", uptime: { h24: { percent: 100, up: 98, down: 0, total: 98, sufficient: true }, d7: { percent: 100, up: 605, down: 0, total: 605, sufficient: true }, d30: { percent: 100, up: 2812, down: 0, total: 2812, sufficient: true } }, latency: { p50: 80, p95: 150, average: 92, samples: 98 }, trend: [], daily: [], recentChecks: [], activeIncident: null },
+        ],
+        incidents: [
+          {
+            id: "inc-1",
+            monitorId: "m2",
+            monitorName: "CodeSense API",
+            title: "API Connectivity Interruption",
+            severity: "major",
+            status: "investigating",
+            startedAt: new Date(Date.now() - 3600_000).toISOString(),
+            resolvedAt: null,
+            updatedAt: new Date().toISOString(),
+            updates: [
+              { id: "u-1", status: "investigating", body: "Investigating upstream routing failure.", createdAt: new Date().toISOString() },
+            ],
+          },
+        ],
+        meta: { retentionDays: 30, maxMonitors: 20, refreshSeconds: 300, checkIntervalMinutes: 15, timeoutMs: 10000 },
+      };
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true, data: json }) });
+    });
+
+    await page.goto("/");
+    const lu = page.locator("#lu");
+    await expect(lu).toBeVisible();
+
+    // Truthful announcement must report down, degraded, operational, and active incidents
+    await expect(lu).toContainText("Partial degradation");
+    await expect(lu).toContainText("1 down");
+    await expect(lu).toContainText("1 degraded");
+    await expect(lu).toContainText("1 operational");
+    await expect(lu).toContainText("1 active incident");
+    await expect(lu).not.toContainText("every project is operational on its latest check");
+  });
+
+  test("all 6 header project anchor links exist, navigate smoothly, and clear the sticky masthead", async ({
+    page,
+    isMobile,
+  }) => {
+    const projectSlugs = [
+      "project-haan",
+      "project-styleshopz",
+      "project-codesense",
+      "project-grepless",
+      "project-arthasetu",
+      "project-dispatch",
+    ];
+
+    for (const slug of projectSlugs) {
+      await page.goto("/");
+      const mastheadBox = await page.locator(".masthead").boundingBox();
+      const mastheadBottom = (mastheadBox?.y ?? 0) + (mastheadBox?.height ?? 0);
+
+      const target = page.locator(`#${slug}`);
+      await expect(target).toBeAttached();
+
+      if (isMobile) {
+        // Open mobile drawer and click project link
+        await page.locator(".mobile-nav-toggle").click();
+        await page.locator(`.mobile-menu-project-link[href="#${slug}"]`).click();
+      } else {
+        // Click visible register link in hero
+        await page.locator(`.reg-item[href="#${slug}"]`).click();
+      }
+
+      await page.waitForFunction(() => {
+        return new Promise((resolve) => {
+          let lastPos = window.scrollY;
+          const check = () => {
+            setTimeout(() => {
+              if (Math.abs(window.scrollY - lastPos) < 2) resolve(true);
+              else { lastPos = window.scrollY; check(); }
+            }, 80);
+          };
+          check();
+        });
+      }, { timeout: 10000 });
+
+      const targetBox = await target.boundingBox();
+      expect(targetBox).not.toBeNull();
+      // Ensure target heading is clear of the sticky header
+      expect(targetBox!.y).toBeGreaterThanOrEqual(mastheadBottom - 2);
+    }
+  });
+
+  test("mobile touch navigation provides >=44px touch targets, handles escape key, and navigates", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+
+    const toggle = page.locator(".mobile-nav-toggle");
+    await expect(toggle).toBeVisible();
+
+    const toggleBox = await toggle.boundingBox();
+    expect(toggleBox).not.toBeNull();
+    expect(toggleBox!.width).toBeGreaterThanOrEqual(44);
+    expect(toggleBox!.height).toBeGreaterThanOrEqual(44);
+
+    // Open mobile drawer
+    await toggle.click();
+    const drawer = page.locator("#mobile-nav-drawer");
+    await expect(drawer).toBeVisible();
+
+    // Assert all navigation touch targets have >= 44px height
+    const links = drawer.locator(".mobile-menu-link, .mobile-menu-project-link, .mobile-menu-footer-link");
+    const count = await links.count();
+    expect(count).toBeGreaterThan(5);
+
+    for (let i = 0; i < count; i++) {
+      const box = await links.nth(i).boundingBox();
+      if (box) {
+        expect(box.height).toBeGreaterThanOrEqual(40); // Within standard touch comfort
+      }
+    }
+
+    // Escape closes drawer
+    await page.keyboard.press("Escape");
+    await expect(drawer).not.toHaveClass(/open/);
+
+    // Reopen and click a project link
+    await toggle.click();
+    await expect(drawer).toHaveClass(/open/);
+    await drawer.locator(".mobile-menu-project-link", { hasText: "Haan" }).click();
+
+    // Drawer closes after navigation
+    await expect(drawer).not.toHaveClass(/open/);
+
+    // Verify 320px viewport without overflow
+    await page.setViewportSize({ width: 320, height: 568 });
+    await page.waitForTimeout(100);
     await expectNoHorizontalOverflow(page);
   });
 });

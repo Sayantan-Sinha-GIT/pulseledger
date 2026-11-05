@@ -116,6 +116,59 @@ function Sparkline({ points, name }: { points: LatencyPoint[]; name: string }) {
   );
 }
 
+export function slugifyProject(name: string): string {
+  return `project-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`;
+}
+
+export function deriveStatusClaim(data: StatusResponse | null, error: string | null): string {
+  if (error && !data) {
+    return "Live status unavailable · error connecting to ledger";
+  }
+  if (!data) {
+    return "Last updated: no snapshot yet · every project is unknown until its first completed check";
+  }
+
+  const timeStr = formatShortTime(data.generatedAt);
+  const monitors = data.monitors || [];
+  if (monitors.length === 0) {
+    return `Last updated: ${timeStr} · no endpoints configured`;
+  }
+
+  const degraded = monitors.filter((m) => m.state === "degraded").length;
+  const down = monitors.filter((m) => m.state === "down").length;
+  const incident = monitors.filter((m) => m.state === "incident").length;
+  const paused = monitors.filter((m) => m.state === "paused").length;
+  const unknown = monitors.filter((m) => m.state === "unknown").length;
+  const operational = monitors.filter((m) => m.state === "operational").length;
+  const activeIncidents = (data.incidents || []).filter((i) => i.status !== "resolved").length;
+
+  if (degraded === 0 && down === 0 && incident === 0 && unknown === 0 && activeIncidents === 0) {
+    return `Last updated: ${timeStr} · every project is operational on its latest check`;
+  }
+
+  const parts: string[] = [];
+  if (down > 0) parts.push(`${down} down`);
+  if (incident > 0) parts.push(`${incident} in incident`);
+  if (degraded > 0) parts.push(`${degraded} degraded`);
+  if (operational > 0) parts.push(`${operational} operational`);
+  if (unknown > 0) parts.push(`${unknown} unknown`);
+  if (paused > 0) parts.push(`${paused} paused`);
+  if (activeIncidents > 0) parts.push(`${activeIncidents} active incident${activeIncidents > 1 ? "s" : ""}`);
+
+  const stateLabel =
+    data.overall === "operational"
+      ? "Operational"
+      : data.overall === "degraded"
+      ? "Partial degradation"
+      : data.overall === "down"
+      ? "Major outage"
+      : data.overall === "incident"
+      ? "Active incident"
+      : "State unconfirmed";
+
+  return `Last updated: ${timeStr} · ${stateLabel} · ${parts.join(", ")}`;
+}
+
 export function StatusPage() {
   const [data, setData] = useState<StatusResponse | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -124,6 +177,7 @@ export function StatusPage() {
   const [themeMode, setThemeMode] = useState<"dark" | "light">("dark");
   const [expandedDetails, setExpandedDetails] = useState<Record<string, boolean>>({});
   const [selectedMonitorId, setSelectedMonitorId] = useState<string>("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const lastUpdatedRef = useRef<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
@@ -144,6 +198,18 @@ export function StatusPage() {
       }
     } catch {}
   }, []);
+
+  // Close mobile drawer on Escape key
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileMenuOpen]);
 
   const toggleTheme = useCallback(() => {
     setThemeMode((prev) => {
@@ -342,71 +408,19 @@ export function StatusPage() {
       }
     });
 
-    // 3. Chapter 2 (#probe)
+    // 3. Chapter 2 (#probe) — progress markers for tests; visual transform driven by GSAP matchMedia
     if (probeEl) {
       probeEl.setAttribute("data-scroll-progress", chapter2Progress.toFixed(3));
     }
-    const timelineAreaEl = document.getElementById("timeline-area-group");
-    if (timelineAreaEl) {
-      timelineAreaEl.style.clipPath = `inset(0px ${((1 - chapter2Progress) * 100).toFixed(1)}% 0px 0px)`;
-    }
-    const timelineTraceEl = document.getElementById("timeline-svg-trace");
-    if (timelineTraceEl) {
-      const traceDashoffset = Math.round((1 - chapter2Progress) * 1000);
-      timelineTraceEl.setAttribute("stroke-dashoffset", String(traceDashoffset));
-      timelineTraceEl.style.strokeDashoffset = `${traceDashoffset}px`;
-    }
-    const timelinePlayheadEl = document.getElementById("timeline-playhead-group");
-    if (timelinePlayheadEl) {
-      timelinePlayheadEl.style.transform = `translate3d(${(chapter2Progress * 720).toFixed(1)}px, 0px, 0px)`;
-    }
-    const probeChassisEl = document.getElementById("probe-chassis-stage");
-    if (probeChassisEl) {
-      probeChassisEl.style.transform = `translate3d(0px, ${((1 - chapter2Progress) * 26).toFixed(1)}px, 0px)`;
-    }
 
-    // 4. Chapter 3 (#incidents)
+    // 4. Chapter 3 (#incidents) — progress markers for tests; visual transform driven by GSAP
     if (incidentsEl) {
       incidentsEl.setAttribute("data-scroll-progress", chapter3Progress.toFixed(3));
     }
-    const sealRingEl = document.getElementById("incident-seal-ring");
-    if (sealRingEl) {
-      const sealDashoffset = Math.round((1 - chapter3Progress) * 1000);
-      sealRingEl.setAttribute("stroke-dashoffset", String(sealDashoffset));
-      sealRingEl.style.strokeDashoffset = `${sealDashoffset}px`;
-    }
-    const sealRotorEl = document.getElementById("incident-seal-rotor");
-    if (sealRotorEl) {
-      sealRotorEl.style.transform = `rotate(${(chapter3Progress * 180).toFixed(1)}deg)`;
-    }
-    const sealProgressTextEl = document.getElementById("incident-seal-progress-text");
-    if (sealProgressTextEl) {
-      sealProgressTextEl.textContent = `SEAL DRAWN · ${Math.round(chapter3Progress * 100)}%`;
-    }
-    const spineFillEl = document.getElementById("incident-spine-fill");
-    if (spineFillEl) {
-      spineFillEl.style.transform = `scaleY(${chapter3Progress.toFixed(3)})`;
-    }
-    const broadsheetEl = document.getElementById("incident-broadsheet-panel");
-    if (broadsheetEl) {
-      const slideX = ((1 - chapter3Progress) * 20).toFixed(1);
-      const liftY = ((1 - chapter3Progress) * 26).toFixed(1);
-      broadsheetEl.style.transform = `translate3d(${slideX}px, ${liftY}px, 0px)`;
-    }
 
-    // 5. Chapter 4 (#method)
+    // 5. Chapter 4 (#method) — progress markers for tests; visual transform driven by GSAP
     if (methodEl) {
       methodEl.setAttribute("data-scroll-progress", chapter4Progress.toFixed(3));
-    }
-    const methodBusLineEl = document.getElementById("method-bus-line");
-    if (methodBusLineEl) {
-      const busDashoffset = Math.round((1 - chapter4Progress) * 1000);
-      methodBusLineEl.setAttribute("stroke-dashoffset", String(busDashoffset));
-      methodBusLineEl.style.strokeDashoffset = `${busDashoffset}px`;
-    }
-    const methodSignalCarriageEl = document.getElementById("method-signal-carriage");
-    if (methodSignalCarriageEl) {
-      methodSignalCarriageEl.style.transform = `translate3d(${(chapter4Progress * 680).toFixed(1)}px, 0px, 0px)`;
     }
   }, []);
 
@@ -795,7 +809,124 @@ export function StatusPage() {
       });
     }
 
+    // Pinned check recording and forensics scenes matching home.html
+    const tr = document.getElementById("timeline-svg-trace") as SVGGeometryElement | null;
+    let traceTotalLength = 1000;
+    if (tr) {
+      try {
+        traceTotalLength = tr.getTotalLength() || 1000;
+      } catch {
+        traceTotalLength = 1000;
+      }
+      tr.style.strokeDasharray = `${traceTotalLength}`;
+    }
+
+    const pipe = (p: number) => {
+      if (tr) {
+        tr.style.strokeDashoffset = `${traceTotalLength * (1 - p)}`;
+        tr.setAttribute("stroke-dashoffset", String(Math.round(traceTotalLength * (1 - p))));
+        if (typeof tr.getPointAtLength === "function") {
+          try {
+            const pt = tr.getPointAtLength(traceTotalLength * p);
+            const ph = document.getElementById("ph");
+            if (ph) {
+              ph.setAttribute("x1", String(pt.x));
+              ph.setAttribute("x2", String(pt.x));
+            }
+            const pc = document.getElementById("pc");
+            if (pc) {
+              pc.setAttribute("cx", String(pt.x));
+              pc.setAttribute("cy", String(pt.y));
+            }
+            const clip = document.getElementById("timeline-area-clip");
+            if (clip) {
+              clip.setAttribute("width", String(pt.x));
+            }
+            const areaGroup = document.getElementById("timeline-area-group");
+            if (areaGroup) {
+              areaGroup.style.clipPath = `inset(0px ${(600 - pt.x).toFixed(1)}px 0px 0px)`;
+            }
+            const playheadGroup = document.getElementById("timeline-playhead-group");
+            if (playheadGroup) {
+              playheadGroup.style.transform = `translate3d(${pt.x.toFixed(1)}px, 0px, 0px)`;
+            }
+          } catch {}
+        }
+      }
+      const items = Array.from(document.querySelectorAll("#stg li"));
+      const stageIdx = Math.min(3, Math.floor(p * 4));
+      items.forEach((el, k) => {
+        el.classList.toggle("on", rm ? true : k === stageIdx);
+      });
+      const probe = document.getElementById("probe");
+      if (probe) {
+        probe.setAttribute("data-scroll-progress", p.toFixed(3));
+      }
+      const chassis = document.getElementById("probe-chassis-stage");
+      if (chassis) {
+        chassis.style.transform = `translate3d(0px, ${((1 - p) * 26).toFixed(1)}px, 0px)`;
+      }
+    };
+
+    const sealRing = document.getElementById("incident-seal-ring") as SVGGeometryElement | null;
+    const arts = Array.from(document.querySelectorAll("#incident-broadsheet-panel article"));
+    const sealp = (p: number) => {
+      if (sealRing) {
+        const dashoffset = Math.round(440 * (1 - p));
+        sealRing.style.strokeDashoffset = `${dashoffset}`;
+        sealRing.setAttribute("stroke-dashoffset", String(dashoffset));
+      }
+      const rotor = document.getElementById("incident-seal-rotor");
+      if (rotor) {
+        rotor.style.transform = `rotate(${p * 360}deg)`;
+        rotor.style.transformOrigin = "100px 100px";
+      }
+      const spine = document.getElementById("incident-spine-fill");
+      if (spine) {
+        spine.style.transform = `scaleX(${p})`;
+      }
+      const sealText = document.getElementById("incident-seal-progress-text");
+      if (sealText) {
+        sealText.textContent = `SEAL DRAWN · ${Math.round(p * 100)}%`;
+      }
+      const broadsheet = document.getElementById("incident-broadsheet-panel");
+      if (broadsheet) {
+        broadsheet.style.transform = `translate3d(${((1 - p) * 20).toFixed(1)}px, ${((1 - p) * 26).toFixed(1)}px, 0px)`;
+      }
+      const artIdx = Math.min(2, Math.floor(p * 3));
+      arts.forEach((a, k) => {
+        a.classList.toggle("on", rm || k === artIdx);
+      });
+      const incidents = document.getElementById("incidents");
+      if (incidents) {
+        incidents.setAttribute("data-scroll-progress", p.toFixed(3));
+      }
+    };
+
+    const bus = document.getElementById("method-bus-line") as SVGGeometryElement | null;
+    const car = document.getElementById("method-signal-carriage");
+    const busp = (p: number) => {
+      if (bus) {
+        const dashoffset = Math.round(1000 * (1 - p));
+        bus.style.strokeDashoffset = `${dashoffset}`;
+        bus.setAttribute("stroke-dashoffset", String(dashoffset));
+      }
+      if (car) {
+        car.setAttribute("cx", String(1000 * p));
+        car.style.transform = `translate3d(${(p * 680).toFixed(1)}px, 0px, 0px)`;
+      }
+      const method = document.getElementById("method");
+      if (method) {
+        method.setAttribute("data-scroll-progress", p.toFixed(3));
+      }
+    };
+
+    const mm = gsap.matchMedia();
+
     if (rm) {
+      pipe(1);
+      sealp(1);
+      busp(1);
       const clip = document.getElementById("timeline-area-clip");
       if (clip) clip.setAttribute("width", "600");
       const secPanel = document.querySelector<HTMLElement>("#sec .panel");
@@ -805,6 +936,39 @@ export function StatusPage() {
         b.textContent = b.dataset.n || "0";
       });
     } else {
+      mm.add("(min-width:861px)", () => {
+        ScrollTrigger.create({
+          trigger: "#pipe",
+          start: "top top",
+          end: "+=2200",
+          pin: true,
+          scrub: true,
+          onUpdate: (s) => pipe(s.progress),
+        });
+      });
+
+      mm.add("(max-width:860px)", () => {
+        ScrollTrigger.create({
+          trigger: "#pipe",
+          start: "top 70%",
+          end: "bottom 40%",
+          scrub: true,
+          onUpdate: (s) => pipe(s.progress),
+        });
+      });
+
+      pipe(0);
+      sealp(0);
+      busp(0);
+
+      ScrollTrigger.create({
+        trigger: "#incidents .grid",
+        start: "top 70%",
+        end: "bottom 60%",
+        scrub: true,
+        onUpdate: (s) => sealp(s.progress),
+      });
+
       gsap.to("#sec .panel", {
         clipPath: "inset(0% 0% round 0px)",
         ease: "none",
@@ -814,6 +978,14 @@ export function StatusPage() {
           end: "top 15%",
           scrub: true,
         },
+      });
+
+      ScrollTrigger.create({
+        trigger: "#sec",
+        start: "top 40%",
+        end: "bottom 90%",
+        scrub: true,
+        onUpdate: (s) => busp(Math.min(1, s.progress * 1.4)),
       });
 
       gsap.from(".sg > div", {
@@ -894,6 +1066,7 @@ export function StatusPage() {
       document.removeEventListener("click", onHashClick);
       gsap.ticker.remove(tickerCb);
       if (lenis) lenis.destroy();
+      mm.revert();
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
@@ -944,7 +1117,7 @@ export function StatusPage() {
 
           <nav aria-label="Jump to project" className="sr-only">
             {PORTFOLIO_PROJECTS.map((p) => (
-              <a key={p} href={`#project-${p.toLowerCase()}`}>
+              <a key={p} href={`#${slugifyProject(p)}`}>
                 {p}
               </a>
             ))}
@@ -971,9 +1144,99 @@ export function StatusPage() {
                 <path d="M12 1v3M12 20v3M1 12h3M20 12h3M4.2 4.2l2 2M17.8 17.8l2 2M4.2 19.8l2-2M17.8 6.2l2-2" />
               </svg>
             </button>
+            <button
+              type="button"
+              className="mobile-nav-toggle"
+              aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav-drawer"
+              onClick={() => setMobileMenuOpen((o) => !o)}
+            >
+              {mobileMenuOpen ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M3 12h18M3 6h18M3 18h18" />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
         <div id="prog"></div>
+
+        {/* Accessible mobile drawer menu */}
+        <div
+          id="mobile-nav-drawer"
+          className={`mobile-menu-backdrop ${mobileMenuOpen ? "open" : ""}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setMobileMenuOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setMobileMenuOpen(false);
+          }}
+        >
+          <div className="mobile-menu-panel">
+            <div className="mobile-menu-header">
+              <span className="mobile-menu-title">PulseLedger</span>
+              <button
+                type="button"
+                className="mobile-menu-close"
+                aria-label="Close menu"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="mobile-menu-section-label">Chapters &amp; Sections</div>
+            <nav className="mobile-menu-nav" aria-label="Mobile Navigation">
+              <a className="mobile-menu-link" href="#services" onClick={() => setMobileMenuOpen(false)}>
+                Fleet ledger
+              </a>
+              <a className="mobile-menu-link" href="#probe" onClick={() => setMobileMenuOpen(false)}>
+                Recorded checks
+              </a>
+              <a className="mobile-menu-link" href="#incidents" onClick={() => setMobileMenuOpen(false)}>
+                Incidents journal
+              </a>
+              <a className="mobile-menu-link" href="#method" onClick={() => setMobileMenuOpen(false)}>
+                Security &amp; method
+              </a>
+              <a className="mobile-menu-link" href="#owner" onClick={() => setMobileMenuOpen(false)}>
+                Owner ledger
+              </a>
+            </nav>
+
+            <div className="mobile-menu-section-label">Portfolio Projects</div>
+            <div className="mobile-menu-projects-grid">
+              {PORTFOLIO_PROJECTS.map((p) => (
+                <a
+                  key={p}
+                  className="mobile-menu-project-link"
+                  href={`#${slugifyProject(p)}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {p}
+                </a>
+              ))}
+            </div>
+
+            <Link
+              className="mobile-menu-footer-link"
+              href="/admin"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Owner desk sign in &rarr;
+            </Link>
+          </div>
+        </div>
       </header>
 
       <main id="main">
@@ -1005,9 +1268,7 @@ export function StatusPage() {
                   </div>
                 )}
                 <span className="mono updated-note" id="lu" aria-live="polite">
-                  {data
-                    ? `Last updated: ${formatShortTime(data.generatedAt)} · every project is operational on its latest check`
-                    : "Last updated: no snapshot yet · every project is unknown until its first completed check"}
+                  {deriveStatusClaim(data, error)}
                 </span>
                 <button
                   className="btn"
@@ -1027,11 +1288,12 @@ export function StatusPage() {
                   const pMonitors = projectGroups.get(proj) ?? [];
                   const pState = computeProjectState(pMonitors);
                   const cls = projectStateClass(pState);
+                  const pSlug = slugifyProject(proj);
                   return (
-                    <span key={proj}>
+                    <a key={proj} href={`#${pSlug}`} className="reg-item" title={`Jump to ${proj} monitors`}>
                       <i className={`mk ${cls}`}></i>
                       <b>{proj}</b>
-                    </span>
+                    </a>
                   );
                 })}
               </div>
@@ -1120,20 +1382,24 @@ export function StatusPage() {
 
               <div id="rows">
                 {Array.from(projectGroups.entries()).map(([projectName, monitors], pIdx) => {
-                  const pSlug = projectName.toLowerCase();
+                  const pSlug = slugifyProject(projectName);
                   return (
                     <div
                       key={projectName}
-                      className="project-group"
                       id={`project-${pIdx + 1}`}
-                      data-project-slug={pSlug}
+                      className="project-group-wrap"
                     >
-                      <div className="project-group-header">
-                        <h2 className="project-group-title">{projectName}</h2>
-                        <span className="mono" style={{ fontSize: 11 }}>
-                          {monitors.length} {monitors.length === 1 ? "endpoint" : "endpoints"}
-                        </span>
-                      </div>
+                      <div
+                        className="project-group"
+                        id={pSlug}
+                        data-project-slug={projectName.toLowerCase()}
+                      >
+                        <div className="project-group-header">
+                          <h2 className="project-group-title">{projectName}</h2>
+                          <span className="mono" style={{ fontSize: 11 }}>
+                            {monitors.length} {monitors.length === 1 ? "endpoint" : "endpoints"}
+                          </span>
+                        </div>
 
                       {monitors.length === 0 ? (
                         <p className="note mono">No endpoints configured for {projectName}.</p>
@@ -1283,6 +1549,7 @@ export function StatusPage() {
                           );
                         })
                       )}
+                      </div>
                     </div>
                   );
                 })}
@@ -1465,7 +1732,7 @@ export function StatusPage() {
 
               <div>
                 <p className="mono">Chapter 2 · Recorded check explorer</p>
-                <h2 id="probe-heading" style={{ margin: "16px 0 0", fontSize: "clamp(38px,5vw,76px)" }}>
+                <h2 id="probe-heading" style={{ margin: "16px 0 0" }}>
                   From request to <em>record</em>.
                 </h2>
                 <ol className="stg" id="stg">

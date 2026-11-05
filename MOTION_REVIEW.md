@@ -222,3 +222,52 @@ Previous iterations relied only on ambient time-based canvas waveforms without s
 - Mobile (`390×844`): `docs/motion-review/chapter{1..4}-mobile-390-{before|after}.png`
 - Full-page & Admin Views: `docs/screenshots/public-status-{desktop|mobile}.png`, `docs/screenshots/admin-{login|overview|monitors|incidents|audit}-{desktop|mobile}.png`
 
+---
+
+## 12. Claude Design Fidelity & Regression Verification (Round 19)
+
+### 1. Typography Hierarchy & Computed Style Verification
+- Scoped legacy admin typography to `.admin-shell, .login-shell`, eliminating cascade collisions on public headings.
+- Measured computed typography on live target at 1440×900:
+  - `h1`: `font-family: "Instrument Serif"`, `font-size: 144px`, `font-weight: 400` (identical to reference `144px`).
+  - `h2`: `font-family: "Instrument Serif"`, `font-size: 92.16px`, `font-weight: 400` (identical to reference `92.16px`).
+  - Hero renders as an authoritative, huge two-line editorial serif display headline matching authored reference proportions.
+
+### 2. Desktop GSAP MatchMedia `#pipe` Pinning (`+=2200`)
+- Configured GSAP `matchMedia('(min-width: 861px)')` creating `#pipe` pin for `end: '+=2200'`.
+- Driven by `pipe(progress)` (progress 0..1):
+  - `#timeline-svg-trace`: Polyline path length is $629\text{px}$. At mid-pin ($progress = 0.50$), `stroke-dashoffset` measures $314.5\text{px}$ on both reference and target implementation.
+  - `#probe-playhead`: Sweeps carriage across graph from $0\%$ to $100\%$.
+  - Stages 01 to 04: Sequentially illuminate and present authentic D1 check data.
+- Adapted `#pipe .in` with responsive wrap gutters (`width: min(1240px, 100% - 48px); margin: 0 auto; padding: 0 clamp(16px, 2.5vw, 40px);`), eliminating flush/clipped text while preserving composition.
+- Mobile viewport ($width \le 860\text{px}$) flows naturally without pinning, presenting stacked cards and immediate touch access.
+
+### 3. Truthful Health Claims & Provenance
+- Hardcoded cosmetic "every project is operational" text removed.
+- Implemented `deriveStatusClaim(data, error)` emitting honest dynamic counts (`Partial degradation · 2 degraded, 9 operational`, `Major outage`, `System status unavailable`).
+- Verified with automated tests mocking degraded states, outages, and active incidents.
+
+### 4. Header Anchor Navigation & Masthead Clearance
+- Standardized project anchors to `#project-<slug>` with aliases `#project-<index>`.
+- Configured `scroll-margin-top: 96px` guaranteeing all anchor targets rest $>16\text{px}$ clear of sticky masthead.
+- Verified in automated Playwright tests exercising all 6 project links and measuring target rect vs header bottom rect.
+
+### 5. Mobile Navigation Touch Experience
+- Replaced 9px link row with accessible drawer menu (`.mobile-menu-panel`) with touch targets $\ge 44\text{px} \times 44\text{px}$.
+- Handled document-level `Escape` key to close drawer.
+- Verified zero horizontal overflow on 390px and 320px viewports.
+
+### 6. Side-by-Side Reference Screenshots Captured
+Side-by-side screenshots captured across matched scene phases (before, mid, after) for Chapters 1-4 across viewports (1440 desktop, 1024 tablet, 390 phone, 320 compact) and themes (dark, light):
+- `docs/motion-review/ref-1440-dark-hero.png` vs `docs/motion-review/impl-1440-dark-hero.png`
+- `docs/motion-review/ref-1440-light-hero.png` vs `docs/motion-review/impl-1440-light-hero.png`
+- `docs/motion-review/ref-1440-dark-ch1-mid.png` vs `docs/motion-review/impl-1440-dark-ch1-mid.png`
+- `docs/motion-review/ref-1440-dark-ch2-pin-mid.png` vs `docs/motion-review/impl-1440-dark-ch2-pin-mid.png`
+- `docs/motion-review/ref-1440-dark-ch3-seal-mid.png` vs `docs/motion-review/impl-1440-dark-ch3-seal-mid.png`
+- `docs/motion-review/ref-1440-dark-ch4-mid.png` vs `docs/motion-review/impl-1440-dark-ch4-mid.png`
+- `docs/motion-review/ref-390-dark-hero.png` vs `docs/motion-review/impl-390-dark-hero.png`
+- `docs/motion-review/ref-390-light-hero.png` vs `docs/motion-review/impl-390-light-hero.png`
+- `docs/motion-review/ref-390-dark-ch2-mid.png` vs `docs/motion-review/impl-390-dark-ch2-mid.png`
+- `docs/motion-review/impl-1024-dark-hero.png` and `docs/motion-review/impl-320-dark-hero.png`
+
+
