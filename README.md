@@ -11,14 +11,15 @@ Workers · React 19 + Vite · D1
 
 ## What it does
 
-- **Continuous Seismic & Print Operations Journal**: An original visual world modeled after an automated physical drum recorder and precision editorial ledger. Deep carbon slate (`#0b0e14`), continuous ruled ledger chart bands (`#283243`), physical double-bordered ink stamps, and zero borrowed sci-fi or dossier tropes.
-- **4 Scroll-Driven Operations-Journal Chapters**: Physical scroll choreography driven by `window.scrollY` and `IntersectionObserver`: (1) `#services` mechanical 30-day ledger tape spool apparatus and per-row `.uptime-strip` `clip-path` unspooling with stylus printhead sweeps; (2) `#probe` scroll-drawn SVG live latency chronograph (`stroke-dashoffset` & playhead carriage) paired with the recorded D1 check explorer; (3) `#incidents` scroll-driven rotary verification seal SVG and unfolding forensic incident broadsheet; and (4) `#method` scroll-wired 4-stage operational protocol schematic bus.
-- **Dual-Channel Analog Stylus Needles**: Living background canvas rendering continuous analog needle ink traces across millimetric chart paper rules: Channel 1 tracks fleet health with smooth harmonic oscillations (exhibiting dynamic shock tremors if degraded/down), while Channel 2 tracks Cloudflare cron epoch pulses, sitting inside a dedicated unobstructed lower drum window (`margin-bottom: 140px`).
-- **Precision Laboratory Drum Oscillograph**: In `#probe`, an interactive diagnostic instrument with calibrated vertical scale (0 to 400ms), dual-trace analog persistence, and inspection of genuine recorded check telemetry from Cloudflare D1 (timestamp, HTTP status code, measured latency, execution trigger, and illustrative response waveforms).
-- **Unified Visual Identity**: Self-hosted **Space Grotesk** (display & UI) and **JetBrains Mono** (telemetry numbers, code, timestamps) under SIL Open Font License 1.1 with WOFF2 preloading, replacing all generic system fonts across the entire application.
-- **Cohesive Operations Desk**: Public status page (`/`), private owner sign-in (`/admin`), and authenticated desk (Overview, Monitors, Incidents, Activity) share a single calm, dense, highly legible design system.
+- **Authored Operations Journal Design**: A faithful realization of the Claude-authored reference design (`my-design/home.html`). Dark theme (`--bg: #0c0e0d`, `--acc: #f0a63a`) and Light theme (`--bg: #f3eee2`, `--acc: #9a4400`) with high-contrast tactile craft.
+- **Self-Hosted Typography Trio**: Display headlines and brand wordmark in **Instrument Serif** normal 400 (`h1 clamp(52px, 10vw, 160px)`, `h2 clamp(40px, 6.4vw, 100px)`), telemetry metrics and timestamps in **IBM Plex Mono** (400, 500), and interface body copy in **Hanken Grotesk** (400, 500, 600). All fonts are locally vendored and self-hosted as WOFF2 in `public/fonts/`. Legacy admin typography is strictly scoped to `.admin-shell, .login-shell`.
+- **Desktop Pinned Check Explorer (`#pipe`)**: GSAP `matchMedia('(min-width: 861px)')` pin `+=2200` driving `pipe(progress)` (draws 629px SVG latency chronograph, sweeps playhead carriage 0%..100%, and sequentially illuminates stages 01–04) with responsive wrap gutters. Phone flows naturally with stacked cards and immediate touch access.
+- **Truthful Fleet Health Claims**: Dynamic `deriveStatusClaim(data, error)` truthfully reflects snapshot health and exact per-state counts (`Partial degradation · 4 degraded, 7 operational`, `Major outage`, `System status unavailable`), eliminating hardcoded false all-green claims.
+- **Accessible Mobile Touch Navigation**: Compact touch drawer menu (`.mobile-menu-panel`) with $\ge 44\text{px} \times 44\text{px}$ touch targets, document-level `Escape` key handling, and direct links to sections, projects (`#project-haan`, etc.), and `/admin`.
+- **4 Scroll-Driven Chapters**: Physical scroll choreography driven by `window.scrollY` and `IntersectionObserver`: (1) `#services` fleet matrix with interactive 30-day ledger strips; (2) `#probe` recorded check explorer replaying genuine Cloudflare D1 checks with illustrative waveforms; (3) `#incidents` scroll-driven rotary verification seal SVG and forensic broadsheet; and (4) `#method` scroll-wired 4-stage operational protocol bus.
+- **Dual Living Canvas Engines**: Living background canvas rendering an ambient dust particle field (`canvas#bg`) and a continuous dual-stylus seismograph drum plate (`canvas#tele`) with millimetric chart paper rules, plus a continuous marquee velocity ribbon (`.mq`).
 - **Real Edge Checks**: Checks 11 endpoints across Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu, and Dispatch every 15 minutes with real HTTPS requests.
-- **Zero-Inventory Truth**: Computes uptime and latency exclusively from stored Cloudflare D1 checks—zero synthetic backfills, zero invented statistics.
+- **Zero-Inventory Truth & D1 Read Budget**: Computes uptime and latency exclusively from stored Cloudflare D1 checks served from a single persisted snapshot row with 5-minute UI refresh and 15-minute cron. Zero synthetic backfills, zero invented statistics.
 - **Private Owner Desk**: Restrained operational console for monitor CRUD, pause/resume, manual checks, check logs, incident updates, and activity audit trail.
 - **Strict Security Boundaries**: PBKDF2-SHA256 password verification, HttpOnly SameSite=Strict cookies, HMAC CSRF tokens, strict origin verification, and SQL prepared statements.
 
@@ -138,35 +139,40 @@ Then reload the public page or call `/api/status` to see the stored checks.
 
 ```bash
 npm run typecheck            # app, worker, tests, and Node configs
-npm test                     # 70 Vitest tests
+npm test                     # 73 Vitest tests + D1 read budget migration check
 npm run build                # production bundle
-npm run test:e2e             # Playwright desktop + mobile (needs local server/credentials)
+npm run test:e2e             # Playwright test suites
 npm run check:secrets        # scans tracked files and verifies ignores
 npm audit --audit-level=high
 ```
 
-The Vitest suite covers status precedence, uptime windows and insufficient samples,
-latency percentiles, URL/SSRF validation, PBKDF2 verification, sessions, CSRF, origin
-checks, login rate limiting, monitor CRUD validation, manual checks, incident lifecycle,
-cron deduplication and retention, health, public/admin API shapes, and recorded-check /
-no-data telemetry provenance.
+### Playwright E2E & Reference Fidelity
 
-The Playwright suite runs at 1440×900 and 390×844. It verifies real rendered checks,
-expandable history, manual refresh, keyboard focus, all six state labels, no horizontal
-overflow, sticky masthead anchor clearance, two-position computed scroll choreography deltas
-across all chapters (`transform`, `clip-path`, SVG `stroke-dashoffset`, and `data-scroll-progress`),
-owner sign-in/out, protected reload behavior, monitor create/check/edit/
-pause/resume/remove with confirmation, and an incident opened → updated → resolved flow
-that is then read back on the public page.
+The Playwright testing suite is divided into two focused layers:
 
-Current combined-branch results: typecheck clean, 73/73 Vitest tests passing, local D1
-migration checks passing, production build succeeds,
-10/10 desktop Playwright tests passing, 8/8 mobile Playwright tests passing (2 destructive
-mobile flows intentionally skipped), `npm audit` reports 0 vulnerabilities, and the
-secret scan passes on every tracked file. The D1 read-budget migration and redesigned
-public site were deployed on 2026-11-05 after the quota reset. Live health and all 11
-monitors passed verification; a snapshot lookup read exactly one D1 row. See
-`docs/D1_READ_BUDGET.md` for recovery evidence and the estimated daily read budget.
+1. **Core Functional, Motion, Typography & Navigation Suite** (`e2e/public.spec.ts`):
+   ```bash
+   npx playwright test e2e/public.spec.ts
+   ```
+   Runs 20 automated tests across desktop (1440×900) and mobile (390×844) viewports. It is 100% self-contained and executes on any clean checkout without requiring any private reference files. Verifies real checks, uptime history, on-demand refresh, keyboard accessibility, 320px/390px/1440px overflow freedom, anchor clearance under the sticky header, dynamic truthful status claims (`deriveStatusClaim`), mobile touch drawer navigation ($\ge 44\text{px}$ targets, `Escape` key handling), two-position scroll choreography deltas across all four chapters, and computed typography (Instrument Serif 400 `h1` and `h2`, Hanken Grotesk body, and IBM Plex Mono telemetry).
+
+2. **Side-by-Side Reference Fidelity Comparison** (`e2e/fidelity-side-by-side.spec.ts`):
+   ```bash
+   # Run against authored reference design (if available)
+   npx playwright test e2e/fidelity-side-by-side.spec.ts
+
+   # Configure custom reference file path:
+   FIDELITY_REFERENCE_PATH=/path/to/home.html npx playwright test e2e/fidelity-side-by-side.spec.ts
+
+   # Explicitly skip reference comparison:
+   SKIP_FIDELITY_REFERENCE=true npx playwright test e2e/fidelity-side-by-side.spec.ts
+   ```
+   Compares the live implementation against the authored Claude design (`my-design/home-working.html` or `my-design/home.html`) across matched before/mid/after scene phases for Chapters 1–4 across viewports (1440, 1024, 390, 320) and themes (dark, light), generating side-by-side screenshots in `docs/motion-review/`.
+   **Clean Checkout / Missing Reference Handling**: On a clean checkout where the private design files are not present, this test honestly skips (`2 skipped`) with the explicit reason:
+   `Reference design file not found (clean checkout without ignored my-design/home-working.html or my-design/home.html). Set FIDELITY_REFERENCE_PATH or supply reference file to enable side-by-side fidelity comparison.`
+   It never marks an unavailable fidelity comparison PASS and never substitutes implementation as reference.
+
+Current results: typecheck clean, 73/73 Vitest tests passing, local D1 migration checks passing, production build succeeds, 20/20 public Playwright tests passing, 2/2 fidelity tests passing (or honestly skipped when reference is omitted), `npm audit` reports 0 vulnerabilities, and the secret scan passes on every tracked file.
 
 Live verification on 2026-11-01: the deployed cron fired in the 08:15 UTC slot and both
 seeded monitors recorded `scheduled` checks with HTTP 200 (59 ms and 61 ms). The live

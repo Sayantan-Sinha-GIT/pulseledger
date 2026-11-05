@@ -456,4 +456,93 @@ test.describe("public status page", () => {
     await page.waitForTimeout(100);
     await expectNoHorizontalOverflow(page);
   });
+
+  test("verifies computed typography: Instrument Serif display, Hanken Grotesk body, and IBM Plex Mono telemetry", async ({
+    page,
+    isMobile,
+  }) => {
+    if (isMobile) {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto("/");
+      await page.waitForSelector(".service");
+
+      const h1Metrics = await page.evaluate(() => {
+        const h1 = document.querySelector("#hero h1");
+        if (!h1) return null;
+        const s = window.getComputedStyle(h1);
+        return {
+          fontFamily: s.fontFamily.toLowerCase(),
+          fontWeight: s.fontWeight,
+          fontSize: parseFloat(s.fontSize),
+        };
+      });
+
+      expect(h1Metrics).not.toBeNull();
+      expect(h1Metrics!.fontFamily).toContain("instrument serif");
+      expect(h1Metrics!.fontWeight).toBe("400");
+      // Mobile clamp(52px, 10vw, 160px) clamps to ~52px on 390px
+      expect(h1Metrics!.fontSize).toBeGreaterThanOrEqual(48);
+      expect(h1Metrics!.fontSize).toBeLessThanOrEqual(60);
+    } else {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto("/");
+      await page.waitForSelector(".service");
+
+      const metrics = await page.evaluate(() => {
+        const h1 = document.querySelector("#hero h1");
+        const h2 = document.querySelector("#services h2");
+        const lead = document.querySelector("p.lead");
+        const mono = document.querySelector("#lu");
+
+        return {
+          h1: h1
+            ? {
+                fontFamily: window.getComputedStyle(h1).fontFamily.toLowerCase(),
+                fontWeight: window.getComputedStyle(h1).fontWeight,
+                fontSize: parseFloat(window.getComputedStyle(h1).fontSize),
+              }
+            : null,
+          h2: h2
+            ? {
+                fontFamily: window.getComputedStyle(h2).fontFamily.toLowerCase(),
+                fontWeight: window.getComputedStyle(h2).fontWeight,
+                fontSize: parseFloat(window.getComputedStyle(h2).fontSize),
+              }
+            : null,
+          lead: lead
+            ? {
+                fontFamily: window.getComputedStyle(lead).fontFamily.toLowerCase(),
+                fontSize: parseFloat(window.getComputedStyle(lead).fontSize),
+              }
+            : null,
+          mono: mono
+            ? {
+                fontFamily: window.getComputedStyle(mono).fontFamily.toLowerCase(),
+                fontSize: parseFloat(window.getComputedStyle(mono).fontSize),
+              }
+            : null,
+        };
+      });
+
+      expect(metrics.h1).not.toBeNull();
+      expect(metrics.h1!.fontFamily).toContain("instrument serif");
+      expect(metrics.h1!.fontWeight).toBe("400");
+      // clamp(52px, 10vw, 160px) at 1440px produces 144px
+      expect(metrics.h1!.fontSize).toBeGreaterThanOrEqual(140);
+      expect(metrics.h1!.fontSize).toBeLessThanOrEqual(148);
+
+      expect(metrics.h2).not.toBeNull();
+      expect(metrics.h2!.fontFamily).toContain("instrument serif");
+      expect(metrics.h2!.fontWeight).toBe("400");
+      // clamp(40px, 6.4vw, 100px) at 1440px produces 92.16px
+      expect(metrics.h2!.fontSize).toBeGreaterThanOrEqual(88);
+      expect(metrics.h2!.fontSize).toBeLessThanOrEqual(96);
+
+      expect(metrics.lead).not.toBeNull();
+      expect(metrics.lead!.fontFamily).toMatch(/hanken grotesk|sans/);
+
+      expect(metrics.mono).not.toBeNull();
+      expect(metrics.mono!.fontFamily).toMatch(/ibm plex mono|mono/);
+    }
+  });
 });

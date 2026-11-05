@@ -1,8 +1,26 @@
 import { test, expect, type Page } from "@playwright/test";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-const refUrl = pathToFileURL(resolve(process.cwd(), "my-design/home-working.html")).href;
+const envRefPath = process.env.FIDELITY_REFERENCE_PATH;
+const disableRef = process.env.SKIP_FIDELITY_REFERENCE === "true";
+const workingRefPath = resolve(process.cwd(), "my-design/home-working.html");
+const originalRefPath = resolve(process.cwd(), "my-design/home.html");
+
+const resolvedRefPath = disableRef
+  ? null
+  : envRefPath
+  ? existsSync(envRefPath)
+    ? envRefPath
+    : null
+  : existsSync(workingRefPath)
+  ? workingRefPath
+  : existsSync(originalRefPath)
+  ? originalRefPath
+  : null;
+
+const refUrl = resolvedRefPath ? pathToFileURL(resolvedRefPath).href : "";
 
 interface ComputedMetrics {
   fontFamily: string;
@@ -46,6 +64,11 @@ test.describe("Fidelity side-by-side verification", () => {
   test("verifies typography, desktop pinning, and scene-phase motion deltas side-by-side", async ({
     page,
   }) => {
+    test.skip(
+      !resolvedRefPath,
+      "Reference design file not found (clean checkout without ignored my-design/home-working.html or my-design/home.html). Set FIDELITY_REFERENCE_PATH or supply reference file to enable side-by-side fidelity comparison."
+    );
+
     test.setTimeout(180_000);
 
     const refPage = await page.context().newPage();

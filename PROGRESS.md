@@ -37,6 +37,12 @@ Last updated: 2026-11-04
    - Restored desktop `#pipe` GSAP pinning (`pin: true, end: '+=2200'`) via GSAP `matchMedia('(min-width: 861px)')` driving `pipe(progress)` (progress 0..1) updating the timeline trace, playhead, clip-rect, and stages 01-04. Adapted `#pipe .in` with responsive wrap gutters (`width: min(1240px, 100% - 48px); margin: 0 auto; padding: 0 clamp(16px, 2.5vw, 40px)`). Natural mobile flow on `<=860px`. Removed competing rAF style transforms.
    - Replaced row of minuscule 9px links on mobile with an accessible touch drawer menu with touch targets >= 44px, keyboard/escape/focus handling, tested at 320px and 390px.
    - Overhauled `e2e/fidelity-side-by-side.spec.ts` to test matched before/mid/after scene phases for Chapters 1-4 on desktop (1440) and phone (390) in both dark and light themes, plus tablet (1024) and compact (320), asserting computed font styles and scene deltas.
+14. Configurable Fidelity Comparison & Self-Contained Core Suite (2026-11-05):
+   - Made reference comparison in `e2e/fidelity-side-by-side.spec.ts` opt-in and configurable via `FIDELITY_REFERENCE_PATH` and `SKIP_FIDELITY_REFERENCE`.
+   - On a clean checkout where `my-design/` is git-ignored and not committed, the test honestly skips (`2 skipped`) with an explicit missing-reference reason; never marks PASS or substitutes implementation.
+   - Added core computed typography assertions to `e2e/public.spec.ts` so all 20 functional, motion, font, status, and navigation tests run 100% self-contained without needing the reference file.
+   - Verified both branches: normal comparison (2 passed) and skipped branch with `SKIP_FIDELITY_REFERENCE=true` (2 skipped), without editing or deleting `my-design/home.html` (preserved byte-for-byte at 33,824 bytes).
+   - Reloaded and resolved intended disk version of `StatusPage.tsx` and updated `README.md` on disk.
 
 ## Feature Ledger
 
