@@ -164,8 +164,9 @@ migration checks passing, production build succeeds,
 10/10 desktop Playwright tests passing, 8/8 mobile Playwright tests passing (2 destructive
 mobile flows intentionally skipped), `npm audit` reports 0 vulnerabilities, and the
 secret scan passes on every tracked file. The D1 read-budget migration and redesigned
-public site are committed, but live deployment awaits the Cloudflare D1 daily quota
-reset; see `docs/D1_READ_BUDGET.md` for the deployment gate and read-cost estimate.
+public site were deployed on 2026-11-05 after the quota reset. Live health and all 11
+monitors passed verification; a snapshot lookup read exactly one D1 row. See
+`docs/D1_READ_BUDGET.md` for recovery evidence and the estimated daily read budget.
 
 Live verification on 2026-11-01: the deployed cron fired in the 08:15 UTC slot and both
 seeded monitors recorded `scheduled` checks with HTTP 200 (59 ms and 61 ms). The live

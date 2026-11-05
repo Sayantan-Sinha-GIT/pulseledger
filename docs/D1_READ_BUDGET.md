@@ -26,3 +26,9 @@ At the 12-monitor cap and 15-minute checks, one snapshot rebuild reads no more t
 5. If deployment fails, retain the migration and deploy the previous Worker revision. The added summary table and triggers are compatible with the old code. Do not claim the incident resolved until the live queries and read-rate trend have been checked.
 
 The combined branch passed `npm run check` (73 Vitest tests, migration backfill/trigger checks, typecheck, build, and audit), `npm run check:secrets` (132 tracked files), and Playwright (18 passed, 2 deliberately skipped mobile owner mutations). The local D1 migrations `0001` through `0004` applied before the browser run. Production application was blocked by D1 error `7500` on 4 November; the live result must be recorded after reset.
+
+## Recovery verified — 5 November 2026
+
+The Windows scheduled attempt at 05:40 IST failed to launch (task result `4294770688`), leaving no deployment log. The same recovery script was then run directly after reset and completed at 00:31 UTC (06:01 IST). It reran `npm run check` (73 tests, migration checks, typecheck, build, zero audit vulnerabilities) and the tracked-file secret scan before applying migration `0004` and deploying Worker version `405432ca-6b53-4fb6-918c-4d42bb5d34eb` from commit `5503090`.
+
+Live `/health` reported a healthy database, `/api/status` returned all 11 portfolio monitors, and two public requests returned the same snapshot generation time (`2026-11-05T00:31:10.445Z`). A direct production lookup of `generated_at WHERE id = 1` reported exactly **1 row read, 0 rows written**, with no database change. The redesigned public page returned HTTP 200. Service is restored; the roughly 0.51-million-row daily source-read budget above remains an estimate, not a measured full-day traffic result.
