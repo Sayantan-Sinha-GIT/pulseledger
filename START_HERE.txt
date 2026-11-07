@@ -6,15 +6,13 @@ Website: https://pulseledger.srimantasutapa123.workers.dev/
 Owner desk: https://pulseledger.srimantasutapa123.workers.dev/admin
 Source: https://github.com/Sayantan-Sinha-GIT/pulseledger
 Owner email: srimantasutapa123@gmail.com
-Your existing owner password is preserved in the separate private recovery
-archive. No password or signing material belongs in the public source zip.
+Your existing owner password is in secrets/owner-credentials.txt and RECOVERY/.
 
 YOUR DRIVE BACKUP
-Use the prepared PulseLedger archive in Desktop\FINAL_DRIVE_UPLOAD.
-It contains complete source, database migrations, tests, documentation,
-the owner-supplied homepage designs, and the built frontend assets.
-Keep the separate PRIVATE_RECOVERY archive private. It contains owner
-credentials and the local environment configuration for this deployment.
+Upload the whole Desktop\pulseledger folder directly to your personal Drive.
+It contains complete source, migrations, tests, documentation, your homepage
+designs, built frontend assets, and the RECOVERY folder with owner credentials,
+local configuration and a database export.
 
 FOLDER MAP
 src/client/   React public status page and owner desk
@@ -24,7 +22,8 @@ migrations/   Reproducible D1 schema and portfolio monitor seeds
 tests/, e2e/  Backend and desktop/mobile browser checks
 docs/         Architecture evidence and D1 read-budget explanation
 my-design/    Your homepage source (local/private; not on GitHub)
-dist/         Built frontend (included in the Drive archive)
+dist/         Built frontend
+RECOVERY/     Owner credentials, local configuration and database backup
 FINAL_VERIFICATION.md  Actual final results and fixes
 README.md     Full setup, architecture and deployment instructions
 
@@ -38,7 +37,7 @@ From this folder:
 Open http://127.0.0.1:8787/ and /admin.
 Read the generated local password in secrets/owner-credentials.txt.
 setup:local never overwrites an existing .dev.vars configuration.
-If restoring this exact deployment, use the private recovery files instead
+If restoring this exact deployment, use the RECOVERY files instead
 of generating a new owner password. Local checks can be triggered at:
 http://127.0.0.1:8787/cdn-cgi/local/scheduled
 
@@ -48,8 +47,8 @@ the current database ID in wrangler.jsonc and existing Worker secret.
 For a different account, create a new D1 database and update that ID.
   npm run db:migrate:remote
   npm run deploy
-The Worker, D1 database, and password secret live on Cloudflare. A source
-archive alone does not duplicate your live database history or cloud account.
+The Worker, D1 database, and password secret live on Cloudflare. RECOVERY has
+a dated database export. It does not include your Cloudflare account login.
 
 WHAT IT MONITORS
 11 public URLs across Haan, StyleShopZ, CodeSense, Grepless, ArthaSetu and
